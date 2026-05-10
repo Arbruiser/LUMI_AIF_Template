@@ -14,6 +14,20 @@ interface MarkdownRendererProps {
   source: string;
 }
 
+/** Vite injects the deployment base path (e.g. "/lumi-aif-creator-kit/" on
+ *  GitHub Pages). Author-friendly relative paths like "./assets/foo.jpg" or
+ *  "assets/foo.jpg" need to be resolved against it so they work in dev,
+ *  preview, and on Pages without authors knowing about base URLs. */
+function resolveAssetUrl(src: string | undefined): string | undefined {
+  if (!src) return src;
+  // Absolute URLs and already-absolute paths pass through unchanged.
+  if (/^[a-z]+:\/\//i.test(src) || src.startsWith("//")) return src;
+  if (src.startsWith("/")) return src;
+  const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
+  const rel = src.replace(/^\.\//, "");
+  return `${base}/${rel}`;
+}
+
 // Match `[!type] optional title` at the start of a paragraph. Use [^\n]* so
 // the title doesn't gobble the rest of a multi-line paragraph (the body of the
 // callout is the text after the first newline).
