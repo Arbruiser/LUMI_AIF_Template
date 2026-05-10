@@ -54,6 +54,54 @@ export function findPage(slug: string): Page | undefined {
   return pages.find((p) => p.slug === slug);
 }
 
+/** Linear list of pages in sidebar order — used for prev/next navigation. */
+export function flattenNavOrder(): Page[] {
+  const tree = buildNavTree();
+  const out: Page[] = [];
+  const walk = (nodes: NavNode[]) => {
+    for (const n of nodes) {
+      out.push(n.page);
+      walk(n.children);
+    }
+  };
+  walk(tree);
+  return out;
+}
+
+export interface PrevNext {
+  prev?: Page;
+  next?: Page;
+}
+
+export function getPrevNext(slug: string): PrevNext {
+  const flat = flattenNavOrder();
+  const idx = flat.findIndex((p) => p.slug === slug);
+  if (idx === -1) return {};
+  return {
+    prev: idx > 0 ? flat[idx - 1] : undefined,
+    next: idx < flat.length - 1 ? flat[idx + 1] : undefined,
+  };
+}
+
+/** Build "Home › Chapter › Page" trail from front-matter parent links. */
+export function getBreadcrumbs(slug: string): Page[] {
+  const page = findPage(slug);
+  if (!page) return [];
+  const trail: Page[] = [page];
+  let current = page;
+  const byTitle = new Map(pages.map((p) => [p.frontmatter.title, p]));
+  while (current.frontmatter.parent) {
+    const parent = byTitle.get(current.frontmatter.parent);
+    if (!parent || trail.includes(parent)) break;
+    trail.unshift(parent);
+    current = parent;
+  }
+  // Always start from Home unless we're already on it.
+  const home = findPage("");
+  if (home && trail[0].slug !== "") trail.unshift(home);
+  return trail;
+}
+
 export interface NavNode {
   page: Page;
   children: NavNode[];
