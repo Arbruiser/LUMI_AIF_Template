@@ -46,8 +46,15 @@ function extractCallout(
   const variant = match[1].toLowerCase() as CalloutVariant;
   const title = match[2].trim() || undefined;
 
-  // Remove the matched marker from the first paragraph; keep the rest.
-  const restOfFirst = inner.slice(1);
+  // Keep any text in the same paragraph that came AFTER the marker line
+  // (e.g. `> [!note] Title` on line 1 and body text on line 2 — markdown
+  // joins these into one paragraph separated by `\n`).
+  const matchedLen = match[0].length;
+  const remainderHead = head.slice(matchedLen).replace(/^\n+/, "");
+  const restOfFirst: React.ReactNode[] = [
+    ...(remainderHead ? [remainderHead] : []),
+    ...inner.slice(1),
+  ];
   const newFirst = React.cloneElement(
     first as React.ReactElement<{ children?: React.ReactNode }>,
     { children: restOfFirst }
