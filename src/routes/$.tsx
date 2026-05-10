@@ -3,10 +3,11 @@ import { findPage } from "@/lib/content";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { siteConfig } from "../../site.config";
 
-export const Route = createFileRoute("/")({
-  component: IndexPage,
-  head: () => {
-    const page = findPage("");
+export const Route = createFileRoute("/$")({
+  component: CatchAllPage,
+  head: ({ params }) => {
+    const slug = (params as { _splat?: string })._splat ?? "";
+    const page = findPage(slug);
     const title = page?.frontmatter.title
       ? `${page.frontmatter.title} — ${siteConfig.title}`
       : siteConfig.title;
@@ -19,8 +20,10 @@ export const Route = createFileRoute("/")({
   },
 });
 
-function IndexPage() {
-  const page = findPage("");
+function CatchAllPage() {
+  const params = Route.useParams() as { _splat?: string };
+  const slug = params._splat ?? "";
+  const page = findPage(slug);
   if (!page) throw notFound();
   return <MarkdownRenderer source={page.body} />;
 }
