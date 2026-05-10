@@ -40,7 +40,7 @@ export function AppSidebar() {
           <img
             src={logoSrc}
             alt="LUMI AI Factory"
-            className="h-9 w-auto max-w-[190px] invert dark:invert-0"
+            className="h-9 w-auto max-w-[190px] dark:invert"
           />
         </Link>
       </SidebarHeader>
