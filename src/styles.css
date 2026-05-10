@@ -2,7 +2,9 @@
 @source "../src";
 @import "tw-animate-css";
 @import "katex/dist/katex.min.css";
-@import "highlight.js/styles/github.css" layer(base);
+/* Syntax highlighting palette is defined below using only LUMI brand colours
+   (no github.css import — that theme ships greens, reds, and oranges that
+   are not part of the LUMI AIF palette). */
 
 @custom-variant dark (&:is(.dark *));
 
@@ -339,41 +341,76 @@
   margin: 0.5rem 0;
 }
 
-/* Override highlight.js github theme to play nice with our code-bg */
+/* ============= Syntax highlighting (LUMI palette only) =============
+   Hues used: 240 (blue), 290 (purple), 1 (magenta), 207 (teal).
+   Lightness adjusted for sufficient contrast in light vs dark mode. */
 .hljs {
   background: transparent !important;
   color: var(--color-foreground);
   padding: 0 !important;
 }
 
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-built_in,
+.hljs-name,
+.hljs-tag,
+.hljs-title,
+.hljs-section {
+  color: var(--lumi-blue);
+  font-weight: 600;
+}
+
+.hljs-string,
+.hljs-attr,
+.hljs-literal,
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-regexp {
+  color: var(--lumi-magenta);
+}
+
+.hljs-type,
+.hljs-class .hljs-title,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params {
+  color: var(--lumi-purple);
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-meta,
+.hljs-deletion {
+  color: var(--color-muted-foreground);
+  font-style: italic;
+}
+
 .dark .hljs-keyword,
 .dark .hljs-selector-tag,
 .dark .hljs-built_in,
 .dark .hljs-name,
-.dark .hljs-tag {
-  color: oklch(0.78 0.1 207);
+.dark .hljs-tag,
+.dark .hljs-title,
+.dark .hljs-section {
+  color: oklch(0.78 0.1 207); /* brighter teal — readable on dark bg */
 }
 
 .dark .hljs-string,
 .dark .hljs-attr,
-.dark .hljs-literal {
-  color: oklch(0.82 0.12 150);
-}
-
-.dark .hljs-comment,
-.dark .hljs-quote,
-.dark .hljs-meta {
-  color: oklch(0.6 0.02 240);
-  font-style: italic;
-}
-
+.dark .hljs-literal,
 .dark .hljs-number,
 .dark .hljs-symbol,
-.dark .hljs-bullet {
-  color: oklch(0.78 0.15 30);
+.dark .hljs-bullet,
+.dark .hljs-regexp {
+  color: oklch(0.75 0.18 1); /* brighter magenta */
 }
 
-.dark .hljs-title,
-.dark .hljs-section {
-  color: oklch(0.8 0.15 290);
+.dark .hljs-type,
+.dark .hljs-class .hljs-title,
+.dark .hljs-variable,
+.dark .hljs-template-variable,
+.dark .hljs-params {
+  color: oklch(0.78 0.09 290); /* brighter purple */
 }
