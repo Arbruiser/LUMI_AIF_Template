@@ -335,6 +335,35 @@
   text-decoration: none;
 }
 
+/* Heading anchors: appear on hover, copy deep-link to clipboard. */
+.prose-lumi h2,
+.prose-lumi h3,
+.prose-lumi h4 {
+  scroll-margin-top: 5rem;
+  position: relative;
+}
+
+.prose-lumi .heading-anchor {
+  display: inline-block;
+  margin-left: 0.4em;
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  /* Inline link icon (lucide link-2) tinted with currentColor. */
+  background-color: var(--lumi-magenta);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M9 17H7A5 5 0 0 1 7 7h2'/><path d='M15 7h2a5 5 0 1 1 0 10h-2'/><line x1='8' y1='12' x2='16' y2='12'/></svg>") no-repeat center / contain;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M9 17H7A5 5 0 0 1 7 7h2'/><path d='M15 7h2a5 5 0 1 1 0 10h-2'/><line x1='8' y1='12' x2='16' y2='12'/></svg>") no-repeat center / contain;
+}
+
+.prose-lumi h2:hover .heading-anchor,
+.prose-lumi h3:hover .heading-anchor,
+.prose-lumi h4:hover .heading-anchor,
+.prose-lumi .heading-anchor:focus {
+  opacity: 1;
+}
+
 .callout-body p,
 .callout-body ul,
 .callout-body ol {

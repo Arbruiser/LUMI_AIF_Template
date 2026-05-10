@@ -6,6 +6,7 @@ import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+
 import rehypeRaw from "rehype-raw";
 import { Callout } from "./Callout";
 import { CodeBlock } from "./CodeBlock";
@@ -83,14 +84,52 @@ function extractCallout(
 }
 
 export function MarkdownRenderer({ source }: MarkdownRendererProps) {
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  // Delegated click on heading-anchor links: copy the deep-link to clipboard
+  // instead of just scrolling. Falls back to default behavior on failure.
+  React.useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const onClick = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest("a.heading-anchor");
+      if (!target) return;
+      const href = (target as HTMLAnchorElement).getAttribute("href");
+      if (!href || !href.startsWith("#")) return;
+      const url = window.location.origin + window.location.pathname + href;
+      if (navigator.clipboard) {
+        e.preventDefault();
+        navigator.clipboard.writeText(url).catch(() => {});
+        // Still update the URL hash so the page scrolls to the heading.
+        window.history.replaceState(null, "", href);
+        document.getElementById(href.slice(1))?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    };
+    el.addEventListener("click", onClick);
+    return () => el.removeEventListener("click", onClick);
+  }, []);
+
   return (
-    <div className="prose-lumi">
+    <div className="prose-lumi" ref={containerRef}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkMath]}
         rehypePlugins={[
           rehypeRaw,
           rehypeSlug,
-          [rehypeAutolinkHeadings, { behavior: "wrap" }],
+          [
+            rehypeAutolinkHeadings,
+            {
+              behavior: "append",
+              properties: {
+                className: "heading-anchor",
+                ariaLabel: "Link to this section",
+              },
+              content: { type: "text", value: "" },
+            },
+          ],
           rehypeHighlight,
           rehypeKatex,
         ]}
