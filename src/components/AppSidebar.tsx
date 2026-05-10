@@ -22,6 +22,8 @@ import {
 import { buildNavTree, type NavNode } from "@/lib/content";
 import { siteConfig } from "../../site.config";
 
+const logoSrc = `${import.meta.env.BASE_URL}assets/lumi-ai-factory-logo.png`;
+
 function slugToHref(slug: string) {
   return slug === "" ? "/" : `/${slug}`;
 }
@@ -35,18 +37,12 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="border-b border-sidebar-border px-4 py-4">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded bg-lumi-blue text-xs font-bold tracking-tight text-white">
-            AIF
-          </div>
-          <div className="flex flex-col leading-tight">
-            <span className="text-sm font-semibold text-sidebar-foreground">
-              LUMI AI Factory
-            </span>
-            <span className="text-[11px] text-sidebar-foreground/60">
-              {siteConfig.title}
-            </span>
-          </div>
+        <Link to="/" className="flex items-center">
+          <img
+            src={logoSrc}
+            alt="LUMI AI Factory"
+            className="h-9 w-auto max-w-[190px] dark:invert"
+          />
         </Link>
       </SidebarHeader>
       <SidebarContent>
