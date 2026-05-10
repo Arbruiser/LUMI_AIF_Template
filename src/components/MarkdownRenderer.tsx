@@ -6,6 +6,7 @@ import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import { Link2 } from "lucide-react";
 import rehypeRaw from "rehype-raw";
 import { Callout } from "./Callout";
 import { CodeBlock } from "./CodeBlock";
@@ -90,7 +91,17 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
         rehypePlugins={[
           rehypeRaw,
           rehypeSlug,
-          [rehypeAutolinkHeadings, { behavior: "wrap" }],
+          [
+            rehypeAutolinkHeadings,
+            {
+              behavior: "append",
+              properties: {
+                className: "heading-anchor",
+                ariaLabel: "Link to this section",
+              },
+              content: { type: "text", value: "" },
+            },
+          ],
           rehypeHighlight,
           rehypeKatex,
         ]}
