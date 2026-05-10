@@ -38,15 +38,19 @@ jobs:
         run: bun run build
         env:
           VITE_BASE_PATH: ${{ env.VITE_BASE_PATH }}
-      - name: Add SPA 404 fallback
+      - name: Prepare static site
         run: |
-          # GitHub Pages serves /404.html for unknown paths.
-          # Copy index.html so client-side routing works on direct deep links.
-          if [ -f dist/index.html ]; then cp dist/index.html dist/404.html; fi
+          # TanStack Start SPA mode emits a single _shell.html in dist/client.
+          # GitHub Pages needs index.html (homepage) and 404.html (deep-link
+          # fallback) so client-side routing works on hard refresh.
+          cp dist/client/_shell.html dist/client/index.html
+          cp dist/client/_shell.html dist/client/404.html
+          # Disable Jekyll so files/folders starting with _ are served as-is.
+          touch dist/client/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: dist/client
 
   deploy:
     needs: build
