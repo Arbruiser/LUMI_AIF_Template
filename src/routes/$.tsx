@@ -1,6 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { findPage } from "@/lib/content";
-import { MarkdownRenderer } from "@/components/MarkdownRenderer";
+import { PageLayout } from "@/components/PageLayout";
 import { siteConfig } from "../../site.config";
 
 export const Route = createFileRoute("/$")({
@@ -25,5 +25,5 @@ function CatchAllPage() {
   const slug = params._splat ?? "";
   const page = findPage(slug);
   if (!page) throw notFound();
-  return <MarkdownRenderer source={page.body} />;
+  return <PageLayout page={page} />;
 }
