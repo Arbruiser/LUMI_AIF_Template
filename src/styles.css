@@ -90,11 +90,11 @@
   --radius: 0.625rem;
 
   /* Brand palette (constant across themes) */
-  --lumi-purple: oklch(0.595 0.082 290);   /* #7477b8 */
-  --lumi-blue: oklch(0.487 0.085 240);     /* #2c6789 */
-  --lumi-magenta: oklch(0.628 0.276 1);    /* #ec008c */
-  --lumi-teal: oklch(0.738 0.124 207);     /* #28c0d2 */
-  --lumi-black: oklch(0.225 0.004 17);     /* #231f20 */
+  --lumi-purple: oklch(0.594 0.099 280.92);   /* #7477b8 */
+  --lumi-blue: oklch(0.49 0.082 237.06);      /* #2c6789 */
+  --lumi-magenta: oklch(0.616 0.253 355.14);  /* #ec008c */
+  --lumi-teal: oklch(0.741 0.12 207.43);      /* #28c0d2 */
+  --lumi-black: oklch(0.244 0.006 0.59);      /* #231f20 */
 
   /* Light theme — brand mixed with white */
   --background: oklch(1 0 0);
@@ -183,8 +183,8 @@
 
   --callout-note-bg: oklch(0.27 0.04 290);
   --callout-note-border: oklch(0.4 0.08 290);
-  --callout-warning-bg: oklch(0.26 0.035 350);
-  --callout-warning-border: oklch(0.5 0.15 350);
+  --callout-warning-bg: color-mix(in oklab, var(--lumi-magenta) 10%, var(--lumi-black));
+  --callout-warning-border: color-mix(in oklab, var(--lumi-magenta) 72%, var(--lumi-black));
   --callout-info-bg: oklch(0.26 0.04 240);
   --callout-info-border: oklch(0.42 0.08 240);
   --callout-tip-bg: oklch(0.26 0.05 207);
