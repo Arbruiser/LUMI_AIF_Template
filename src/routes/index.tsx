@@ -1,6 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { findPage } from "@/lib/content";
-import { MarkdownRenderer } from "@/components/MarkdownRenderer";
+import { PageLayout } from "@/components/PageLayout";
 import { siteConfig } from "../../site.config";
 
 export const Route = createFileRoute("/")({
@@ -22,5 +22,5 @@ export const Route = createFileRoute("/")({
 function IndexPage() {
   const page = findPage("");
   if (!page) throw notFound();
-  return <MarkdownRenderer source={page.body} />;
+  return <PageLayout page={page} />;
 }
