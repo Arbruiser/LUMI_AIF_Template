@@ -6,7 +6,7 @@ import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import { Link2 } from "lucide-react";
+
 import rehypeRaw from "rehype-raw";
 import { Callout } from "./Callout";
 import { CodeBlock } from "./CodeBlock";
