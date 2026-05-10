@@ -131,11 +131,16 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
               </a>
             );
           },
+          img({ src, alt, ...rest }) {
+            return <img src={resolveAssetUrl(src)} alt={alt ?? ""} {...rest} />;
+          },
           iframe(props) {
+            const src = resolveAssetUrl(props.src);
             return (
               <div className="my-6 aspect-video w-full overflow-hidden rounded-lg border border-border">
                 <iframe
                   {...props}
+                  src={src}
                   className="h-full w-full"
                   allowFullScreen
                 />
