@@ -342,7 +342,7 @@
 }
 
 /* ============= Syntax highlighting (LUMI palette only) =============
-   Hues used: 240 (blue), 290 (purple), 1 (magenta), 207 (teal).
+   Hues used: 237 (blue), 281 (purple), 355 (magenta), 207 (teal).
    Lightness adjusted for sufficient contrast in light vs dark mode. */
 .hljs {
   background: transparent !important;
@@ -404,7 +404,7 @@
 .dark .hljs-symbol,
 .dark .hljs-bullet,
 .dark .hljs-regexp {
-  color: oklch(0.75 0.18 1); /* brighter magenta */
+  color: color-mix(in oklab, var(--lumi-magenta) 78%, white); /* brighter LUMI magenta */
 }
 
 .dark .hljs-type,
