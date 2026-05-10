@@ -1,0 +1,141 @@
+import * as React from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import rehypeHighlight from "rehype-highlight";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeRaw from "rehype-raw";
+import { Callout } from "./Callout";
+import { CodeBlock } from "./CodeBlock";
+
+interface MarkdownRendererProps {
+  source: string;
+}
+
+const CALLOUT_RE = /^\[!(note|warning|info|tip|command)\](.*)$/i;
+
+type CalloutVariant = "note" | "warning" | "info" | "tip" | "command";
+
+/** Detect GitHub-style `[!type] Title` in the first child of a blockquote. */
+function extractCallout(
+  children: React.ReactNode
+): { variant: CalloutVariant; title?: string; rest: React.ReactNode } | null {
+  const arr = React.Children.toArray(children);
+  // Skip whitespace-only text nodes that markdown adds between blocks.
+  const firstIdx = arr.findIndex(
+    (c) => !(typeof c === "string" && c.trim() === "")
+  );
+  if (firstIdx === -1) return null;
+  const first = arr[firstIdx];
+
+  if (!React.isValidElement(first)) return null;
+  const firstProps = first.props as { children?: React.ReactNode };
+  const inner = React.Children.toArray(firstProps.children);
+  if (inner.length === 0) return null;
+  const head = inner[0];
+  if (typeof head !== "string") return null;
+
+  const match = head.match(CALLOUT_RE);
+  if (!match) return null;
+
+  const variant = match[1].toLowerCase() as CalloutVariant;
+  const title = match[2].trim() || undefined;
+
+  // Remove the matched marker from the first paragraph; keep the rest.
+  const restOfFirst = inner.slice(1);
+  const newFirst = React.cloneElement(
+    first as React.ReactElement<{ children?: React.ReactNode }>,
+    { children: restOfFirst }
+  );
+  const rest = [
+    ...arr.slice(0, firstIdx),
+    ...(restOfFirst.length > 0 ? [newFirst] : []),
+    ...arr.slice(firstIdx + 1),
+  ];
+
+  return { variant, title, rest };
+}
+
+export function MarkdownRenderer({ source }: MarkdownRendererProps) {
+  return (
+    <div className="prose-lumi">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm, remarkMath]}
+        rehypePlugins={[
+          rehypeRaw,
+          rehypeSlug,
+          [rehypeAutolinkHeadings, { behavior: "wrap" }],
+          rehypeHighlight,
+          rehypeKatex,
+        ]}
+        components={{
+          blockquote({ children }) {
+            const callout = extractCallout(children);
+            if (callout) {
+              return (
+                <Callout variant={callout.variant} title={callout.title}>
+                  {callout.rest}
+                </Callout>
+              );
+            }
+            return (
+              <blockquote className="my-5 border-l-4 border-border pl-4 italic text-foreground/80">
+                {children}
+              </blockquote>
+            );
+          },
+          pre({ children }) {
+            // We render <pre> via CodeBlock from the inner <code>.
+            const child = React.Children.only(
+              children
+            ) as React.ReactElement<{ className?: string; children?: React.ReactNode }>;
+            return (
+              <CodeBlock className={child.props.className}>
+                {child.props.children}
+              </CodeBlock>
+            );
+          },
+          code({ className, children }) {
+            // Inline code (no className) — block code is handled by `pre`.
+            if (!className) {
+              return (
+                <code className="rounded bg-inline-code-bg px-1.5 py-0.5 font-mono text-[0.9em] text-inline-code-fg">
+                  {children}
+                </code>
+              );
+            }
+            return <code className={className}>{children}</code>;
+          },
+          a({ href, children }) {
+            const isExternal = href?.startsWith("http");
+            return (
+              <a
+                href={href}
+                target={isExternal ? "_blank" : undefined}
+                rel={isExternal ? "noreferrer noopener" : undefined}
+                className="text-link underline-offset-2 hover:text-lumi-magenta hover:underline"
+              >
+                {children}
+              </a>
+            );
+          },
+          iframe(props) {
+            return (
+              <div className="my-6 aspect-video w-full overflow-hidden rounded-lg border border-border">
+                <iframe
+                  {...props}
+                  className="h-full w-full"
+                  allowFullScreen
+                />
+              </div>
+            );
+          },
+        }}
+      >
+        {source}
+      </ReactMarkdown>
+    </div>
+  );
+}
