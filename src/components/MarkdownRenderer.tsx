@@ -14,7 +14,24 @@ interface MarkdownRendererProps {
   source: string;
 }
 
-const CALLOUT_RE = /^\[!(note|warning|info|tip|command)\](.*)$/i;
+/** Vite injects the deployment base path (e.g. "/lumi-aif-creator-kit/" on
+ *  GitHub Pages). Author-friendly relative paths like "./assets/foo.jpg" or
+ *  "assets/foo.jpg" need to be resolved against it so they work in dev,
+ *  preview, and on Pages without authors knowing about base URLs. */
+function resolveAssetUrl(src: string | undefined): string | undefined {
+  if (!src) return src;
+  // Absolute URLs and already-absolute paths pass through unchanged.
+  if (/^[a-z]+:\/\//i.test(src) || src.startsWith("//")) return src;
+  if (src.startsWith("/")) return src;
+  const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
+  const rel = src.replace(/^\.\//, "");
+  return `${base}/${rel}`;
+}
+
+// Match `[!type] optional title` at the start of a paragraph. Use [^\n]* so
+// the title doesn't gobble the rest of a multi-line paragraph (the body of the
+// callout is the text after the first newline).
+const CALLOUT_RE = /^\[!(note|warning|info|tip|command)\][ \t]*([^\n]*)/i;
 
 type CalloutVariant = "note" | "warning" | "info" | "tip" | "command";
 
@@ -43,8 +60,15 @@ function extractCallout(
   const variant = match[1].toLowerCase() as CalloutVariant;
   const title = match[2].trim() || undefined;
 
-  // Remove the matched marker from the first paragraph; keep the rest.
-  const restOfFirst = inner.slice(1);
+  // Keep any text in the same paragraph that came AFTER the marker line
+  // (e.g. `> [!note] Title` on line 1 and body text on line 2 — markdown
+  // joins these into one paragraph separated by `\n`).
+  const matchedLen = match[0].length;
+  const remainderHead = head.slice(matchedLen).replace(/^\n+/, "");
+  const restOfFirst: React.ReactNode[] = [
+    ...(remainderHead ? [remainderHead] : []),
+    ...inner.slice(1),
+  ];
   const newFirst = React.cloneElement(
     first as React.ReactElement<{ children?: React.ReactNode }>,
     { children: restOfFirst }
@@ -121,11 +145,16 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
               </a>
             );
           },
+          img({ src, alt, ...rest }) {
+            return <img src={resolveAssetUrl(src)} alt={alt ?? ""} {...rest} />;
+          },
           iframe(props) {
+            const src = resolveAssetUrl(props.src);
             return (
               <div className="my-6 aspect-video w-full overflow-hidden rounded-lg border border-border">
                 <iframe
                   {...props}
+                  src={src}
                   className="h-full w-full"
                   allowFullScreen
                 />
