@@ -2,7 +2,9 @@
 @source "../src";
 @import "tw-animate-css";
 @import "katex/dist/katex.min.css";
-@import "highlight.js/styles/github.css" layer(base);
+/* Syntax highlighting palette is defined below using only LUMI brand colours
+   (no github.css import — that theme ships greens, reds, and oranges that
+   are not part of the LUMI AIF palette). */
 
 @custom-variant dark (&:is(.dark *));
 
