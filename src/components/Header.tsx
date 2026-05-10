@@ -22,7 +22,7 @@ export function Header() {
         <img
           src={logoSrc}
           alt="LUMI AI Factory"
-          className="h-7 w-auto dark:invert"
+          className="h-7 w-auto invert dark:invert-0"
         />
       </div>
       <div className="ml-auto flex items-center gap-1">
