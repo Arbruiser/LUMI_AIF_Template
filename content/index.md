@@ -88,13 +88,13 @@ Drop your image in the `public/assets/` folder of the repository, then
 reference it from any `.md` file. Use the `./assets/...` form — the template
 resolves it correctly in dev, in preview, and on GitHub Pages.
 
-![LUMI AI Factory sample banner](./assets/lumi-sample.jpg)
+![LUMI data center facade from the LUMI brand guide](./assets/lumi-data-center.jpg)
 
 For a captioned, resized image, use HTML directly inside your markdown:
 
 <figure>
-  <img src="./assets/lumi-sample.jpg" style="width: 60%; margin: 0 auto; display: block;" />
-  <figcaption><em>Figure 1: A LUMI AI Factory sample banner.</em></figcaption>
+  <img src="./assets/lumi-data-center.jpg" style="width: 60%; margin: 0 auto; display: block;" />
+  <figcaption><em>Figure 1: LUMI data center visual from the LUMI brand guide.</em></figcaption>
 </figure>
 
 ---
@@ -105,5 +105,5 @@ Copy the **Embed code** from YouTube (Share → Embed) and paste the `<iframe>`
 directly into your `.md` file. It will be rendered in a responsive 16:9
 container automatically:
 
-<iframe src="https://www.youtube.com/embed/F4QrxLgjL-c" title="LUMI supercomputer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/aLae9Sd2oos?si=uJ_6ccR3ArrpVXqT" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
