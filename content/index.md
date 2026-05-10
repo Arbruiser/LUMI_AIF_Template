@@ -84,24 +84,26 @@ $$
 
 ## Embedding pictures
 
-Place your image in `content/assets/` and reference it like this:
+Drop your image in the `public/assets/` folder of the repository, then
+reference it from any `.md` file. Use the `./assets/...` form — the template
+resolves it correctly in dev, in preview, and on GitHub Pages.
 
-```markdown
-![Description of the image](./assets/spring-school.jpg)
-```
+![LUMI AI Factory sample banner](./assets/lumi-sample.jpg)
 
-For a captioned, resized image, use HTML:
+For a captioned, resized image, use HTML directly inside your markdown:
 
-```html
 <figure>
-  <img src="./assets/summer-school.jpg" style="width: 60%;" />
-  <figcaption><em>Figure 1: Spring School on Computational Chemistry 2024.</em></figcaption>
+  <img src="./assets/lumi-sample.jpg" style="width: 60%; margin: 0 auto; display: block;" />
+  <figcaption><em>Figure 1: A LUMI AI Factory sample banner.</em></figcaption>
 </figure>
-```
 
 ---
 
 ## Embedding YouTube videos
 
 Copy the **Embed code** from YouTube (Share → Embed) and paste the `<iframe>`
-directly into your `.md` file. It will be rendered in a responsive container.
+directly into your `.md` file. It will be rendered in a responsive 16:9
+container automatically:
+
+<iframe src="https://www.youtube.com/embed/F4QrxLgjL-c" title="LUMI supercomputer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
