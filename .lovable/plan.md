@@ -1,139 +1,51 @@
+Here are concrete, high-impact improvements grouped by priority. Pick any combination and I'll implement.
 
-# LUMI AIF Learning Template
+## Authoring experience (biggest wins)
 
-A modern, stylish replacement for the Just-the-Docs template. Authors only ever touch `.md` files in a `content/` folder. Everything else (sidebar, theming, callouts, dark mode) is automatic.
+1. **In-page table of contents.** Auto-generate a sticky right-hand TOC from the page's H2/H3 headings, with active-section highlight on scroll. Long chapters become much easier to navigate.
+2. **Prev / Next page navigation.** Buttons at the bottom of every page that follow `nav_order`, so students read sequentially without going back to the sidebar.
+3. **"Edit this page on GitHub" link.** `site.config.ts` already has `githubRepo` — wire it into the footer so contributors can fix typos in one click.
+4. **Search.** Client-side fuzzy search (e.g. `flexsearch` or `fuse.js`) over all markdown content, keyboard-shortcut `/` to focus, results grouped by page.
+5. **Reading progress + estimated reading time.** Small "8 min read" label under each H1, plus a thin magenta progress bar at the top of the page on scroll.
 
-## What the author experiences
+## Content & callouts
 
-1. Click **Use this template** on the GitHub repo.
-2. Enable GitHub Pages → Source: GitHub Actions.
-3. Open `content/index.md` and start writing. Add new pages by creating new `.md` files in `content/` (or a subfolder for chapters with subchapters).
-4. Push to `main` → site rebuilds and redeploys automatically.
+6. **More callout variants** authors keep asking for: `[!example]`, `[!exercise]`, `[!solution]` (collapsible), `[!quote]`. Same syntax, just more colours from the LUMI palette.
+7. **Collapsible sections** via `<details>` styled with brand colours — useful for "Show solution" or long terminal output.
+8. **Code block enhancements**: filename label above the block (` ```python title="train.py" `), line numbers, and line-range highlighting.
+9. **Footnotes and definition lists** — already supported by `remark-gfm` for footnotes; just needs styling.
 
-The `index.md` and `chapter1.md` shipped with the template double as the user manual, exactly like today — improved and updated for the new callout types.
+## Structure & navigation
 
-## Authoring model (Markdown frontmatter)
+10. **Multi-level chapter grouping.** Today the sidebar supports 1 level of nesting. Add support for `chapter1/lesson1.md` style folders so larger courses can group lessons under modules.
+11. **Breadcrumbs** above the H1 (Home › Chapter 1 › Lesson 2).
+12. **404 page** with a search box and links to the top chapters instead of a generic "page not found".
 
-Same mental model as Just-the-Docs so current authors aren't retrained:
+## Polish
 
-```yaml
----
-title: "Chapter 1 — Getting Started with LUMI"
-nav_order: 2
-parent: "Optional parent title"   # for subchapters
-has_children: true                # for chapter index pages
----
-```
+13. **Better typography.** Drop-cap on the first paragraph of each chapter, tighter heading rhythm, larger line-height for body copy on wide screens.
+14. **Image lightbox.** Click any markdown image to open it full-screen with caption.
+15. **Print stylesheet.** A clean `@media print` so students can save chapters as PDF without sidebar/header chrome.
+16. **Copy-link-to-heading.** Hover icon next to each H2/H3 that copies the deep-link to clipboard.
+17. **Mobile polish.** The sidebar already collapses, but the header logo and theme toggle could use tighter spacing on <380px screens.
 
-Supported markdown features:
-- Headings, lists, links, images (`./assets/...` relative paths work)
-- Fenced code blocks with syntax highlighting + copy button
-- Inline `code`
-- Math via KaTeX (`$inline$` and `$$block$$`)
-- YouTube embeds (paste the iframe, or use `{% youtube ID %}`-style shortcode)
-- Four callout types (see below)
-- Tables, blockquotes, horizontal rules
+## Author tooling
 
-## Callouts
+18. **`content/_template.md`** — a starter file authors can copy when adding a new page, with the front-matter and a few example blocks pre-filled.
+19. **README rewrite.** A short "How to add a chapter in 60 seconds" section aimed at non-developers.
+20. **PR preview deploys.** Add a GitHub Action that comments a Pages preview URL on every PR so authors can review their writing before merging.
 
-Authors write callouts with a simple syntax (kept identical-feeling to `{: .note }`):
+## SEO & sharing
 
-```md
-> [!note] Optional title
-> Body text in **purple** styling.
-
-> [!warning] Optional title
-> Body text in **magenta** styling.
-
-> [!tip] Optional title
-> Body text in **teal** (LUMI effect colour).
-
-> [!info] Optional title
-> Body text in **blue** styling.
-
-> [!command]
-> srun --pty bash
-```
-
-`note` (purple), `warning` (magenta), `tip` (teal #28c0d2), `info` (blue), and `command` (highlighted shell block with copy button) — all branded and theme-aware.
-
-## Layout
-
-Docs-style three-zone:
-
-```text
-┌──────────────────────────────────────────────────────┐
-│  [LUMI AIF logo]   Title                  [☼/☾] [↗] │
-├──────────┬───────────────────────────────────────────┤
-│          │                                           │
-│ Sidebar  │   Markdown content                        │
-│ (chapters│                                           │
-│  + sub-  │   Wide, comfortable reading column        │
-│  chapters│                                           │
-│  collap- │                                           │
-│  sible)  │                                           │
-│          │                                           │
-└──────────┴───────────────────────────────────────────┘
-```
-
-- Left sidebar: auto-built from `nav_order`/`parent`. Collapsible groups, current page highlighted, mini-icon collapse on small screens.
-- Header: LUMI AIF logo (light/dark variants), site title from config, theme toggle, "LUMI AIF Website" external link.
-- Main: generous reading width, anchor links on headings, "Edit this page on GitHub" link in the footer.
-- Mobile: sidebar becomes off-canvas drawer.
-
-## Theming
-
-- LUMI AIF colour tokens defined in `src/styles.css` as `oklch` semantic tokens — no hardcoded colours anywhere in components.
-- Light and dark palettes both derived from the LUMI brand palette + white mixes (light) and brand palette + black mixes (dark).
-- Default = follow system, with a header toggle that persists choice in localStorage.
-- Typography: Inter (free, close in feel to Mr Eaves XL Mod) for body and headings. Mono via JetBrains Mono. Note in the README: Mr Eaves XL Mod is licensed and not free; if the author has a license they can drop the woff2 into `public/fonts/` and uncomment one line in `styles.css`.
-
-## Site configuration
-
-A single `site.config.ts` (or `content/_config.md` frontmatter) lets the author set:
-- Site title, description
-- External "aux" links shown in the header
-- GitHub repo URL (powers the "Edit on GitHub" links)
-- Optional logo override
-
-## GitHub Pages deployment
-
-Ships with `.github/workflows/deploy.yml` that:
-- Installs deps, builds the static site (`vite build` to fully prerendered HTML)
-- Sets the correct `base` path for `https://<user>.github.io/<repo>/`
-- Deploys to the `gh-pages` environment via `actions/deploy-pages`
-
-Local preview: `bun install && bun run dev`. README documents this for the slightly-technical authors.
-
-## Updated author-facing instructions (replaces current README)
-
-Same structure as today's instructions, lightly cleaned up:
-
-1. Click **Use this template** and name the repo for your materials.
-2. Settings → Pages → Source: **GitHub Actions**.
-3. Wait for the green tick next to your commit.
-4. Click the gear ⚙ next to **About**, tick **Use your GitHub Pages website**, Save.
-5. Edit `content/index.md` (the home page — keep this filename). Add chapters by creating more `.md` files in `content/`.
-6. Push to GitHub → site redeploys automatically. Hard-refresh with Ctrl/Cmd+Shift+R if you don't see changes.
+21. **Per-page OG images.** Auto-generate a branded share card (LUMI logo + page title on magenta background) at build time using `satori`. Right now every page shares the same generic preview.
+22. **`sitemap.xml` and `robots.txt`** generated at build time from the markdown files.
+23. **JSON-LD `Article` schema** on each page using the front-matter title and description.
 
 ---
 
-## Technical details (for reference)
+## Suggested first batch (if you want a single round)
 
-- **Stack**: TanStack Start (Vite 7 + React 19) — Lovable's default. Configured for SSG/prerender so the output is fully static HTML for GitHub Pages.
-- **Markdown pipeline**: `import.meta.glob('/content/**/*.md', { query: '?raw', eager: true })` loads all markdown at build time. Parsed with `unified` + `remark-parse` + `remark-gfm` + `remark-math` + `remark-directive` (for callouts) → `rehype-katex` + `rehype-highlight` + `rehype-slug` + `rehype-autolink-headings` → React via `rehype-react`.
-- **Routing**: A single TanStack catch-all route `/$` reads the slug, looks up the parsed markdown entry, renders it. Sidebar tree is built once from the glob result.
-- **Brand assets**: LUMI AIF horizontal logo (light + dark variants) shipped in `public/brand/`. Author can swap them.
-- **Files the author should never need to open**: anything outside `content/`, `public/brand/` (optional), and `site.config.ts`.
-- **Files to add/replace**:
-  - `content/index.md`, `content/chapter1.md` — ported & expanded from uploads
-  - `src/styles.css` — full LUMI token palette (light + dark)
-  - `src/lib/content.ts` — markdown loader + nav tree builder
-  - `src/components/AppSidebar.tsx`, `Header.tsx`, `Callout.tsx`, `CodeBlock.tsx`, `ThemeToggle.tsx`
-  - `src/routes/__root.tsx` — sidebar layout shell
-  - `src/routes/index.tsx` → renders `content/index.md`
-  - `src/routes/$.tsx` — catch-all for other pages
-  - `.github/workflows/deploy.yml`
-  - `site.config.ts`
-  - `README.md` — author instructions
-- **Repo**: code lands in the existing Lovable project; the user pushes it to `Arbruiser/LUMI_AIF_template_Loveable` from the Lovable GitHub integration.
+The combination that gives the best perceived upgrade in one go:
+**1 (TOC) + 2 (Prev/Next) + 3 (Edit on GitHub) + 11 (Breadcrumbs) + 16 (heading anchor copy)** — all navigation/orientation features, all touch the same `MarkdownRenderer` + route layout, and together they make the site feel like a real documentation product (think Docusaurus / Mintlify) without changing how authors write markdown.
+
+Tell me which numbers you want and I'll implement.
