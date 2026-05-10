@@ -14,7 +14,10 @@ interface MarkdownRendererProps {
   source: string;
 }
 
-const CALLOUT_RE = /^\[!(note|warning|info|tip|command)\](.*)$/i;
+// Match `[!type] optional title` at the start of a paragraph. Use [^\n]* so
+// the title doesn't gobble the rest of a multi-line paragraph (the body of the
+// callout is the text after the first newline).
+const CALLOUT_RE = /^\[!(note|warning|info|tip|command)\][ \t]*([^\n]*)/i;
 
 type CalloutVariant = "note" | "warning" | "info" | "tip" | "command";
 
