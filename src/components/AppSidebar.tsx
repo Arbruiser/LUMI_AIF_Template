@@ -20,7 +20,6 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { buildNavTree, type NavNode } from "@/lib/content";
-import { siteConfig } from "../../site.config";
 
 const logoSrc = `${import.meta.env.BASE_URL}assets/lumi-ai-factory-logo.png`;
 
