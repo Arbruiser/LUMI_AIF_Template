@@ -5,7 +5,7 @@ import { MarkdownRenderer } from "./MarkdownRenderer";
 import { TableOfContents } from "./TableOfContents";
 import { extractToc } from "@/lib/toc";
 import { getBreadcrumbs, getPrevNext, type Page } from "@/lib/content";
-import { siteConfig } from "../../site.config";
+
 
 interface Props {
   page: Page;
@@ -21,10 +21,6 @@ export function PageLayout({ page }: Props) {
     () => getPrevNext(page.slug),
     [page.slug]
   );
-
-  const editUrl =
-    siteConfig.githubRepo &&
-    `https://github.com/${siteConfig.githubRepo}/edit/${siteConfig.githubBranch}/${page.path}`;
 
   return (
     <div className="grid grid-cols-1 gap-10 xl:grid-cols-[minmax(0,1fr)_220px]">
