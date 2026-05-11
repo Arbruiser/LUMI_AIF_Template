@@ -170,10 +170,10 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
     const el = containerRef.current;
     if (!el) return;
     const onClick = (e: MouseEvent) => {
-      const target = (e.target as HTMLElement).closest("a.heading-anchor");
+      const target = (e.target as HTMLElement).closest("button.heading-anchor");
       if (!target) return;
       e.preventDefault();
-      const href = (target as HTMLAnchorElement).getAttribute("href");
+      const href = (target as HTMLButtonElement).dataset.href;
       if (!href || !href.startsWith("#")) return;
       const url = window.location.origin + window.location.pathname + href;
       if (navigator.clipboard) {
@@ -192,17 +192,7 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
         rehypePlugins={[
           rehypeRaw,
           rehypeSlug,
-          [
-            rehypeAutolinkHeadings,
-            {
-              behavior: "append",
-              properties: {
-                className: "heading-anchor",
-                ariaLabel: "Link to this section",
-              },
-              content: linkIconSvg,
-            },
-          ],
+          rehypeCopyHeadingButtons,
           rehypeHighlight,
           rehypeHoistCodeMeta,
           rehypeKatex,
