@@ -192,6 +192,12 @@
   --inline-code-bg: oklch(0.28 0.018 250);
   --inline-code-fg: oklch(0.82 0.08 207);
 
+  --terminal-bg: oklch(0.14 0.012 250);
+  --terminal-chrome: oklch(0.22 0.014 250);
+  --terminal-border: oklch(1 0 0 / 12%);
+  --terminal-fg: oklch(0.95 0.012 207);
+  --terminal-prompt: oklch(0.82 0.14 207);
+
   --callout-note-bg: oklch(0.27 0.04 290);
   --callout-note-border: oklch(0.4 0.08 290);
   --callout-warning-bg: oklch(0.32 0.13 355.14);
