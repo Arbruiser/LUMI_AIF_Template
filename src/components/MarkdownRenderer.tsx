@@ -143,13 +143,12 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
     const onClick = (e: MouseEvent) => {
       const target = (e.target as HTMLElement).closest("a.heading-anchor");
       if (!target) return;
+      e.preventDefault();
       const href = (target as HTMLAnchorElement).getAttribute("href");
       if (!href || !href.startsWith("#")) return;
       const url = window.location.origin + window.location.pathname + href;
       if (navigator.clipboard) {
-        e.preventDefault();
         navigator.clipboard.writeText(url).catch(() => {});
-        window.history.replaceState(null, "", href);
         toast.success("Link copied to clipboard");
       }
     };
