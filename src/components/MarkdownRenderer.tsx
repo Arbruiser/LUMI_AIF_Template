@@ -255,7 +255,6 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
       >
         <DialogContent
           className="max-w-[95vw] border-0 bg-transparent p-0 shadow-none sm:max-w-[90vw]"
-          showCloseButton
         >
           <VisuallyHidden>
             <DialogTitle>{lightbox?.alt || "Image preview"}</DialogTitle>
