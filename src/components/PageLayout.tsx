@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronLeft, ChevronRight, Pencil } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 import { TableOfContents } from "./TableOfContents";
@@ -59,20 +59,6 @@ export function PageLayout({ page }: Props) {
         )}
 
         <MarkdownRenderer source={page.body} />
-
-        {editUrl && (
-          <div className="mt-12 border-t border-border pt-6">
-            <a
-              href={editUrl}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-lumi-magenta"
-            >
-              <Pencil className="h-3.5 w-3.5" />
-              Edit this page on GitHub
-            </a>
-          </div>
-        )}
 
         {(prev || next) && (
           <nav

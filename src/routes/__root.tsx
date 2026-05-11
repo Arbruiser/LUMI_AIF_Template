@@ -139,9 +139,6 @@ function RootComponent() {
                 <Outlet />
               </div>
             </main>
-            <footer className="border-t border-border px-6 py-6 text-center text-xs text-muted-foreground">
-              Built with the LUMI AI Factory learning template
-            </footer>
           </SidebarInset>
         </SidebarProvider>
       </ThemeProvider>
