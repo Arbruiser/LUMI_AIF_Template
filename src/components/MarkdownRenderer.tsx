@@ -267,17 +267,27 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
               </a>
             );
           },
-          img({ src, alt }) {
+          img(props) {
+            const { src, alt, style, width, height, className } =
+              props as React.ImgHTMLAttributes<HTMLImageElement>;
             const resolved = resolveAssetUrl(src) ?? "";
             const altText = alt ?? "";
             return (
               <button
                 type="button"
                 onClick={() => setLightbox({ src: resolved, alt: altText })}
-                className="block w-full cursor-zoom-in border-0 bg-transparent p-0"
+                className="cursor-zoom-in border-0 bg-transparent p-0 max-w-full"
+                style={{ display: "block", margin: "1.25rem 0" }}
                 aria-label={altText ? `Open image: ${altText}` : "Open image"}
               >
-                <img src={resolved} alt={altText} />
+                <img
+                  src={resolved}
+                  alt={altText}
+                  style={style}
+                  width={width}
+                  height={height}
+                  className={className}
+                />
               </button>
             );
           },
