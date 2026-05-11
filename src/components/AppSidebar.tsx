@@ -36,7 +36,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader className="border-b border-sidebar-border p-3">
+      <SidebarHeader className="h-14 flex-row items-center border-b border-sidebar-border px-3 py-0">
         <Link to="/" className="block w-full">
           <img
             src={logoLight}
