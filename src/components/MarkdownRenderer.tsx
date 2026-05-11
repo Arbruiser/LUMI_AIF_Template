@@ -5,7 +5,6 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { fromHtmlIsomorphic } from "hast-util-from-html-isomorphic";
 
 import rehypeRaw from "rehype-raw";
@@ -40,6 +39,36 @@ function rehypeHoistCodeMeta() {
           node.children[0].data.meta;
       }
     });
+  };
+}
+
+function rehypeCopyHeadingButtons() {
+  return (tree: unknown) => {
+    visit(
+      tree as never,
+      "element",
+      (node: {
+        tagName?: string;
+        properties?: Record<string, unknown>;
+        children?: unknown[];
+      }) => {
+        if (!/^h[1-4]$/.test(node.tagName ?? "")) return;
+        const id = node.properties?.id;
+        if (typeof id !== "string") return;
+        node.children = node.children ?? [];
+        node.children.push({
+          type: "element",
+          tagName: "button",
+          properties: {
+            type: "button",
+            className: ["heading-anchor"],
+            ariaLabel: "Copy link to this section",
+            dataHref: `#${id}`,
+          },
+          children: linkIconSvg,
+        });
+      }
+    );
   };
 }
 
