@@ -548,18 +548,19 @@ pre.with-line-numbers .code-line::before {
   color: var(--color-terminal-fg) !important;
 }
 
-/* Render a `$` prompt before each non-empty logical line. We split on \n
-   via a CSS trick: each line wrapped by hljs is a span — but plain text is
-   not. Simpler approach: prefix the whole block with a single prompt and
-   style the leading character via ::before on the <code>. To get a prompt
-   per line we use white-space + a background gradient hack would be hard;
-   instead, prepend a prompt to the first line only and rely on the
-   terminal chrome to set the visual context. */
-.terminal-block pre code::before {
-  content: "user@lumi:~$ ";
+.terminal-line {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+}
+
+.terminal-prompt {
   color: var(--color-terminal-prompt);
   font-weight: 600;
   user-select: none;
+}
+
+.terminal-command {
+  min-width: 0;
 }
 
 /* Ubuntu-style title bar (flat dark gray, like GNOME headerbar) */
