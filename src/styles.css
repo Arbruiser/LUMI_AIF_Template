@@ -465,14 +465,19 @@
 }
 
 /* ============= Terminal-styled bash code blocks ============= */
+.terminal-block {
+  background: var(--color-terminal-bg);
+}
+
 .terminal-block pre {
-  background: transparent;
-  color: var(--color-terminal-fg);
+  background: var(--color-terminal-bg) !important;
+  color: var(--color-terminal-fg) !important;
 }
 
 .terminal-block pre code {
   display: block;
   counter-reset: tline;
+  color: var(--color-terminal-fg) !important;
 }
 
 /* Render a `$` prompt before each non-empty logical line. We split on \n
@@ -516,7 +521,10 @@
 
 /* Brighten hljs tokens inside terminal blocks so they read on the dark bg
    regardless of theme. */
-.terminal-block .hljs,
+.terminal-block .hljs {
+  color: var(--color-terminal-fg) !important;
+}
+
 .terminal-block .hljs-keyword,
 .terminal-block .hljs-selector-tag,
 .terminal-block .hljs-built_in,
@@ -524,7 +532,8 @@
 .terminal-block .hljs-tag,
 .terminal-block .hljs-title,
 .terminal-block .hljs-section {
-  color: var(--color-terminal-prompt) !important;
+  color: var(--color-terminal-fg) !important;
+  font-weight: 500;
 }
 
 .terminal-block .hljs-string,
