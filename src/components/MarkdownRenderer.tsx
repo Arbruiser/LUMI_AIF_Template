@@ -6,9 +6,16 @@ import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import { fromHtmlIsomorphic } from "hast-util-from-html-isomorphic";
 
 import rehypeRaw from "rehype-raw";
+
+const linkIconSvg = fromHtmlIsomorphic(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>`,
+  { fragment: true }
+).children;
 import { toast } from "sonner";
+import { visit } from "unist-util-visit";
 import { Callout } from "./Callout";
 import { CodeBlock } from "./CodeBlock";
 import {
@@ -17,6 +24,24 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+
+/** Hoist `data.meta` from <code> onto its parent <pre> so it survives the
+ *  hast→React boundary and is reachable via JSX props. */
+function rehypeHoistCodeMeta() {
+  return (tree: unknown) => {
+    visit(tree as never, "element", (node: { tagName?: string; properties?: Record<string, unknown>; children?: Array<{ tagName?: string; data?: { meta?: string } }> }) => {
+      if (
+        node.tagName === "pre" &&
+        node.children?.[0]?.tagName === "code" &&
+        node.children[0].data?.meta
+      ) {
+        node.properties = node.properties ?? {};
+        (node.properties as Record<string, unknown>).dataMeta =
+          node.children[0].data.meta;
+      }
+    });
+  };
+}
 
 interface MarkdownRendererProps {
   source: string;
@@ -151,30 +176,11 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
                 className: "heading-anchor",
                 ariaLabel: "Link to this section",
               },
-              content: {
-                type: "element",
-                tagName: "svg",
-                properties: {
-                  xmlns: "http://www.w3.org/2000/svg",
-                  viewBox: "0 0 24 24",
-                  fill: "none",
-                  stroke: "currentColor",
-                  strokeWidth: 2.25,
-                  strokeLinecap: "round",
-                  strokeLinejoin: "round",
-                  width: 16,
-                  height: 16,
-                  ariaHidden: "true",
-                },
-                children: [
-                  { type: "element", tagName: "path", properties: { d: "M9 17H7A5 5 0 0 1 7 7h2" }, children: [] },
-                  { type: "element", tagName: "path", properties: { d: "M15 7h2a5 5 0 1 1 0 10h-2" }, children: [] },
-                  { type: "element", tagName: "line", properties: { x1: 8, y1: 12, x2: 16, y2: 12 }, children: [] },
-                ],
-              },
+              content: linkIconSvg,
             },
           ],
           rehypeHighlight,
+          rehypeHoistCodeMeta,
           rehypeKatex,
         ]}
         components={{
@@ -193,16 +199,13 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
               </blockquote>
             );
           },
-          pre({ children, node }) {
+          pre(props) {
+            const { children } = props;
+            const dataMeta = (props as { dataMeta?: string }).dataMeta;
             const child = React.Children.only(
               children
             ) as React.ReactElement<{ className?: string; children?: React.ReactNode }>;
-            // react-markdown / remark-rehype attaches the original fence
-            // info-string as `data.meta` on the inner code hast node.
-            const codeNode = (node as { children?: Array<{ data?: { meta?: string } }> })
-              ?.children?.[0];
-            const meta = codeNode?.data?.meta;
-            const parsed = parseCodeMeta(meta);
+            const parsed = parseCodeMeta(dataMeta);
             return (
               <CodeBlock
                 className={child.props.className}
