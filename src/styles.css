@@ -396,20 +396,21 @@ html {
 }
 
 .prose-lumi .heading-anchor {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline;
   margin-left: 0.4em;
   color: var(--lumi-magenta);
   opacity: 0;
   transition: opacity 0.15s ease;
-  vertical-align: middle;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 .prose-lumi .heading-anchor svg {
-  display: block;
+  display: inline;
+  vertical-align: -0.15em;
 }
 
+.prose-lumi h1:hover .heading-anchor,
 .prose-lumi h2:hover .heading-anchor,
 .prose-lumi h3:hover .heading-anchor,
 .prose-lumi h4:hover .heading-anchor,
