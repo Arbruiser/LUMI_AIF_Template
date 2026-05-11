@@ -5,7 +5,6 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { fromHtmlIsomorphic } from "hast-util-from-html-isomorphic";
 
 import rehypeRaw from "rehype-raw";
@@ -40,6 +39,36 @@ function rehypeHoistCodeMeta() {
           node.children[0].data.meta;
       }
     });
+  };
+}
+
+function rehypeCopyHeadingButtons() {
+  return (tree: unknown) => {
+    visit(
+      tree as never,
+      "element",
+      (node: {
+        tagName?: string;
+        properties?: Record<string, unknown>;
+        children?: unknown[];
+      }) => {
+        if (!/^h[1-4]$/.test(node.tagName ?? "")) return;
+        const id = node.properties?.id;
+        if (typeof id !== "string") return;
+        node.children = node.children ?? [];
+        node.children.push({
+          type: "element",
+          tagName: "button",
+          properties: {
+            type: "button",
+            className: ["heading-anchor"],
+            ariaLabel: "Copy link to this section",
+            dataHref: `#${id}`,
+          },
+          children: linkIconSvg,
+        });
+      }
+    );
   };
 }
 
@@ -141,15 +170,14 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
     const el = containerRef.current;
     if (!el) return;
     const onClick = (e: MouseEvent) => {
-      const target = (e.target as HTMLElement).closest("a.heading-anchor");
+      const target = (e.target as HTMLElement).closest("button.heading-anchor");
       if (!target) return;
-      const href = (target as HTMLAnchorElement).getAttribute("href");
+      e.preventDefault();
+      const href = (target as HTMLButtonElement).dataset.href;
       if (!href || !href.startsWith("#")) return;
       const url = window.location.origin + window.location.pathname + href;
       if (navigator.clipboard) {
-        e.preventDefault();
         navigator.clipboard.writeText(url).catch(() => {});
-        window.history.replaceState(null, "", href);
         toast.success("Link copied to clipboard");
       }
     };
@@ -162,21 +190,11 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkMath]}
         rehypePlugins={[
+          rehypeHoistCodeMeta,
           rehypeRaw,
           rehypeSlug,
-          [
-            rehypeAutolinkHeadings,
-            {
-              behavior: "append",
-              properties: {
-                className: "heading-anchor",
-                ariaLabel: "Link to this section",
-              },
-              content: linkIconSvg,
-            },
-          ],
+          rehypeCopyHeadingButtons,
           rehypeHighlight,
-          rehypeHoistCodeMeta,
           rehypeKatex,
         ]}
         components={{
@@ -198,9 +216,19 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
           pre(props) {
             const { children } = props;
             const p = props as Record<string, unknown>;
+            const node = p.node as
+              | {
+                  children?: Array<{
+                    tagName?: string;
+                    data?: { meta?: string };
+                  }>;
+                }
+              | undefined;
             const dataMeta =
               (p.dataMeta as string | undefined) ??
-              (p["data-meta"] as string | undefined);
+              (p["data-meta"] as string | undefined) ??
+              node?.children?.find((child) => child.tagName === "code")?.data
+                ?.meta;
             const child = React.Children.only(
               children
             ) as React.ReactElement<{ className?: string; children?: React.ReactNode }>;
