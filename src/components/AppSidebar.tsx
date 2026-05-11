@@ -77,8 +77,16 @@ function NavItem({ node, pathname }: { node: NavNode; pathname: string }) {
   if (node.children.length === 0) {
     return (
       <SidebarMenuItem>
-        <SidebarMenuButton asChild isActive={active}>
-          <Link to={href}>{node.page.frontmatter.title}</Link>
+        <SidebarMenuButton
+          asChild
+          isActive={active}
+          className="h-auto min-h-8 py-1.5 [&>span:last-child]:whitespace-normal [&>span:last-child]:truncate-none"
+        >
+          <Link to={href}>
+            <span className="whitespace-normal leading-snug">
+              {node.page.frontmatter.title}
+            </span>
+          </Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
     );
