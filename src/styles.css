@@ -138,11 +138,11 @@
   --inline-code-bg: oklch(0.945 0.008 240);
   --inline-code-fg: var(--lumi-blue);
 
-  --terminal-bg: oklch(0.22 0.05 350);          /* Ubuntu aubergine #300A24 */
+  --terminal-bg: #300a24;
   --terminal-chrome: oklch(0.32 0.012 280);     /* Ubuntu titlebar */
   --terminal-chrome-fg: oklch(0.96 0.005 280);
   --terminal-border: oklch(0.18 0.04 350);
-  --terminal-fg: oklch(0.97 0.005 280);
+  --terminal-fg: #ffffff;
   --terminal-prompt: oklch(0.78 0.18 142);      /* Ubuntu green prompt */
 
   --callout-note-bg: oklch(0.97 0.018 290);
@@ -194,11 +194,11 @@
   --inline-code-bg: oklch(0.28 0.018 250);
   --inline-code-fg: oklch(0.82 0.08 207);
 
-  --terminal-bg: oklch(0.22 0.05 350);
+  --terminal-bg: #300a24;
   --terminal-chrome: oklch(0.28 0.012 280);
   --terminal-chrome-fg: oklch(0.96 0.005 280);
   --terminal-border: oklch(0.16 0.04 350);
-  --terminal-fg: oklch(0.97 0.005 280);
+  --terminal-fg: #ffffff;
   --terminal-prompt: oklch(0.78 0.18 142);
 
   --callout-note-bg: oklch(0.27 0.04 290);
@@ -489,28 +489,29 @@
   user-select: none;
 }
 
-/* Ubuntu-style title bar */
+/* Ubuntu-style title bar (flat dark gray, like GNOME headerbar) */
 .terminal-chrome {
-  background: linear-gradient(to bottom, oklch(0.36 0.012 280), oklch(0.26 0.012 280));
-  color: var(--color-terminal-chrome-fg);
-  border-bottom: 1px solid oklch(0 0 0 / 30%);
+  background: #2c2c2c;
+  color: #ffffff;
+  border-bottom: 1px solid #1a1a1a;
 }
 
 .terminal-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 1.25rem;
+  height: 1.25rem;
   border-radius: 9999px;
-  background: oklch(0.45 0.012 280);
-  color: oklch(0.96 0.005 280);
+  background: #4a4a4a;
+  color: #ffffff;
   font-size: 0.7rem;
   line-height: 1;
 }
 
 .terminal-btn-close {
-  background: #e95420; /* Ubuntu orange */
+  background: transparent;
+  color: #ffffff;
 }
 
 /* Brighten hljs tokens inside terminal blocks so they read on the dark bg
