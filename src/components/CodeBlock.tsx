@@ -93,7 +93,15 @@ export function CodeBlock({
   const isTerminal = lang ? TERMINAL_LANGS.has(lang.toLowerCase()) : false;
 
   const onCopy = async () => {
-    const text = ref.current?.innerText ?? "";
+    let text = "";
+    if (isTerminal && ref.current) {
+      const cmds = ref.current.querySelectorAll(".terminal-command");
+      text = Array.from(cmds)
+        .map((el) => (el as HTMLElement).innerText)
+        .join("\n");
+    } else {
+      text = ref.current?.innerText ?? "";
+    }
     await navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
