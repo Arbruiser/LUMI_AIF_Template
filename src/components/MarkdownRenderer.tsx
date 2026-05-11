@@ -201,7 +201,10 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
           },
           pre(props) {
             const { children } = props;
-            const dataMeta = (props as { dataMeta?: string }).dataMeta;
+            const p = props as Record<string, unknown>;
+            const dataMeta =
+              (p.dataMeta as string | undefined) ??
+              (p["data-meta"] as string | undefined);
             const child = React.Children.only(
               children
             ) as React.ReactElement<{ className?: string; children?: React.ReactNode }>;
