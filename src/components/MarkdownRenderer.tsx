@@ -6,8 +6,14 @@ import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import { fromHtmlIsomorphic } from "hast-util-from-html-isomorphic";
 
 import rehypeRaw from "rehype-raw";
+
+const linkIconSvg = fromHtmlIsomorphic(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>`,
+  { fragment: true }
+).children;
 import { toast } from "sonner";
 import { Callout } from "./Callout";
 import { CodeBlock } from "./CodeBlock";
