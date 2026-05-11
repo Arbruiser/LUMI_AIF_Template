@@ -74,6 +74,24 @@ result = math.sqrt(25)
 print(f"The calculation result is: {result}")
 ```
 
+You can optionally label a code block with a filename — handy when the
+snippet belongs to a specific script. Just add `title="..."` after the
+language:
+
+````md
+```python title="train.py"
+import torch
+model = torch.nn.Linear(10, 1)
+```
+````
+
+…which renders as:
+
+```python title="train.py"
+import torch
+model = torch.nn.Linear(10, 1)
+```
+
 - **Terminal flair**: tag a code block with `bash`, `sh`, `shell`, or `zsh`
   and it will render as a styled terminal window — perfect for showing
   HPC commands students should run themselves:
