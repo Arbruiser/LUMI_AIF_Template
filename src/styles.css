@@ -379,27 +379,37 @@ html {
   text-align: center;
 }
 
-.prose-lumi h1 a,
-.prose-lumi h2 a,
-.prose-lumi h3 a,
-.prose-lumi h4 a {
+.prose-lumi h1 a:not(.heading-anchor),
+.prose-lumi h2 a:not(.heading-anchor),
+.prose-lumi h3 a:not(.heading-anchor),
+.prose-lumi h4 a:not(.heading-anchor) {
   color: inherit;
   text-decoration: none;
 }
 
 /* Heading anchors: appear on hover, copy deep-link to clipboard. */
+.prose-lumi h1,
 .prose-lumi h2,
 .prose-lumi h3,
 .prose-lumi h4 {
   scroll-margin-top: 5rem;
   position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4em;
 }
 
 .prose-lumi .heading-anchor {
-  float: right;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
   margin-left: 0.4em;
-  margin-top: 0.35em;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: var(--lumi-magenta);
+  cursor: pointer;
   opacity: 0;
   transition: opacity 0.15s ease;
   text-decoration: none;
@@ -544,18 +554,19 @@ pre.with-line-numbers .code-line::before {
   color: var(--color-terminal-fg) !important;
 }
 
-/* Render a `$` prompt before each non-empty logical line. We split on \n
-   via a CSS trick: each line wrapped by hljs is a span — but plain text is
-   not. Simpler approach: prefix the whole block with a single prompt and
-   style the leading character via ::before on the <code>. To get a prompt
-   per line we use white-space + a background gradient hack would be hard;
-   instead, prepend a prompt to the first line only and rely on the
-   terminal chrome to set the visual context. */
-.terminal-block pre code::before {
-  content: "user@lumi:~$ ";
+.terminal-line {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+}
+
+.terminal-prompt {
   color: var(--color-terminal-prompt);
   font-weight: 600;
   user-select: none;
+}
+
+.terminal-command {
+  min-width: 0;
 }
 
 /* Ubuntu-style title bar (flat dark gray, like GNOME headerbar) */
