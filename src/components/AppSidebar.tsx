@@ -39,12 +39,12 @@ export function AppSidebar() {
       <SidebarHeader className="border-b border-sidebar-border p-3">
         <Link to="/" className="block w-full">
           <img
-            src={logoDark}
+            src={logoLight}
             alt="LUMI AI Factory"
             className="w-full h-auto block dark:hidden"
           />
           <img
-            src={logoLight}
+            src={logoDark}
             alt="LUMI AI Factory"
             className="w-full h-auto hidden dark:block"
           />
