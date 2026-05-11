@@ -30,6 +30,11 @@ nav_order: 1
 ---
 ```
 
+> [!warning] Before you publish
+> Double-check `nav_order` across all pages so the sidebar reads
+> top-to-bottom in the order you teach. Mismatched ordering is the most
+> common authoring mistake.
+
 The `parent` value must match the parent page's `title` exactly.
 
 > [!tip]
