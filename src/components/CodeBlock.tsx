@@ -64,6 +64,21 @@ function wrapLines(
   ));
 }
 
+function wrapTerminalLines(children: React.ReactNode): React.ReactNode {
+  const lines = splitIntoLines(children);
+  while (lines.length > 1 && lines[lines.length - 1].length === 0) lines.pop();
+  return lines.map((parts, i) => (
+    <span key={i} className="terminal-line code-line">
+      <span className="terminal-prompt" aria-hidden="true">
+        user@lumi:~$&nbsp;
+      </span>
+      <span className="terminal-command">
+        {parts.length > 0 ? parts : "\u200B"}
+      </span>
+    </span>
+  ));
+}
+
 export function CodeBlock({
   className,
   children,
@@ -84,7 +99,9 @@ export function CodeBlock({
     setTimeout(() => setCopied(false), 1500);
   };
 
-  const wrapped = wrapLines(children, highlightLines);
+  const wrapped = isTerminal
+    ? wrapTerminalLines(children)
+    : wrapLines(children, highlightLines);
 
   if (isTerminal) {
     return (
