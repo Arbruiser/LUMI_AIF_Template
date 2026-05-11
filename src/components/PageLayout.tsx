@@ -24,7 +24,7 @@ export function PageLayout({ page }: Props) {
 
   return (
     <div className="grid grid-cols-1 gap-10 xl:grid-cols-[minmax(0,1fr)_220px]">
-      <article className="min-w-0">
+      <article className="min-w-0 mx-auto w-full max-w-[78ch] xl:mx-0 xl:max-w-none">
         {breadcrumbs.length > 1 && (
           <nav
             aria-label="Breadcrumb"
