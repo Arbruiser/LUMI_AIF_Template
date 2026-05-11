@@ -393,12 +393,16 @@ html {
 .prose-lumi h4 {
   scroll-margin-top: 5rem;
   position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4em;
 }
 
 .prose-lumi .heading-anchor {
-  float: right;
-  margin-left: 0.4em;
-  margin-top: 0.35em;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  margin-left: auto;
   color: var(--lumi-magenta);
   opacity: 0;
   transition: opacity 0.15s ease;
