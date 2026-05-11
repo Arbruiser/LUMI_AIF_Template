@@ -134,8 +134,8 @@ function RootComponent() {
           <AppSidebar />
           <SidebarInset className="flex min-h-screen flex-col">
             <Header />
-            <main className="flex-1 px-4 py-8 sm:px-8 lg:px-12">
-              <div className="mx-auto w-full max-w-7xl">
+            <main className="flex-1 px-4 py-8 sm:px-8 lg:px-12 xl:px-16">
+              <div className="mx-auto w-full max-w-[1400px] 2xl:max-w-[1600px]">
                 <Outlet />
               </div>
             </main>
