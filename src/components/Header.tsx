@@ -10,21 +10,12 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/theme";
 import { siteConfig } from "../../site.config";
 
-const logoSrc = `${import.meta.env.BASE_URL}assets/lumi-ai-factory-logo.png`;
-
 export function Header() {
   const { theme, resolved, setTheme } = useTheme();
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-border bg-background/85 px-3 backdrop-blur">
       <SidebarTrigger className="text-foreground" />
-      <div className="ml-1 hidden items-center gap-2 md:flex">
-        <img
-          src={logoSrc}
-          alt="LUMI AI Factory"
-          className="h-7 w-auto invert dark:invert-0"
-        />
-      </div>
       <div className="ml-auto flex items-center gap-1">
         {siteConfig.auxLinks.map((link) => (
           <Button
