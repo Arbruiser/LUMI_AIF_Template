@@ -4,12 +4,65 @@
 //     componentTagger (dev-only), VITE_* env injection, @ path alias, React/TanStack dedupe,
 //     error logger plugins, and sandbox detection (port/host/strictPort).
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { readdirSync, readFileSync, statSync, writeFileSync, mkdirSync } from "node:fs";
+import { join, relative } from "node:path";
+import type { Plugin } from "vite";
+import { siteConfig } from "./site.config";
 
-// Static-site build for GitHub Pages:
-//   - Disable the Cloudflare Workers adapter (we don't deploy to a Worker).
-//   - Enable TanStack Start's SPA mode so the build prerenders to static HTML.
-//   - Honour VITE_BASE_PATH so the site works under /<repo>/ on project pages.
 const basePath = process.env.VITE_BASE_PATH || "/";
+
+function walkMd(dir: string, out: string[] = []): string[] {
+  for (const name of readdirSync(dir)) {
+    const full = join(dir, name);
+    const s = statSync(full);
+    if (s.isDirectory()) walkMd(full, out);
+    else if (name.endsWith(".md")) out.push(full);
+  }
+  return out;
+}
+
+function fileToSlug(filePath: string): string {
+  const rel = relative("content", filePath).replace(/\\/g, "/").replace(/\.md$/, "");
+  return rel === "index" ? "" : rel;
+}
+
+function joinUrl(a: string, b: string) {
+  return `${a.replace(/\/$/, "")}/${b.replace(/^\//, "")}`;
+}
+
+/** Generate sitemap.xml + robots.txt at build time from content/**/*.md. */
+function sitemapPlugin(): Plugin {
+  let outDir = "dist";
+  return {
+    name: "lumi-sitemap",
+    apply: "build",
+    configResolved(cfg) {
+      outDir = cfg.build.outDir;
+    },
+    closeBundle() {
+      try {
+        const files = walkMd("content");
+        const base = (siteConfig.siteUrl || "").replace(/\/$/, "");
+        if (!base) return;
+        const urls = files.map((f) => {
+          const slug = fileToSlug(f);
+          const loc = slug === "" ? `${base}/` : `${base}/${slug}`;
+          const lastmod = statSync(f).mtime.toISOString().slice(0, 10);
+          return `  <url><loc>${loc}</loc><lastmod>${lastmod}</lastmod></url>`;
+        });
+        const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`;
+        const robots = `User-agent: *\nAllow: /\n\nSitemap: ${joinUrl(base, "sitemap.xml")}\n`;
+        mkdirSync(outDir, { recursive: true });
+        writeFileSync(join(outDir, "sitemap.xml"), xml);
+        writeFileSync(join(outDir, "robots.txt"), robots);
+      } catch (e) {
+        // Don't fail the build on sitemap errors.
+        // eslint-disable-next-line no-console
+        console.warn("[lumi-sitemap] skipped:", e);
+      }
+    },
+  };
+}
 
 export default defineConfig({
   cloudflare: false,
@@ -20,5 +73,6 @@ export default defineConfig({
   },
   vite: {
     base: basePath,
+    plugins: [sitemapPlugin()],
   },
 });

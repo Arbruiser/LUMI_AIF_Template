@@ -6,6 +6,8 @@ export const siteConfig = {
   title: "LUMI AIF Learning Materials",
   /** Default meta description and og:description. */
   description: "Official training documentation for CSC staff and partners.",
+  /** Canonical site URL (no trailing slash). Used for sitemap.xml + robots.txt. */
+  siteUrl: "https://arbruiser.github.io/LUMI_AIF_template_Loveable",
   /** External links shown on the right of the header. */
   auxLinks: [
     { label: "LUMI AIF Website", href: "https://lumi-ai-factory.eu/" },
