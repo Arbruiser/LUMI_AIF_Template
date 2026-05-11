@@ -198,9 +198,19 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
           pre(props) {
             const { children } = props;
             const p = props as Record<string, unknown>;
+            const node = p.node as
+              | {
+                  children?: Array<{
+                    tagName?: string;
+                    data?: { meta?: string };
+                  }>;
+                }
+              | undefined;
             const dataMeta =
               (p.dataMeta as string | undefined) ??
-              (p["data-meta"] as string | undefined);
+              (p["data-meta"] as string | undefined) ??
+              node?.children?.find((child) => child.tagName === "code")?.data
+                ?.meta;
             const child = React.Children.only(
               children
             ) as React.ReactElement<{ className?: string; children?: React.ReactNode }>;
