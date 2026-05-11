@@ -12,43 +12,52 @@ interface CodeBlockProps {
 
 const TERMINAL_LANGS = new Set(["bash", "sh", "shell", "zsh", "console"]);
 
-/** Wrap each newline-separated line of an already-highlighted code tree in a
- *  <span class="code-line"> so we can apply line numbers and per-line
- *  highlighting via CSS. Walks both text nodes and span children. */
+/** Recursively split a (possibly nested) React tree into per-line arrays.
+ *  Newlines may be buried inside spans emitted by rehype-highlight, so we
+ *  walk children and clone wrapping elements once per line. */
+function splitIntoLines(node: React.ReactNode): React.ReactNode[][] {
+  if (node == null || node === false || node === true) return [[]];
+  if (Array.isArray(node)) {
+    let out: React.ReactNode[][] = [[]];
+    for (const child of node) {
+      const sub = splitIntoLines(child);
+      if (sub.length === 0) continue;
+      out[out.length - 1].push(...sub[0]);
+      for (let i = 1; i < sub.length; i++) out.push([...sub[i]]);
+    }
+    return out;
+  }
+  if (typeof node === "string" || typeof node === "number") {
+    const parts = String(node).split("\n");
+    return parts.map((p) => (p.length ? [p] : []));
+  }
+  if (React.isValidElement(node)) {
+    const props = (node as React.ReactElement<{ children?: React.ReactNode }>).props;
+    const inner = splitIntoLines(props.children);
+    return inner.map((lineChildren, i) => {
+      if (lineChildren.length === 0) return [];
+      return [
+        React.cloneElement(
+          node as React.ReactElement<{ children?: React.ReactNode }>,
+          { key: `s${i}` },
+          ...lineChildren
+        ),
+      ];
+    });
+  }
+  return [[]];
+}
+
 function wrapLines(
   children: React.ReactNode,
   highlight?: Set<number>
 ): React.ReactNode {
-  const lines: React.ReactNode[][] = [[]];
-  const pushNode = (n: React.ReactNode) => lines[lines.length - 1].push(n);
-
-  React.Children.forEach(children, (child) => {
-    if (typeof child === "string") {
-      const parts = child.split("\n");
-      parts.forEach((p, i) => {
-        if (p.length > 0) pushNode(p);
-        if (i < parts.length - 1) lines.push([]);
-      });
-    } else {
-      pushNode(child);
-    }
-  });
-
-  // Drop a trailing empty line that markdown commonly appends.
-  if (
-    lines.length > 1 &&
-    lines[lines.length - 1].length === 0
-  ) {
-    lines.pop();
-  }
-
+  const lines = splitIntoLines(children);
+  while (lines.length > 1 && lines[lines.length - 1].length === 0) lines.pop();
   return lines.map((parts, i) => (
     <span
       key={i}
-      className={cn(
-        "code-line",
-        highlight?.has(i + 1) && "code-line-hl"
-      )}
+      className={cn("code-line", highlight?.has(i + 1) && "code-line-hl")}
     >
       {parts.length > 0 ? parts : "\u200B"}
     </span>
