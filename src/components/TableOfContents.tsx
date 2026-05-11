@@ -30,14 +30,13 @@ export function TableOfContents({ items }: Props) {
     );
     headings.forEach((h) => observer.observe(h));
 
-    // Force last item active when page is scrolled to (near) the bottom,
-    // since the IntersectionObserver bottom margin can prevent it from
-    // ever being the "first visible" heading.
     const onScroll = () => {
       const nearBottom =
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight - 4;
       if (nearBottom) setActiveId(items[items.length - 1].id);
+      const atTop = window.scrollY < 80;
+      if (atTop) setActiveId(items[0].id);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
@@ -47,6 +46,18 @@ export function TableOfContents({ items }: Props) {
       window.removeEventListener("scroll", onScroll);
     };
   }, [items]);
+
+  React.useEffect(() => {
+    if (!activeId) return;
+    const newHash = `#${activeId}`;
+    if (window.location.hash !== newHash) {
+      window.history.replaceState(
+        null,
+        "",
+        window.location.pathname + window.location.search + newHash
+      );
+    }
+  }, [activeId]);
 
   if (items.length === 0) return null;
 
