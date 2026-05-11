@@ -69,6 +69,11 @@
   --color-code-border: var(--code-border);
   --color-inline-code-bg: var(--inline-code-bg);
   --color-inline-code-fg: var(--inline-code-fg);
+  --color-terminal-bg: var(--terminal-bg);
+  --color-terminal-chrome: var(--terminal-chrome);
+  --color-terminal-border: var(--terminal-border);
+  --color-terminal-fg: var(--terminal-fg);
+  --color-terminal-prompt: var(--terminal-prompt);
 
   /* Callouts */
   --color-callout-note-bg: var(--callout-note-bg);
