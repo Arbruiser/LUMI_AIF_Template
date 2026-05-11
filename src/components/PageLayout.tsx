@@ -59,7 +59,7 @@ export function PageLayout({ page }: Props) {
         {(prev || next) && (
           <nav
             aria-label="Page navigation"
-            className="mt-8 grid max-w-[78ch] grid-cols-1 gap-3 sm:grid-cols-2"
+            className="mt-8 grid w-full grid-cols-1 gap-3 sm:grid-cols-2"
           >
             {prev ? (
               <Link

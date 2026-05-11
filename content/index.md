@@ -124,8 +124,8 @@ Use viewport-relative widths (`vw`) so the image actually scales down on
 larger screens:
 
 <figure>
-  <img src="./assets/lumi-data-center.jpg" style="width: 40vw; max-width: 100%; margin: 0 auto; display: block;" />
-  <figcaption style="text-align: center;"><em>Figure 1: LUMI data center visual from the LUMI brand guide.</em></figcaption>
+  <img src="./assets/lumi-data-center.jpg" alt="LUMI data center visual from the LUMI brand guide" style="width: 40vw; max-width: 100%; margin: 0 auto; display: block;" />
+  <figcaption><em>Figure 1: LUMI data center visual from the LUMI brand guide.</em></figcaption>
 </figure>
 
 ---
