@@ -38,20 +38,6 @@ export function TableOfContents({ items }: Props) {
       const atTop = window.scrollY < 80;
       if (atTop) setActiveId(items[0].id);
     };
-      },
-      { rootMargin: "-80px 0px -70% 0px", threshold: 0 }
-    );
-    headings.forEach((h) => observer.observe(h));
-
-    // Force last item active when page is scrolled to (near) the bottom,
-    // since the IntersectionObserver bottom margin can prevent it from
-    // ever being the "first visible" heading.
-    const onScroll = () => {
-      const nearBottom =
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 4;
-      if (nearBottom) setActiveId(items[items.length - 1].id);
-    };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 
