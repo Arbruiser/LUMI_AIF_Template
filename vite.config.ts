@@ -30,7 +30,7 @@ function joinUrl(a: string, b: string) {
   return `${a.replace(/\/$/, "")}/${b.replace(/^\//, "")}`;
 }
 
-/** Generate sitemap.xml + robots.txt at build time from content/**/*.md. */
+// Generate sitemap.xml + robots.txt at build time from markdown content.
 function sitemapPlugin(): Plugin {
   let outDir = "dist";
   return {
