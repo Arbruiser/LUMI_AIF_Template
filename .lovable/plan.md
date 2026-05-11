@@ -1,51 +1,50 @@
-Here are concrete, high-impact improvements grouped by priority. Pick any combination and I'll implement.
+## Selected upgrades
 
-## Authoring experience (biggest wins)
+### 1. Copy-link on headings (visible affordance)
+The click-to-copy logic already exists in `MarkdownRenderer` but the autolink renders an empty span, so users can't see it.
+- Switch `rehypeAutolinkHeadings` content to a small link-icon SVG (or use a `behavior: "append"` with an `<svg>` element node).
+- Style `.heading-anchor` in `styles.css`: hidden by default, fades in on heading hover, magenta on hover, sits to the right of the heading text.
+- Show a tiny "Link copied" toast (reuse existing `sonner` already in `components/ui`).
 
-1. **In-page table of contents.** Auto-generate a sticky right-hand TOC from the page's H2/H3 headings, with active-section highlight on scroll. Long chapters become much easier to navigate.
-2. **Prev / Next page navigation.** Buttons at the bottom of every page that follow `nav_order`, so students read sequentially without going back to the sidebar.
-3. **"Edit this page on GitHub" link.** `site.config.ts` already has `githubRepo` — wire it into the footer so contributors can fix typos in one click.
-4. **Search.** Client-side fuzzy search (e.g. `flexsearch` or `fuse.js`) over all markdown content, keyboard-shortcut `/` to focus, results grouped by page.
-5. **Reading progress + estimated reading time.** Small "8 min read" label under each H1, plus a thin magenta progress bar at the top of the page on scroll.
+### 2. Code block: filename + line numbers
+- Extend the markdown info-string parsing in `CodeBlock`. ReactMarkdown only forwards `language-xxx` in `className`, so we'll move parsing to `MarkdownRenderer`'s `pre` component: read `child.props.className` plus `child.props.metaString` (need a small remark plugin OR a regex on the meta via `remark-directive`-style — simplest is to add `remark-flexible-code-titles`, a tiny well-maintained plugin that turns ` ```python title="train.py" {1,3-5} ` into a `<div class="remark-code-title">` + className tokens).
+- Render the title as a styled chrome bar above the existing code chrome (or replace the `lang` label when title is set).
+- Line numbers: add a `pre.with-line-numbers` CSS treatment using `counter-reset` on `<code>` and `::before` on each `<span class="line">`. To get per-line spans, swap `rehype-highlight` for `rehype-pretty-code` (or keep highlight and post-process). Recommended approach: use `rehype-pretty-code` with Shiki — handles title, line numbers, and line highlighting natively in one plugin and matches the "title + highlight ranges" goal cleanly. We'd remove `rehype-highlight` and `highlight.js` styles, and ship a single Shiki theme that respects light/dark via CSS variables.
+- Terminal variant in `CodeBlock` keeps its current chrome but gains the same line-number CSS when meta requests it.
 
-## Content & callouts
+### 3. Image lightbox
+- Wrap `img` renderer output in a `<button>` that opens a Dialog (shadcn `dialog` already present).
+- Lightbox shows the full-size image centered on a dimmed backdrop, caption from `alt`, ESC / backdrop click to close.
+- Skip wrapping for tiny inline images (e.g., badges) by checking natural width on load; default behavior: every content `<img>` is clickable.
 
-6. **More callout variants** authors keep asking for: `[!example]`, `[!exercise]`, `[!solution]` (collapsible), `[!quote]`. Same syntax, just more colours from the LUMI palette.
-7. **Collapsible sections** via `<details>` styled with brand colours — useful for "Show solution" or long terminal output.
-8. **Code block enhancements**: filename label above the block (` ```python title="train.py" `), line numbers, and line-range highlighting.
-9. **Footnotes and definition lists** — already supported by `remark-gfm` for footnotes; just needs styling.
+### 4. Sitemap.xml + robots.txt
+- Add a build-time generator using a small Vite plugin in `vite.config.ts`:
+  - On `buildEnd` (or via `closeBundle`), read all `content/**/*.md`, derive slugs the same way `lib/content.ts` does, write `dist/sitemap.xml` with `<url><loc>${siteConfig.url}/${slug}</loc></url>` and `<lastmod>` from file mtime.
+  - Write `dist/robots.txt`:
+    ```
+    User-agent: *
+    Allow: /
+    Sitemap: ${siteConfig.url}/sitemap.xml
+    ```
+- Requires `siteConfig.url` (production URL) — add the field to `site.config.ts` if missing.
 
-## Structure & navigation
+### 5. Drop-cap + tighter heading rhythm
+- In `styles.css` under `.prose-lumi`:
+  - First-paragraph drop-cap: `.prose-lumi > p:first-of-type::first-letter { float: left; font-size: 3.2em; line-height: 0.9; padding-right: 0.08em; color: var(--lumi-magenta); font-weight: 700; }`. Skip when the first block is a heading (already true via `:first-of-type`) or a callout.
+  - Heading rhythm: tighten `h2 { margin-top: 2.5rem; margin-bottom: 0.75rem; }`, `h3 { margin-top: 1.75rem; margin-bottom: 0.5rem; }`, lift heading `letter-spacing: -0.01em`.
+  - Wide-screen body line-height: `@media (min-width: 1280px) { .prose-lumi p { line-height: 1.75; } }`.
 
-10. **Multi-level chapter grouping.** Today the sidebar supports 1 level of nesting. Add support for `chapter1/lesson1.md` style folders so larger courses can group lessons under modules.
-11. **Breadcrumbs** above the H1 (Home › Chapter 1 › Lesson 2).
-12. **404 page** with a search box and links to the top chapters instead of a generic "page not found".
+## Files to touch
+- `src/components/MarkdownRenderer.tsx` — autolink icon, lightbox wrapper, code block plugin wiring
+- `src/components/CodeBlock.tsx` — title bar, line-number support
+- `src/styles.css` — anchor styles, drop-cap, heading rhythm, line-number CSS, code theme vars
+- `vite.config.ts` — sitemap/robots plugin
+- `site.config.ts` — add `url`
+- `package.json` — add `rehype-pretty-code` + `shiki` (and `remark-flexible-code-titles` only if we keep `rehype-highlight`); remove `rehype-highlight` + `highlight.js` if we switch to Shiki
 
-## Polish
+## Open question
+For code blocks, two paths:
+- **A. Switch to `rehype-pretty-code` + Shiki** — best result (titles, line numbers, line highlight all built in, themable via CSS vars), but replaces the current syntax highlighter so existing colors will change.
+- **B. Keep `rehype-highlight`, add `remark-flexible-code-titles` + custom CSS for line numbers** — preserves current highlighting, more glue code, no built-in line-range highlighting.
 
-13. **Better typography.** Drop-cap on the first paragraph of each chapter, tighter heading rhythm, larger line-height for body copy on wide screens.
-14. **Image lightbox.** Click any markdown image to open it full-screen with caption.
-15. **Print stylesheet.** A clean `@media print` so students can save chapters as PDF without sidebar/header chrome.
-16. **Copy-link-to-heading.** Hover icon next to each H2/H3 that copies the deep-link to clipboard.
-17. **Mobile polish.** The sidebar already collapses, but the header logo and theme toggle could use tighter spacing on <380px screens.
-
-## Author tooling
-
-18. **`content/_template.md`** — a starter file authors can copy when adding a new page, with the front-matter and a few example blocks pre-filled.
-19. **README rewrite.** A short "How to add a chapter in 60 seconds" section aimed at non-developers.
-20. **PR preview deploys.** Add a GitHub Action that comments a Pages preview URL on every PR so authors can review their writing before merging.
-
-## SEO & sharing
-
-21. **Per-page OG images.** Auto-generate a branded share card (LUMI logo + page title on magenta background) at build time using `satori`. Right now every page shares the same generic preview.
-22. **`sitemap.xml` and `robots.txt`** generated at build time from the markdown files.
-23. **JSON-LD `Article` schema** on each page using the front-matter title and description.
-
----
-
-## Suggested first batch (if you want a single round)
-
-The combination that gives the best perceived upgrade in one go:
-**1 (TOC) + 2 (Prev/Next) + 3 (Edit on GitHub) + 11 (Breadcrumbs) + 16 (heading anchor copy)** — all navigation/orientation features, all touch the same `MarkdownRenderer` + route layout, and together they make the site feel like a real documentation product (think Docusaurus / Mintlify) without changing how authors write markdown.
-
-Tell me which numbers you want and I'll implement.
+I'll go with **A** unless you prefer to keep current colors.

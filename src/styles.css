@@ -268,7 +268,7 @@ html {
   font-size: 1.6rem;
   font-weight: 700;
   letter-spacing: -0.015em;
-  margin: 2.5rem 0 1rem;
+  margin: 2.25rem 0 0.75rem;
   padding-bottom: 0.4rem;
   border-bottom: 1px solid var(--color-border);
 }
@@ -276,7 +276,28 @@ html {
 .prose-lumi h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  margin: 2rem 0 0.75rem;
+  letter-spacing: -0.01em;
+  margin: 1.75rem 0 0.5rem;
+}
+
+/* Drop-cap on the first paragraph of a chapter (i.e. the first <p> directly
+   under the prose container). Skipped when the first block is a heading or
+   callout because :first-of-type only matches paragraphs. */
+.prose-lumi > p:first-of-type::first-letter {
+  float: left;
+  font-family: var(--font-sans);
+  font-size: 3.2em;
+  line-height: 0.85;
+  font-weight: 700;
+  color: var(--lumi-magenta);
+  padding: 0.05em 0.08em 0 0;
+  margin-right: 0.04em;
+}
+
+@media (min-width: 1280px) {
+  .prose-lumi p {
+    line-height: 1.78;
+  }
 }
 
 .prose-lumi h4 {
