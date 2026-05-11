@@ -15,6 +15,7 @@ const linkIconSvg = fromHtmlIsomorphic(
   { fragment: true }
 ).children;
 import { toast } from "sonner";
+import { visit } from "unist-util-visit";
 import { Callout } from "./Callout";
 import { CodeBlock } from "./CodeBlock";
 import {
@@ -23,6 +24,24 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+
+/** Hoist `data.meta` from <code> onto its parent <pre> so it survives the
+ *  hast→React boundary and is reachable via JSX props. */
+function rehypeHoistCodeMeta() {
+  return (tree: unknown) => {
+    visit(tree as never, "element", (node: { tagName?: string; properties?: Record<string, unknown>; children?: Array<{ tagName?: string; data?: { meta?: string } }> }) => {
+      if (
+        node.tagName === "pre" &&
+        node.children?.[0]?.tagName === "code" &&
+        node.children[0].data?.meta
+      ) {
+        node.properties = node.properties ?? {};
+        (node.properties as Record<string, unknown>).dataMeta =
+          node.children[0].data.meta;
+      }
+    });
+  };
+}
 
 interface MarkdownRendererProps {
   source: string;
