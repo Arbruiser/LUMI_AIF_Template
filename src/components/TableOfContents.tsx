@@ -47,6 +47,18 @@ export function TableOfContents({ items }: Props) {
     };
   }, [items]);
 
+  React.useEffect(() => {
+    if (!activeId) return;
+    const newHash = `#${activeId}`;
+    if (window.location.hash !== newHash) {
+      window.history.replaceState(
+        null,
+        "",
+        window.location.pathname + window.location.search + newHash
+      );
+    }
+  }, [activeId]);
+
   if (items.length === 0) return null;
 
   return (
