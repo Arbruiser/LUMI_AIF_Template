@@ -138,7 +138,7 @@
   --inline-code-bg: oklch(0.945 0.008 240);
   --inline-code-fg: var(--lumi-blue);
 
-  --terminal-bg: #300a24;
+  --terminal-bg: #3d0a2c;
   --terminal-chrome: oklch(0.32 0.012 280);     /* Ubuntu titlebar */
   --terminal-chrome-fg: oklch(0.96 0.005 280);
   --terminal-border: oklch(0.18 0.04 350);
@@ -194,7 +194,7 @@
   --inline-code-bg: oklch(0.28 0.018 250);
   --inline-code-fg: oklch(0.82 0.08 207);
 
-  --terminal-bg: #300a24;
+  --terminal-bg: #3d0a2c;
   --terminal-chrome: oklch(0.28 0.012 280);
   --terminal-chrome-fg: oklch(0.96 0.005 280);
   --terminal-border: oklch(0.16 0.04 350);
