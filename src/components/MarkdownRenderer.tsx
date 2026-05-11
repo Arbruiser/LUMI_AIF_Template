@@ -180,6 +180,7 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
             },
           ],
           rehypeHighlight,
+          rehypeHoistCodeMeta,
           rehypeKatex,
         ]}
         components={{
