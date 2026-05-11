@@ -74,6 +74,16 @@ result = math.sqrt(25)
 print(f"The calculation result is: {result}")
 ```
 
+- **Terminal flair**: tag a code block with `bash`, `sh`, `shell`, or `zsh`
+  and it will render as a styled terminal window — perfect for showing
+  HPC commands students should run themselves:
+
+```bash
+module load LUMI/24.03
+srun --account=project_465000001 --partition=small-g --pty bash
+nvidia-smi
+```
+
 - **Math**: write inline math like $E = mc^2$ or block math:
 
 $$
@@ -107,3 +117,16 @@ container automatically:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/aLae9Sd2oos?si=uJ_6ccR3ArrpVXqT" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
+---
+
+## Putting it all together
+
+> [!tip] Authoring workflow
+> Keep each `.md` file focused on a single learning objective. Use callouts
+> for the things students must not miss, and terminal code blocks for any
+> commands they should actually run on LUMI.
+
+> [!warning] Before you publish
+> Double-check `nav_order` across all pages so the sidebar reads top-to-bottom
+> in the order you teach. Mismatched ordering is the most common authoring
+> mistake.

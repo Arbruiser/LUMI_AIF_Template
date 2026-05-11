@@ -69,6 +69,11 @@
   --color-code-border: var(--code-border);
   --color-inline-code-bg: var(--inline-code-bg);
   --color-inline-code-fg: var(--inline-code-fg);
+  --color-terminal-bg: var(--terminal-bg);
+  --color-terminal-chrome: var(--terminal-chrome);
+  --color-terminal-border: var(--terminal-border);
+  --color-terminal-fg: var(--terminal-fg);
+  --color-terminal-prompt: var(--terminal-prompt);
 
   /* Callouts */
   --color-callout-note-bg: var(--callout-note-bg);
@@ -132,6 +137,12 @@
   --inline-code-bg: oklch(0.945 0.008 240);
   --inline-code-fg: var(--lumi-blue);
 
+  --terminal-bg: oklch(0.19 0.012 250);
+  --terminal-chrome: oklch(0.26 0.014 250);
+  --terminal-border: oklch(0.32 0.018 250);
+  --terminal-fg: oklch(0.95 0.01 207);
+  --terminal-prompt: oklch(0.78 0.13 207);
+
   --callout-note-bg: oklch(0.97 0.018 290);
   --callout-note-border: oklch(0.85 0.04 290);
   --callout-warning-bg: color-mix(in oklab, var(--lumi-magenta) 8%, white);
@@ -180,6 +191,12 @@
   --code-border: oklch(1 0 0 / 10%);
   --inline-code-bg: oklch(0.28 0.018 250);
   --inline-code-fg: oklch(0.82 0.08 207);
+
+  --terminal-bg: oklch(0.14 0.012 250);
+  --terminal-chrome: oklch(0.22 0.014 250);
+  --terminal-border: oklch(1 0 0 / 12%);
+  --terminal-fg: oklch(0.95 0.012 207);
+  --terminal-prompt: oklch(0.82 0.14 207);
 
   --callout-note-bg: oklch(0.27 0.04 290);
   --callout-note-border: oklch(0.4 0.08 290);
@@ -442,4 +459,60 @@
 .dark .hljs-template-variable,
 .dark .hljs-params {
   color: oklch(0.78 0.09 290); /* brighter purple */
+}
+
+/* ============= Terminal-styled bash code blocks ============= */
+.terminal-block pre {
+  background: transparent;
+  color: var(--color-terminal-fg);
+}
+
+.terminal-block pre code {
+  display: block;
+  counter-reset: tline;
+}
+
+/* Render a `$` prompt before each non-empty logical line. We split on \n
+   via a CSS trick: each line wrapped by hljs is a span — but plain text is
+   not. Simpler approach: prefix the whole block with a single prompt and
+   style the leading character via ::before on the <code>. To get a prompt
+   per line we use white-space + a background gradient hack would be hard;
+   instead, prepend a prompt to the first line only and rely on the
+   terminal chrome to set the visual context. */
+.terminal-block pre code::before {
+  content: "$ ";
+  color: var(--color-terminal-prompt);
+  font-weight: 600;
+  user-select: none;
+}
+
+/* Brighten hljs tokens inside terminal blocks so they read on the dark bg
+   regardless of theme. */
+.terminal-block .hljs,
+.terminal-block .hljs-keyword,
+.terminal-block .hljs-selector-tag,
+.terminal-block .hljs-built_in,
+.terminal-block .hljs-name,
+.terminal-block .hljs-tag,
+.terminal-block .hljs-title,
+.terminal-block .hljs-section {
+  color: var(--color-terminal-prompt) !important;
+}
+
+.terminal-block .hljs-string,
+.terminal-block .hljs-attr,
+.terminal-block .hljs-literal,
+.terminal-block .hljs-number {
+  color: color-mix(in oklab, var(--lumi-magenta) 70%, white) !important;
+}
+
+.terminal-block .hljs-comment,
+.terminal-block .hljs-meta {
+  color: oklch(0.65 0.02 240) !important;
+  font-style: italic;
+}
+
+.terminal-block .hljs-variable,
+.terminal-block .hljs-params {
+  color: oklch(0.82 0.08 290) !important;
 }
