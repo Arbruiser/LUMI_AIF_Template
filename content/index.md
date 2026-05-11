@@ -181,20 +181,6 @@ reader is currently looking at.
 
 ---
 
-## Putting it all together
-
-> [!tip] Authoring workflow
-> Keep each `.md` file focused on a single learning objective. Use callouts
-> for the things students must not miss, and terminal code blocks for any
-> commands they should actually run on LUMI.
-
-> [!warning] Before you publish
-> Double-check `nav_order` across all pages so the sidebar reads
-> top-to-bottom in the order you teach. Mismatched ordering is the most
-> common authoring mistake.
-
----
-
 ## Need help?
 
 If you have questions or suggestions on how to improve the template, please
