@@ -50,13 +50,15 @@ export function TableOfContents({ items }: Props) {
   React.useEffect(() => {
     if (!activeId) return;
     const newHash = `#${activeId}`;
-    if (window.location.hash !== newHash) {
-      window.history.replaceState(
-        null,
-        "",
-        window.location.pathname + window.location.search + newHash
-      );
-    }
+    if (window.location.hash === newHash) return;
+    const t = window.setTimeout(() => {
+      const url = window.location.pathname + window.location.search + newHash;
+      // Use the native History.prototype method to avoid router-patched
+      // replaceState triggering scroll-to-hash behavior.
+      const native = Object.getPrototypeOf(window.history).replaceState;
+      native.call(window.history, window.history.state, "", url);
+    }, 120);
+    return () => window.clearTimeout(t);
   }, [activeId]);
 
   if (items.length === 0) return null;
