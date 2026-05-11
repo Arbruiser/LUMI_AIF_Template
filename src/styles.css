@@ -379,15 +379,16 @@ html {
   text-align: center;
 }
 
-.prose-lumi h1 a,
-.prose-lumi h2 a,
-.prose-lumi h3 a,
-.prose-lumi h4 a {
+.prose-lumi h1 a:not(.heading-anchor),
+.prose-lumi h2 a:not(.heading-anchor),
+.prose-lumi h3 a:not(.heading-anchor),
+.prose-lumi h4 a:not(.heading-anchor) {
   color: inherit;
   text-decoration: none;
 }
 
 /* Heading anchors: appear on hover, copy deep-link to clipboard. */
+.prose-lumi h1,
 .prose-lumi h2,
 .prose-lumi h3,
 .prose-lumi h4 {
@@ -402,8 +403,13 @@ html {
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
+  justify-content: center;
   margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: var(--lumi-magenta);
+  cursor: pointer;
   opacity: 0;
   transition: opacity 0.15s ease;
   text-decoration: none;
