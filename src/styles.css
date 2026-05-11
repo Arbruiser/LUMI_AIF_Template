@@ -460,3 +460,59 @@
 .dark .hljs-params {
   color: oklch(0.78 0.09 290); /* brighter purple */
 }
+
+/* ============= Terminal-styled bash code blocks ============= */
+.terminal-block pre {
+  background: transparent;
+  color: var(--color-terminal-fg);
+}
+
+.terminal-block pre code {
+  display: block;
+  counter-reset: tline;
+}
+
+/* Render a `$` prompt before each non-empty logical line. We split on \n
+   via a CSS trick: each line wrapped by hljs is a span — but plain text is
+   not. Simpler approach: prefix the whole block with a single prompt and
+   style the leading character via ::before on the <code>. To get a prompt
+   per line we use white-space + a background gradient hack would be hard;
+   instead, prepend a prompt to the first line only and rely on the
+   terminal chrome to set the visual context. */
+.terminal-block pre code::before {
+  content: "$ ";
+  color: var(--color-terminal-prompt);
+  font-weight: 600;
+  user-select: none;
+}
+
+/* Brighten hljs tokens inside terminal blocks so they read on the dark bg
+   regardless of theme. */
+.terminal-block .hljs,
+.terminal-block .hljs-keyword,
+.terminal-block .hljs-selector-tag,
+.terminal-block .hljs-built_in,
+.terminal-block .hljs-name,
+.terminal-block .hljs-tag,
+.terminal-block .hljs-title,
+.terminal-block .hljs-section {
+  color: var(--color-terminal-prompt) !important;
+}
+
+.terminal-block .hljs-string,
+.terminal-block .hljs-attr,
+.terminal-block .hljs-literal,
+.terminal-block .hljs-number {
+  color: color-mix(in oklab, var(--lumi-magenta) 70%, white) !important;
+}
+
+.terminal-block .hljs-comment,
+.terminal-block .hljs-meta {
+  color: oklch(0.65 0.02 240) !important;
+  font-style: italic;
+}
+
+.terminal-block .hljs-variable,
+.terminal-block .hljs-params {
+  color: oklch(0.82 0.08 290) !important;
+}
