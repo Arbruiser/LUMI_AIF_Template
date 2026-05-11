@@ -74,6 +74,7 @@
   --color-terminal-border: var(--terminal-border);
   --color-terminal-fg: var(--terminal-fg);
   --color-terminal-prompt: var(--terminal-prompt);
+  --color-terminal-chrome-fg: var(--terminal-chrome-fg);
 
   /* Callouts */
   --color-callout-note-bg: var(--callout-note-bg);
@@ -137,11 +138,12 @@
   --inline-code-bg: oklch(0.945 0.008 240);
   --inline-code-fg: var(--lumi-blue);
 
-  --terminal-bg: oklch(0.19 0.012 250);
-  --terminal-chrome: oklch(0.26 0.014 250);
-  --terminal-border: oklch(0.32 0.018 250);
-  --terminal-fg: oklch(0.95 0.01 207);
-  --terminal-prompt: oklch(0.78 0.13 207);
+  --terminal-bg: oklch(0.22 0.05 350);          /* Ubuntu aubergine #300A24 */
+  --terminal-chrome: oklch(0.32 0.012 280);     /* Ubuntu titlebar */
+  --terminal-chrome-fg: oklch(0.96 0.005 280);
+  --terminal-border: oklch(0.18 0.04 350);
+  --terminal-fg: oklch(0.97 0.005 280);
+  --terminal-prompt: oklch(0.78 0.18 142);      /* Ubuntu green prompt */
 
   --callout-note-bg: oklch(0.97 0.018 290);
   --callout-note-border: oklch(0.85 0.04 290);
@@ -192,11 +194,12 @@
   --inline-code-bg: oklch(0.28 0.018 250);
   --inline-code-fg: oklch(0.82 0.08 207);
 
-  --terminal-bg: oklch(0.14 0.012 250);
-  --terminal-chrome: oklch(0.22 0.014 250);
-  --terminal-border: oklch(1 0 0 / 12%);
-  --terminal-fg: oklch(0.95 0.012 207);
-  --terminal-prompt: oklch(0.82 0.14 207);
+  --terminal-bg: oklch(0.22 0.05 350);
+  --terminal-chrome: oklch(0.28 0.012 280);
+  --terminal-chrome-fg: oklch(0.96 0.005 280);
+  --terminal-border: oklch(0.16 0.04 350);
+  --terminal-fg: oklch(0.97 0.005 280);
+  --terminal-prompt: oklch(0.78 0.18 142);
 
   --callout-note-bg: oklch(0.27 0.04 290);
   --callout-note-border: oklch(0.4 0.08 290);
@@ -480,10 +483,34 @@
    instead, prepend a prompt to the first line only and rely on the
    terminal chrome to set the visual context. */
 .terminal-block pre code::before {
-  content: "$ ";
+  content: "user@lumi:~$ ";
   color: var(--color-terminal-prompt);
   font-weight: 600;
   user-select: none;
+}
+
+/* Ubuntu-style title bar */
+.terminal-chrome {
+  background: linear-gradient(to bottom, oklch(0.36 0.012 280), oklch(0.26 0.012 280));
+  color: var(--color-terminal-chrome-fg);
+  border-bottom: 1px solid oklch(0 0 0 / 30%);
+}
+
+.terminal-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 9999px;
+  background: oklch(0.45 0.012 280);
+  color: oklch(0.96 0.005 280);
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.terminal-btn-close {
+  background: #e95420; /* Ubuntu orange */
 }
 
 /* Brighten hljs tokens inside terminal blocks so they read on the dark bg
