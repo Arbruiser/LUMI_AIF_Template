@@ -8,20 +8,22 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
 import rehypeRaw from "rehype-raw";
+import { toast } from "sonner";
 import { Callout } from "./Callout";
 import { CodeBlock } from "./CodeBlock";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 interface MarkdownRendererProps {
   source: string;
 }
 
-/** Vite injects the deployment base path (e.g. "/lumi-aif-creator-kit/" on
- *  GitHub Pages). Author-friendly relative paths like "./assets/foo.jpg" or
- *  "assets/foo.jpg" need to be resolved against it so they work in dev,
- *  preview, and on Pages without authors knowing about base URLs. */
 function resolveAssetUrl(src: string | undefined): string | undefined {
   if (!src) return src;
-  // Absolute URLs and already-absolute paths pass through unchanged.
   if (/^[a-z]+:\/\//i.test(src) || src.startsWith("//")) return src;
   if (src.startsWith("/")) return src;
   const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
@@ -29,19 +31,14 @@ function resolveAssetUrl(src: string | undefined): string | undefined {
   return `${base}/${rel}`;
 }
 
-// Match `[!type] optional title` at the start of a paragraph. Use [^\n]* so
-// the title doesn't gobble the rest of a multi-line paragraph (the body of the
-// callout is the text after the first newline).
 const CALLOUT_RE = /^\[!(note|warning|info|tip|command)\][ \t]*([^\n]*)/i;
 
 type CalloutVariant = "note" | "warning" | "info" | "tip" | "command";
 
-/** Detect GitHub-style `[!type] Title` in the first child of a blockquote. */
 function extractCallout(
   children: React.ReactNode
 ): { variant: CalloutVariant; title?: string; rest: React.ReactNode } | null {
   const arr = React.Children.toArray(children);
-  // Skip whitespace-only text nodes that markdown adds between blocks.
   const firstIdx = arr.findIndex(
     (c) => !(typeof c === "string" && c.trim() === "")
   );
@@ -61,9 +58,6 @@ function extractCallout(
   const variant = match[1].toLowerCase() as CalloutVariant;
   const title = match[2].trim() || undefined;
 
-  // Keep any text in the same paragraph that came AFTER the marker line
-  // (e.g. `> [!note] Title` on line 1 and body text on line 2 — markdown
-  // joins these into one paragraph separated by `\n`).
   const matchedLen = match[0].length;
   const remainderHead = head.slice(matchedLen).replace(/^\n+/, "");
   const restOfFirst: React.ReactNode[] = [
@@ -83,11 +77,41 @@ function extractCallout(
   return { variant, title, rest };
 }
 
+/** Parse a code-fence info string like:
+ *    title="train.py" {1,3-5} showLineNumbers
+ *  into { title, highlightLines, showLineNumbers }. */
+function parseCodeMeta(meta?: string): {
+  title?: string;
+  highlightLines?: Set<number>;
+  showLineNumbers?: boolean;
+} {
+  if (!meta) return {};
+  const out: ReturnType<typeof parseCodeMeta> = {};
+  const titleMatch = meta.match(/title=(?:"([^"]+)"|'([^']+)'|(\S+))/);
+  if (titleMatch) out.title = titleMatch[1] ?? titleMatch[2] ?? titleMatch[3];
+  if (/(?:^|\s)showLineNumbers(?:\s|$)/.test(meta)) out.showLineNumbers = true;
+  const range = meta.match(/\{([\d,\s-]+)\}/);
+  if (range) {
+    const set = new Set<number>();
+    for (const part of range[1].split(",")) {
+      const m = part.trim().match(/^(\d+)(?:-(\d+))?$/);
+      if (!m) continue;
+      const start = parseInt(m[1], 10);
+      const end = m[2] ? parseInt(m[2], 10) : start;
+      for (let i = start; i <= end; i++) set.add(i);
+    }
+    if (set.size) out.highlightLines = set;
+  }
+  return out;
+}
+
 export function MarkdownRenderer({ source }: MarkdownRendererProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const [lightbox, setLightbox] = React.useState<{
+    src: string;
+    alt: string;
+  } | null>(null);
 
-  // Delegated click on heading-anchor links: copy the deep-link to clipboard
-  // instead of just scrolling. Falls back to default behavior on failure.
   React.useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -100,12 +124,12 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
       if (navigator.clipboard) {
         e.preventDefault();
         navigator.clipboard.writeText(url).catch(() => {});
-        // Still update the URL hash so the page scrolls to the heading.
         window.history.replaceState(null, "", href);
         document.getElementById(href.slice(1))?.scrollIntoView({
           behavior: "smooth",
           block: "start",
         });
+        toast.success("Link copied to clipboard");
       }
     };
     el.addEventListener("click", onClick);
@@ -149,19 +173,28 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
               </blockquote>
             );
           },
-          pre({ children }) {
-            // We render <pre> via CodeBlock from the inner <code>.
+          pre({ children, node }) {
             const child = React.Children.only(
               children
             ) as React.ReactElement<{ className?: string; children?: React.ReactNode }>;
+            // react-markdown / remark-rehype attaches the original fence
+            // info-string as `data.meta` on the inner code hast node.
+            const codeNode = (node as { children?: Array<{ data?: { meta?: string } }> })
+              ?.children?.[0];
+            const meta = codeNode?.data?.meta;
+            const parsed = parseCodeMeta(meta);
             return (
-              <CodeBlock className={child.props.className}>
+              <CodeBlock
+                className={child.props.className}
+                title={parsed.title}
+                showLineNumbers={parsed.showLineNumbers}
+                highlightLines={parsed.highlightLines}
+              >
                 {child.props.children}
               </CodeBlock>
             );
           },
           code({ className, children }) {
-            // Inline code (no className) — block code is handled by `pre`.
             if (!className) {
               return (
                 <code className="rounded bg-inline-code-bg px-1.5 py-0.5 font-mono text-[0.9em] text-inline-code-fg">
@@ -184,8 +217,19 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
               </a>
             );
           },
-          img({ src, alt, ...rest }) {
-            return <img src={resolveAssetUrl(src)} alt={alt ?? ""} {...rest} />;
+          img({ src, alt }) {
+            const resolved = resolveAssetUrl(src) ?? "";
+            const altText = alt ?? "";
+            return (
+              <button
+                type="button"
+                onClick={() => setLightbox({ src: resolved, alt: altText })}
+                className="block w-full cursor-zoom-in border-0 bg-transparent p-0"
+                aria-label={altText ? `Open image: ${altText}` : "Open image"}
+              >
+                <img src={resolved} alt={altText} />
+              </button>
+            );
           },
           iframe(props) {
             const src = resolveAssetUrl(props.src);
@@ -204,6 +248,34 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
       >
         {source}
       </ReactMarkdown>
+
+      <Dialog
+        open={lightbox !== null}
+        onOpenChange={(open) => !open && setLightbox(null)}
+      >
+        <DialogContent
+          className="max-w-[95vw] border-0 bg-transparent p-0 shadow-none sm:max-w-[90vw]"
+          showCloseButton
+        >
+          <VisuallyHidden>
+            <DialogTitle>{lightbox?.alt || "Image preview"}</DialogTitle>
+          </VisuallyHidden>
+          {lightbox && (
+            <figure className="flex flex-col items-center">
+              <img
+                src={lightbox.src}
+                alt={lightbox.alt}
+                className="max-h-[85vh] w-auto rounded-lg object-contain"
+              />
+              {lightbox.alt && (
+                <figcaption className="mt-3 text-center text-sm text-white/90">
+                  {lightbox.alt}
+                </figcaption>
+              )}
+            </figure>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
