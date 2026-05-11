@@ -49,22 +49,6 @@ To make a chapter with subchapters, add `has_children: true` on the parent and u
 > srun --pty bash
 ```
 
-## Local preview (optional)
-
-If you want to preview the site on your own machine before pushing:
-
-```bash
-bun install        # or: npm install
-bun run dev        # or: npm run dev
-```
-
-Then open http://localhost:8080.
-
-## Customisation
-
-- `site.config.ts` — site title, description, external header links, GitHub repo for the "edit this page" link.
-- `content/` — your `.md` content. Add images under `content/assets/` and reference them with relative paths like `./assets/my-image.png`.
-
 ## Fonts
 
 The official LUMI brand font (Mr Eaves XL Mod OT) is licensed and not redistributable. The template ships with [Inter](https://rsms.me/inter/), a free open-source font with a similar geometric, humanist feel. If your team has a Mr Eaves licence you can drop the `.woff2` files in `public/fonts/` and update `--font-sans` in `src/styles.css`.
