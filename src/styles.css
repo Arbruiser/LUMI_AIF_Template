@@ -137,11 +137,12 @@
   --inline-code-bg: oklch(0.945 0.008 240);
   --inline-code-fg: var(--lumi-blue);
 
-  --terminal-bg: oklch(0.19 0.012 250);
-  --terminal-chrome: oklch(0.26 0.014 250);
-  --terminal-border: oklch(0.32 0.018 250);
-  --terminal-fg: oklch(0.95 0.01 207);
-  --terminal-prompt: oklch(0.78 0.13 207);
+  --terminal-bg: oklch(0.22 0.05 350);          /* Ubuntu aubergine #300A24 */
+  --terminal-chrome: oklch(0.32 0.012 280);     /* Ubuntu titlebar */
+  --terminal-chrome-fg: oklch(0.96 0.005 280);
+  --terminal-border: oklch(0.18 0.04 350);
+  --terminal-fg: oklch(0.97 0.005 280);
+  --terminal-prompt: oklch(0.78 0.18 142);      /* Ubuntu green prompt */
 
   --callout-note-bg: oklch(0.97 0.018 290);
   --callout-note-border: oklch(0.85 0.04 290);
