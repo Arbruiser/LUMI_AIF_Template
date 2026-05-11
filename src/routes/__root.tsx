@@ -13,6 +13,7 @@ import { ThemeProvider } from "@/lib/theme";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Header } from "@/components/Header";
+import { Toaster } from "@/components/ui/sonner";
 import { siteConfig } from "../../site.config";
 
 function NotFoundComponent() {
@@ -140,6 +141,7 @@ function RootComponent() {
               </div>
             </main>
           </SidebarInset>
+          <Toaster />
         </SidebarProvider>
       </ThemeProvider>
     </QueryClientProvider>
