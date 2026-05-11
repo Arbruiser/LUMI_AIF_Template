@@ -32,29 +32,30 @@ export function CodeBlock({ className, children }: CodeBlockProps) {
 
   if (isTerminal) {
     return (
-      <div className="terminal-block group relative my-5 overflow-hidden rounded-lg border border-terminal-border bg-terminal-bg shadow-md">
-        <div className="flex items-center justify-between border-b border-terminal-border bg-terminal-chrome px-3 py-2">
-          <div className="flex items-center gap-1.5">
-            <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-            <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
-            <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-          </div>
-          <span className="font-mono text-[11px] uppercase tracking-wide text-terminal-fg/60">
-            {lang} — terminal
+      <div className="terminal-block group relative my-5 overflow-hidden rounded-md border border-terminal-border shadow-md">
+        <div className="terminal-chrome flex items-center justify-between px-3 py-1.5">
+          <div className="w-16" />
+          <span className="font-sans text-xs text-terminal-chrome-fg truncate">
+            user@lumi: ~
           </span>
-          <button
-            type="button"
-            onClick={onCopy}
-            className="inline-flex items-center gap-1 rounded px-2 py-1 text-xs text-terminal-fg/70 opacity-0 transition-opacity hover:bg-white/10 group-hover:opacity-100 focus:opacity-100"
-            aria-label="Copy code"
-          >
-            {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-            {copied ? "Copied" : "Copy"}
-          </button>
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={onCopy}
+              className="mr-2 inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] text-terminal-chrome-fg/80 opacity-0 transition-opacity hover:bg-white/10 group-hover:opacity-100 focus:opacity-100"
+              aria-label="Copy code"
+            >
+              {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+              {copied ? "Copied" : "Copy"}
+            </button>
+            <span className="terminal-btn" aria-hidden>−</span>
+            <span className="terminal-btn" aria-hidden>▢</span>
+            <span className="terminal-btn terminal-btn-close" aria-hidden>×</span>
+          </div>
         </div>
         <pre
           ref={ref}
-          className="overflow-x-auto px-4 py-3 text-sm leading-relaxed text-terminal-fg"
+          className="overflow-x-auto px-4 py-3 text-sm leading-relaxed text-terminal-fg bg-terminal-bg"
         >
           <code className={className}>{children}</code>
         </pre>
