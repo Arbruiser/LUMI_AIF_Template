@@ -494,7 +494,38 @@ html {
 .dark .hljs-variable,
 .dark .hljs-template-variable,
 .dark .hljs-params {
-  color: oklch(0.78 0.09 290); /* brighter purple */
+  color: oklch(0.78 0.09 290);
+}
+
+/* ============= Per-line wrapping for code blocks ============= */
+.code-line {
+  display: block;
+  min-height: 1.5em;
+}
+
+.code-line-hl {
+  background: color-mix(in oklab, var(--lumi-magenta) 12%, transparent);
+  margin: 0 -1rem;
+  padding: 0 1rem;
+  border-left: 2px solid var(--lumi-magenta);
+}
+
+pre.with-line-numbers {
+  counter-reset: ln;
+}
+
+pre.with-line-numbers .code-line {
+  counter-increment: ln;
+}
+
+pre.with-line-numbers .code-line::before {
+  content: counter(ln);
+  display: inline-block;
+  width: 2em;
+  margin-right: 1em;
+  text-align: right;
+  color: color-mix(in oklab, var(--color-foreground) 35%, transparent);
+  user-select: none;
 }
 
 /* ============= Terminal-styled bash code blocks ============= */
