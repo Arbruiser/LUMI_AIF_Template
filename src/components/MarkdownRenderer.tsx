@@ -199,21 +199,13 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
               </blockquote>
             );
           },
-          pre({ children, node }) {
+          pre(props) {
+            const { children } = props;
+            const dataMeta = (props as { dataMeta?: string }).dataMeta;
             const child = React.Children.only(
               children
             ) as React.ReactElement<{ className?: string; children?: React.ReactNode }>;
-            // react-markdown / remark-rehype attaches the original fence
-            // info-string as `data.meta` on the inner code hast node.
-            const codeNode = (
-              node as { children?: Array<{ data?: { meta?: string }; properties?: Record<string, unknown> }> }
-            )?.children?.[0];
-            const meta =
-              (codeNode?.data?.meta as string | undefined) ??
-              (codeNode?.properties?.metastring as string | undefined);
-            // eslint-disable-next-line no-console
-            if (typeof window !== "undefined") console.log("[CodeBlock meta]", meta, codeNode);
-            const parsed = parseCodeMeta(meta);
+            const parsed = parseCodeMeta(dataMeta);
             return (
               <CodeBlock
                 className={child.props.className}
