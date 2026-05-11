@@ -23,16 +23,29 @@ export function TableOfContents({ items }: Props) {
           if (entry.isIntersecting) visible.add(entry.target.id);
           else visible.delete(entry.target.id);
         }
-        // Prefer the first heading in document order that is currently visible.
         const firstVisible = items.find((i) => visible.has(i.id));
-        if (firstVisible) {
-          setActiveId(firstVisible.id);
-        }
+        if (firstVisible) setActiveId(firstVisible.id);
       },
       { rootMargin: "-80px 0px -70% 0px", threshold: 0 }
     );
     headings.forEach((h) => observer.observe(h));
-    return () => observer.disconnect();
+
+    // Force last item active when page is scrolled to (near) the bottom,
+    // since the IntersectionObserver bottom margin can prevent it from
+    // ever being the "first visible" heading.
+    const onScroll = () => {
+      const nearBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 4;
+      if (nearBottom) setActiveId(items[items.length - 1].id);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", onScroll);
+    };
   }, [items]);
 
   if (items.length === 0) return null;
