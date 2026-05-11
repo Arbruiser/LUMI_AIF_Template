@@ -190,11 +190,11 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkMath]}
         rehypePlugins={[
+          rehypeHoistCodeMeta,
           rehypeRaw,
           rehypeSlug,
           rehypeCopyHeadingButtons,
           rehypeHighlight,
-          rehypeHoistCodeMeta,
           rehypeKatex,
         ]}
         components={{
