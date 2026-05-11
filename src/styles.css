@@ -483,10 +483,34 @@
    instead, prepend a prompt to the first line only and rely on the
    terminal chrome to set the visual context. */
 .terminal-block pre code::before {
-  content: "$ ";
+  content: "user@lumi:~$ ";
   color: var(--color-terminal-prompt);
   font-weight: 600;
   user-select: none;
+}
+
+/* Ubuntu-style title bar */
+.terminal-chrome {
+  background: linear-gradient(to bottom, oklch(0.36 0.012 280), oklch(0.26 0.012 280));
+  color: var(--color-terminal-chrome-fg);
+  border-bottom: 1px solid oklch(0 0 0 / 30%);
+}
+
+.terminal-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 9999px;
+  background: oklch(0.45 0.012 280);
+  color: oklch(0.96 0.005 280);
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.terminal-btn-close {
+  background: #e95420; /* Ubuntu orange */
 }
 
 /* Brighten hljs tokens inside terminal blocks so they read on the dark bg
