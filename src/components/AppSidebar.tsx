@@ -21,8 +21,8 @@ import {
 } from "@/components/ui/collapsible";
 import { buildNavTree, type NavNode } from "@/lib/content";
 
-const logoLight = `${import.meta.env.BASE_URL}assets/lumi-logo-dark.png`;
-const logoDark = `${import.meta.env.BASE_URL}assets/lumi-logo-light.png`;
+const logoLight = `${import.meta.env.BASE_URL}assets/lumi-logo-light.svg`;
+const logoDark = `${import.meta.env.BASE_URL}assets/lumi-logo-dark.svg`;
 
 function slugToHref(slug: string) {
   return slug === "" ? "/" : `/${slug}`;
@@ -36,17 +36,17 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader className="border-b border-sidebar-border px-4 py-4">
-        <Link to="/" className="flex items-center">
-          <img
-            src={logoLight}
-            alt="LUMI AI Factory"
-            className="h-9 w-auto max-w-[190px] block dark:hidden"
-          />
+      <SidebarHeader className="border-b border-sidebar-border p-3">
+        <Link to="/" className="block w-full">
           <img
             src={logoDark}
             alt="LUMI AI Factory"
-            className="h-9 w-auto max-w-[190px] hidden dark:block"
+            className="w-full h-auto block dark:hidden"
+          />
+          <img
+            src={logoLight}
+            alt="LUMI AI Factory"
+            className="w-full h-auto hidden dark:block"
           />
         </Link>
       </SidebarHeader>
