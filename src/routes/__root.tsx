@@ -135,7 +135,7 @@ function RootComponent() {
           <SidebarInset className="flex min-h-screen flex-col">
             <Header />
             <main className="flex-1 px-4 py-8 sm:px-8 lg:px-12">
-              <div className="mx-auto w-full max-w-5xl">
+              <div className="mx-auto w-full max-w-[88rem]">
                 <Outlet />
               </div>
             </main>
