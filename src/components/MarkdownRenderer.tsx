@@ -150,10 +150,6 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
         e.preventDefault();
         navigator.clipboard.writeText(url).catch(() => {});
         window.history.replaceState(null, "", href);
-        document.getElementById(href.slice(1))?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
         toast.success("Link copied to clipboard");
       }
     };
