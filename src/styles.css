@@ -280,18 +280,16 @@ html {
   margin: 1.75rem 0 0.5rem;
 }
 
-/* Drop-cap on the first paragraph of a chapter (i.e. the first <p> directly
-   under the prose container). Skipped when the first block is a heading or
-   callout because :first-of-type only matches paragraphs. */
+/* Drop-cap on the first paragraph of a chapter — slightly larger than body
+   text, painted in LUMI magenta. Skipped automatically when the first block
+   is a heading or callout (because :first-of-type only matches paragraphs). */
 .prose-lumi > p:first-of-type::first-letter {
-  float: left;
   font-family: var(--font-sans);
-  font-size: 3.2em;
-  line-height: 0.85;
+  font-size: 1.6em;
   font-weight: 700;
   color: var(--lumi-magenta);
-  padding: 0.05em 0.08em 0 0;
-  margin-right: 0.04em;
+  line-height: 1;
+  padding-right: 0.04em;
 }
 
 @media (min-width: 1280px) {
@@ -398,17 +396,18 @@ html {
 }
 
 .prose-lumi .heading-anchor {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   margin-left: 0.4em;
-  width: 1em;
-  height: 1em;
-  vertical-align: middle;
+  color: var(--lumi-magenta);
   opacity: 0;
   transition: opacity 0.15s ease;
-  /* Inline link icon (lucide link-2) tinted with currentColor. */
-  background-color: var(--lumi-magenta);
-  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M9 17H7A5 5 0 0 1 7 7h2'/><path d='M15 7h2a5 5 0 1 1 0 10h-2'/><line x1='8' y1='12' x2='16' y2='12'/></svg>") no-repeat center / contain;
-          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M9 17H7A5 5 0 0 1 7 7h2'/><path d='M15 7h2a5 5 0 1 1 0 10h-2'/><line x1='8' y1='12' x2='16' y2='12'/></svg>") no-repeat center / contain;
+  vertical-align: middle;
+}
+
+.prose-lumi .heading-anchor svg {
+  display: block;
 }
 
 .prose-lumi h2:hover .heading-anchor,
