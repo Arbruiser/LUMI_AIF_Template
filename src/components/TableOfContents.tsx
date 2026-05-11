@@ -50,13 +50,12 @@ export function TableOfContents({ items }: Props) {
   React.useEffect(() => {
     if (!activeId) return;
     const newHash = `#${activeId}`;
-    if (window.location.hash !== newHash) {
-      window.history.replaceState(
-        null,
-        "",
-        window.location.pathname + window.location.search + newHash
-      );
-    }
+    if (window.location.hash === newHash) return;
+    const t = window.setTimeout(() => {
+      const url = window.location.pathname + window.location.search + newHash;
+      window.history.replaceState(null, "", url);
+    }, 120);
+    return () => window.clearTimeout(t);
   }, [activeId]);
 
   if (items.length === 0) return null;
