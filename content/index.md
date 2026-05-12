@@ -5,24 +5,17 @@ nav_order: 1
 
 # LUMI AIF Learning Template
 
-This is the official template for creating clean, branded self-learning course
-sites. By using this template, you ensure that your training materials match
-the **LUMI AI Factory** visual identity automatically.
+This is the official template for creating clean, branded self-learning course sites. By using this template, you ensure that your training materials match the **LUMI AI Factory** visual identity automatically.
 
-For a quick overview of the Markdown syntax, see the
-[Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/).
+For a quick overview of the Markdown syntax, see the [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/).
 
 ---
 
 ## Add more pages
-
-1. **Create a new page.** `content/index.md` is the landing page of the
-   website — do not rename it. You can add more pages by dropping new `.md`
-   files into `content/` (or a subfolder). To remove the example chapter,
-   delete `content/chapter1.md`.
+1. **Create a new page:** `index.md` is the 'landing page' of the website, do not rename it. You can add more pages by dropping new `.md` files into `content/` (or a subfolder). To remove the example chapter, delete `content/chapter1.md`.
 2. **Add front matter.** Every page needs these lines at the top:
 
-```yaml
+```markdown
 ---
 title: "Home"
 nav_order: 1
@@ -37,10 +30,9 @@ Where:
 
 ---
 
-## Branded callouts
+## Branded callout boxes
 
-Use callout boxes to highlight information for your students. Just start a
-blockquote with `[!type]` and optionally a custom title:
+Use callout boxes to highlight information for your students. Just start a blockquote with `[!type]` and optionally a custom title. The next line or lines are the main content of the callout box.
 
 > [!note] LUMI Purple — Note
 > Use this for additional context or general helpful information.
@@ -54,8 +46,7 @@ blockquote with `[!type]` and optionally a custom title:
 > [!tip] LUMI Teal — Tip
 > Use this for pro-tips, shortcuts, or recommended best practices.
 
-The `command` callout renders a single copyable terminal command — perfect
-for one-liner HPC instructions:
+The `command` callout renders a copyable terminal command:
 
 > [!command]
 > srun --pty bash
@@ -83,45 +74,30 @@ You can optionally label a code block with a filename — handy when the
 snippet belongs to a specific script. Just add `title="..."` after the
 language:
 
-````md
-```python title="train.py"
-import torch
-model = torch.nn.Linear(10, 1)
-```
-````
-
-…which renders as:
-
 ```python title="train.py"
 import torch
 model = torch.nn.Linear(10, 1)
 ```
 
-- **Terminal blocks**: tag a code block with `bash`, `sh`, `shell`, or `zsh`
-  and it renders as a styled terminal window with a `user@lumi:~$` prompt
-  on every line. The copy button only copies the actual commands — not the
-  prompt — so students can paste straight into their shell:
+- **Terminal blocks**: tag a code block with `bash`, `sh`, `shell`, or `zsh` and it renders as an Ubuntu styled terminal window with a `user@lumi:~$` prompt on every line. The copy button only copies the actual commands — not the prompt — so students can paste straight into their shell:
 
 ```bash
-module load LUMI/24.03
-srun --account=project_465000001 --partition=small-g --pty bash
-nvidia-smi
+module purge
+module use /appl/local/laifs/modules
+module load lumi-aif-singularity-bindings
 ```
 
 ---
 
 ## Embedding pictures
 
-Drop your image in the `public/assets/` folder of the repository, then
-reference it from any `.md` file using the `./assets/...` form — the
-template resolves it correctly in dev, in preview, and on GitHub Pages.
-Click an image to open it full-size in a lightbox.
+Drop your image in the `public/assets/` folder of the repository, then reference it from any `.md` file using the `./assets/...` form as such:
 
 ![LUMI data center facade from the LUMI brand guide](./assets/lumi-data-center.jpg)
 
-For a captioned, resized image, use HTML directly inside your markdown.
-Use viewport-relative widths (`vw`) so the image actually scales down on
-larger screens:
+Images are clickable and can be opened full-screen. 
+
+(Optional) For a captioned, resized image, use HTML directly inside your markdown. Use viewport-relative widths (`vw`) so the image actually scales down on larger screens:
 
 <figure>
   <img src="./assets/lumi-data-center.jpg" alt="LUMI data center visual from the LUMI brand guide" style="width: 40vw; max-width: 100%; margin: 0 auto; display: block;" />
@@ -132,9 +108,7 @@ larger screens:
 
 ## Embedding YouTube videos
 
-Copy the **Embed code** from YouTube (Share → Embed) and paste the `<iframe>`
-directly into your `.md` file. It is rendered in a responsive 16:9
-container automatically:
+To add a video, simply copy the **Embed code** from YouTube (Share > Embed) and paste it into the `.md` file:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/aLae9Sd2oos?si=uJ_6ccR3ArrpVXqT" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
@@ -142,8 +116,7 @@ container automatically:
 
 ## Tables
 
-GitHub-flavored Markdown tables render with LUMI styling out of the box.
-Always leave an empty line before and after the table:
+Tables can be added with this syntax:
 
 | Nodes | CPUs             | CPU cores  | Memory   |
 |:------|:-----------------|:-----------|:---------|
@@ -151,12 +124,15 @@ Always leave an empty line before and after the table:
 | 128   | 2x AMD EPYC 7763 | 128 (2x64) | 512 GiB  |
 | 32    | 2x AMD EPYC 7763 | 128 (2x64) | 1024 GiB |
 
+(The vertical lines don't necessarily need to align perfectly in terms of spaces between them. AI can help you in converting your material to a table like this)
+
+Always leave an empty line before and after the table.
+
 ---
 
 ## Mathematical formulas
 
-Write LaTeX formulas using KaTeX. Use single dollar signs for inline math
-and double dollar signs for block math.
+Write LaTeX formulas using KaTeX. Use single dollar signs for inline math and double dollar signs for block math.
 
 - **Inline math:** $E = mc^2$
 - **Block math:**
@@ -173,15 +149,11 @@ $$
 
 ## Section links and table of contents
 
-Every heading on the page automatically gets a copy-link icon next to it on
-hover — clicking it copies a deep link to that section to your clipboard.
-The table of contents on the right tracks your scroll position and updates
-the URL hash live, so the link you share always points to whatever the
-reader is currently looking at.
+Every heading on the page automatically gets a copy-link icon next to it on hover — clicking it copies a deep link to that section to your clipboard.
+The table of contents on the right tracks your scroll position and updates the URL link live, so the link you share always points to whatever the reader is currently looking at.
 
 ---
 
 ## Need help?
 
-If you have questions or suggestions on how to improve the template, please
-reach out on RocketChat: **Artúr Vojt-Antal**.
+If you have ideas on how to make this template even better, I’d love to hear them! Send me an email at `name.surname@csc.fi` where name is Artur and surname is Voit-Antal (anti-spam measure).
