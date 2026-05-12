@@ -67,8 +67,8 @@ export function TableOfContents({ items }: Props) {
     [scrollToId]
   );
 
-  const replaceHash = React.useCallback((id: string) => {
-    const newHash = `#${id}`;
+  const replaceHash = React.useCallback((id: string | null) => {
+    const newHash = id ? `#${id}` : "";
     if (window.location.hash === newHash) return;
     const url = window.location.pathname + window.location.search + newHash;
     const nativeReplaceState = Object.getPrototypeOf(window.history).replaceState;
@@ -140,6 +140,11 @@ export function TableOfContents({ items }: Props) {
       if (lockedActiveId) {
         setActiveId(lockedActiveId);
         if (shouldUpdateHash) replaceHash(lockedActiveId);
+        return;
+      }
+      if (window.scrollY < 8) {
+        setActiveId(null);
+        if (shouldUpdateHash) replaceHash(null);
         return;
       }
       const baseOffset = Math.min(window.innerHeight * 0.42, 360);
