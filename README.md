@@ -15,7 +15,9 @@ This is a template for creating clean, branded self-learning course sites for th
 4. Click the gear icon ⚙ next to **About** on the right side of your repo, tick **Use your GitHub Pages website**, and click **Save**. The live link now appears at the top of the repo.
 5. Edit `content/index.md` and add your content. To force-refresh and skip the cache, press `Ctrl + F5` (Linux/Windows) or `Cmd + Shift + R` (Mac).
 
-Every push to `main` rebuilds and redeploys the site automatically.
+Every push to `main` rebuilds and redeploys the site automatically. The site URL, GitHub repo, and branch are detected automatically from GitHub Actions, so you can rename your fork at any time without editing config — just push a commit to trigger a fresh build.
+
+To customise the site title, description, or header links, edit `site.config.ts`. The `siteUrl`, `githubRepo`, and `githubBranch` fields are auto-filled at build time and should normally stay empty.
 
 ## Adding pages
 
