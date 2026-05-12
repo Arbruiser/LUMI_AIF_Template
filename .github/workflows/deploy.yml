@@ -57,6 +57,10 @@ jobs:
           # Disable Jekyll so files/folders starting with _ are served as-is.
           touch dist/client/.nojekyll
       - uses: actions/configure-pages@v5
+        with:
+          # Auto-enable GitHub Pages on first run so freshly-templated repos
+          # don't fail before the user manually flips the Pages source.
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist/client
