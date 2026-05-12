@@ -8,11 +8,14 @@ interface Props {
 
 export function TableOfContents({ items }: Props) {
   const [activeId, setActiveId] = React.useState<string | null>(null);
+  const navRef = React.useRef<HTMLElement | null>(null);
+  const lockedActiveIdRef = React.useRef<string | null>(null);
   const restoringHashRef = React.useRef(false);
 
   const scrollToId = React.useCallback((id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
+    lockedActiveIdRef.current = id;
     restoringHashRef.current = true;
     const top = el.getBoundingClientRect().top + window.scrollY - 80;
     window.scrollTo({ top, behavior: "smooth" });
@@ -26,6 +29,34 @@ export function TableOfContents({ items }: Props) {
     window.setTimeout(() => {
       restoringHashRef.current = false;
     }, 700);
+  }, []);
+
+  React.useEffect(() => {
+    const unlockActiveSection = () => {
+      lockedActiveIdRef.current = null;
+      restoringHashRef.current = false;
+    };
+    const unlockOnPointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (target instanceof Node && navRef.current?.contains(target)) return;
+      unlockActiveSection();
+    };
+    const unlockOnKeyDown = (event: KeyboardEvent) => {
+      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "].includes(event.key)) {
+        unlockActiveSection();
+      }
+    };
+
+    window.addEventListener("wheel", unlockActiveSection, { passive: true });
+    window.addEventListener("touchstart", unlockActiveSection, { passive: true });
+    window.addEventListener("pointerdown", unlockOnPointerDown, { capture: true });
+    window.addEventListener("keydown", unlockOnKeyDown);
+    return () => {
+      window.removeEventListener("wheel", unlockActiveSection);
+      window.removeEventListener("touchstart", unlockActiveSection);
+      window.removeEventListener("pointerdown", unlockOnPointerDown, { capture: true });
+      window.removeEventListener("keydown", unlockOnKeyDown);
+    };
   }, []);
 
   const handleLinkClick = React.useCallback(
@@ -53,6 +84,8 @@ export function TableOfContents({ items }: Props) {
     if (!el) return;
     // Defer to next frame so layout is settled.
     requestAnimationFrame(() => {
+      lockedActiveIdRef.current = hash;
+      setActiveId(hash);
       restoringHashRef.current = true;
       const top = el.getBoundingClientRect().top + window.scrollY - 80;
       window.scrollTo({ top, behavior: "auto" });
@@ -70,6 +103,12 @@ export function TableOfContents({ items }: Props) {
     if (headings.length === 0) return;
 
     const computeActive = (shouldUpdateHash: boolean) => {
+      const lockedActiveId = lockedActiveIdRef.current;
+      if (lockedActiveId) {
+        setActiveId(lockedActiveId);
+        if (shouldUpdateHash) replaceHash(lockedActiveId);
+        return;
+      }
       const baseOffset = Math.min(window.innerHeight * 0.42, 360);
       const endOffset = Math.max(baseOffset, window.innerHeight - 120);
       const remainingScroll =
@@ -105,6 +144,7 @@ export function TableOfContents({ items }: Props) {
 
   return (
     <nav
+      ref={navRef}
       aria-label="On this page"
       className="sticky top-20 hidden max-h-[calc(100vh-6rem)] overflow-y-auto text-sm xl:block"
     >
