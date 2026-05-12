@@ -8,6 +8,21 @@ interface Props {
 
 export function TableOfContents({ items }: Props) {
   const [activeId, setActiveId] = React.useState<string | null>(null);
+  const userScrolledRef = React.useRef(false);
+
+  // On mount, if the URL has a hash, scroll to that heading once content is rendered.
+  React.useEffect(() => {
+    if (items.length === 0) return;
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    const el = document.getElementById(hash);
+    if (!el) return;
+    // Defer to next frame so layout is settled.
+    requestAnimationFrame(() => {
+      const top = el.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top, behavior: "auto" });
+    });
+  }, [items]);
 
   React.useEffect(() => {
     if (items.length === 0) return;
@@ -16,45 +31,43 @@ export function TableOfContents({ items }: Props) {
       .filter((el): el is HTMLElement => el !== null);
     if (headings.length === 0) return;
 
-    const visible = new Set<string>();
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) visible.add(entry.target.id);
-          else visible.delete(entry.target.id);
-        }
-        const firstVisible = items.find((i) => visible.has(i.id));
-        if (firstVisible) setActiveId(firstVisible.id);
-      },
-      { rootMargin: "-80px 0px -70% 0px", threshold: 0 }
-    );
-    headings.forEach((h) => observer.observe(h));
-
-    const onScroll = () => {
+    const computeActive = () => {
+      const threshold = 100;
+      let current: string | null = null;
+      for (const h of headings) {
+        const top = h.getBoundingClientRect().top;
+        if (top - threshold <= 0) current = h.id;
+        else break;
+      }
       const nearBottom =
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight - 4;
-      if (nearBottom) setActiveId(items[items.length - 1].id);
-      const atTop = window.scrollY < 80;
-      if (atTop) setActiveId(items[0].id);
+      if (nearBottom) current = items[items.length - 1].id;
+      if (window.scrollY < 80) current = items[0].id;
+      setActiveId(current ?? items[0].id);
+    };
+
+    const onScroll = () => {
+      userScrolledRef.current = true;
+      computeActive();
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+    computeActive();
 
     return () => {
-      observer.disconnect();
       window.removeEventListener("scroll", onScroll);
     };
   }, [items]);
 
   React.useEffect(() => {
     if (!activeId) return;
+    // Don't write the hash until the user has actually scrolled — avoids
+    // hijacking the URL on initial page load.
+    if (!userScrolledRef.current) return;
     const newHash = `#${activeId}`;
     if (window.location.hash === newHash) return;
     const t = window.setTimeout(() => {
       const url = window.location.pathname + window.location.search + newHash;
-      // Use the native History.prototype method to avoid router-patched
-      // replaceState triggering scroll-to-hash behavior.
       const native = Object.getPrototypeOf(window.history).replaceState;
       native.call(window.history, window.history.state, "", url);
     }, 120);
