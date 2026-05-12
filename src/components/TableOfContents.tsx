@@ -10,6 +10,32 @@ export function TableOfContents({ items }: Props) {
   const [activeId, setActiveId] = React.useState<string | null>(null);
   const restoringHashRef = React.useRef(false);
 
+  const scrollToId = React.useCallback((id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    restoringHashRef.current = true;
+    const top = el.getBoundingClientRect().top + window.scrollY - 80;
+    window.scrollTo({ top, behavior: "smooth" });
+    setActiveId(id);
+    const newHash = `#${id}`;
+    if (window.location.hash !== newHash) {
+      const url = window.location.pathname + window.location.search + newHash;
+      const nativeReplaceState = Object.getPrototypeOf(window.history).replaceState;
+      nativeReplaceState.call(window.history, window.history.state, "", url);
+    }
+    window.setTimeout(() => {
+      restoringHashRef.current = false;
+    }, 700);
+  }, []);
+
+  const handleLinkClick = React.useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+      e.preventDefault();
+      scrollToId(id);
+    },
+    [scrollToId]
+  );
+
   const replaceHash = React.useCallback((id: string) => {
     const newHash = `#${id}`;
     if (window.location.hash === newHash) return;
