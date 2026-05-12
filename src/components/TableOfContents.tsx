@@ -142,6 +142,11 @@ export function TableOfContents({ items }: Props) {
         if (shouldUpdateHash) replaceHash(lockedActiveId);
         return;
       }
+      if (window.scrollY < 8) {
+        setActiveId(null);
+        if (shouldUpdateHash) replaceHash(null);
+        return;
+      }
       const baseOffset = Math.min(window.innerHeight * 0.42, 360);
       const endOffset = Math.max(baseOffset, window.innerHeight - 120);
       const remainingScroll =
