@@ -7,7 +7,8 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 import { readdirSync, readFileSync, statSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, relative } from "node:path";
 import type { Plugin } from "vite";
-import { siteConfig } from "./site.config";
+// Note: do NOT import ./site.config here — it reads import.meta.env, which is
+// undefined when vite.config.ts itself runs in Node, and would crash the build.
 
 const basePath = process.env.VITE_BASE_PATH || "/";
 
