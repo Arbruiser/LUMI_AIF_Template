@@ -15,7 +15,39 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  check-pages:
+    runs-on: ubuntu-latest
+    outputs:
+      enabled: ${{ steps.pages.outputs.enabled }}
+    steps:
+      - id: pages
+        name: Check GitHub Pages setup
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          response="$(gh api "repos/${GITHUB_REPOSITORY}/pages" 2>/dev/null)"
+          status=$?
+          set -e
+
+          if [[ $status -ne 0 ]]; then
+            echo "GitHub Pages is not enabled yet. Skipping deploy."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          build_type="$(jq -r '.build_type // empty' <<< "$response")"
+          if [[ "$build_type" != "workflow" ]]; then
+            echo "GitHub Pages is enabled, but the source is not GitHub Actions. Skipping deploy."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "enabled=true" >> "$GITHUB_OUTPUT"
+
   build:
+    needs: check-pages
+    if: needs.check-pages.outputs.enabled == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -57,16 +89,13 @@ jobs:
           # Disable Jekyll so files/folders starting with _ are served as-is.
           touch dist/client/.nojekyll
       - uses: actions/configure-pages@v5
-        with:
-          # Auto-enable GitHub Pages on first run so freshly-templated repos
-          # don't fail before the user manually flips the Pages source.
-          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist/client
 
   deploy:
-    needs: build
+    needs: [check-pages, build]
+    if: needs.check-pages.outputs.enabled == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
