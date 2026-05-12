@@ -118,6 +118,7 @@ export function TableOfContents({ items }: Props) {
             <li key={item.id}>
               <a
                 href={`#${item.id}`}
+                onClick={(e) => handleLinkClick(e, item.id)}
                 className={cn(
                   "-ml-px block border-l py-0.5 pl-3 transition-colors",
                   item.depth === 3 && "pl-6",
