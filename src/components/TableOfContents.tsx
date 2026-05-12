@@ -8,7 +8,15 @@ interface Props {
 
 export function TableOfContents({ items }: Props) {
   const [activeId, setActiveId] = React.useState<string | null>(null);
-  const userScrolledRef = React.useRef(false);
+  const restoringHashRef = React.useRef(false);
+
+  const replaceHash = React.useCallback((id: string) => {
+    const newHash = `#${id}`;
+    if (window.location.hash === newHash) return;
+    const url = window.location.pathname + window.location.search + newHash;
+    const nativeReplaceState = Object.getPrototypeOf(window.history).replaceState;
+    nativeReplaceState.call(window.history, window.history.state, "", url);
+  }, []);
 
   // On mount, if the URL has a hash, scroll to that heading once content is rendered.
   React.useEffect(() => {
@@ -19,8 +27,12 @@ export function TableOfContents({ items }: Props) {
     if (!el) return;
     // Defer to next frame so layout is settled.
     requestAnimationFrame(() => {
+      restoringHashRef.current = true;
       const top = el.getBoundingClientRect().top + window.scrollY - 80;
       window.scrollTo({ top, behavior: "auto" });
+      requestAnimationFrame(() => {
+        restoringHashRef.current = false;
+      });
     });
   }, [items]);
 
@@ -31,48 +43,37 @@ export function TableOfContents({ items }: Props) {
       .filter((el): el is HTMLElement => el !== null);
     if (headings.length === 0) return;
 
-    const computeActive = () => {
-      const threshold = 100;
+    const computeActive = (shouldUpdateHash: boolean) => {
+      const baseOffset = Math.min(window.innerHeight * 0.42, 360);
+      const endOffset = Math.max(baseOffset, window.innerHeight - 120);
+      const remainingScroll =
+        document.documentElement.scrollHeight - (window.scrollY + window.innerHeight);
+      const bottomRamp = Math.min(1, Math.max(0, (600 - remainingScroll) / 600));
+      const easedRamp = bottomRamp * bottomRamp * (3 - 2 * bottomRamp);
+      const activationLine =
+        window.scrollY + baseOffset + (endOffset - baseOffset) * easedRamp;
       let current: string | null = null;
       for (const h of headings) {
-        const top = h.getBoundingClientRect().top;
-        if (top - threshold <= 0) current = h.id;
+        const top = h.getBoundingClientRect().top + window.scrollY;
+        if (top <= activationLine) current = h.id;
         else break;
       }
-      const nearBottom =
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 4;
-      if (nearBottom) current = items[items.length - 1].id;
-      if (window.scrollY < 80) current = items[0].id;
-      setActiveId(current ?? items[0].id);
+      const nextActive = current ?? items[0].id;
+      setActiveId(nextActive);
+      if (shouldUpdateHash) replaceHash(nextActive);
     };
 
     const onScroll = () => {
-      userScrolledRef.current = true;
-      computeActive();
+      const shouldUpdateHash = !restoringHashRef.current;
+      computeActive(shouldUpdateHash);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    computeActive();
+    computeActive(false);
 
     return () => {
       window.removeEventListener("scroll", onScroll);
     };
-  }, [items]);
-
-  React.useEffect(() => {
-    if (!activeId) return;
-    // Don't write the hash until the user has actually scrolled — avoids
-    // hijacking the URL on initial page load.
-    if (!userScrolledRef.current) return;
-    const newHash = `#${activeId}`;
-    if (window.location.hash === newHash) return;
-    const t = window.setTimeout(() => {
-      const url = window.location.pathname + window.location.search + newHash;
-      const native = Object.getPrototypeOf(window.history).replaceState;
-      native.call(window.history, window.history.state, "", url);
-    }, 120);
-    return () => window.clearTimeout(t);
-  }, [activeId]);
+  }, [items, replaceHash]);
 
   if (items.length === 0) return null;
 
