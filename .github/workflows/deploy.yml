@@ -3,6 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  page_build:
   workflow_dispatch:
 
 permissions:
@@ -16,12 +17,9 @@ concurrency:
 
 jobs:
   build:
-    # Skip the very first push that creates the `main` branch (i.e. the
-    # initial commit GitHub makes when the user clicks "Use this template").
-    # At that point GitHub Pages is not configured yet, so a deploy attempt
-    # would fail. Subsequent pushes — and manual `workflow_dispatch` runs —
-    # build and deploy normally.
-    if: github.event_name == 'workflow_dispatch' || github.event.created != true
+    # Skip only the first automatic push created by GitHub's "Use this template".
+    # Manual runs, Pages-triggered runs, normal pushes, and re-runs all deploy.
+    if: github.event_name != 'push' || github.event.created != true || github.run_attempt > 1
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -63,18 +61,13 @@ jobs:
           # Disable Jekyll so files/folders starting with _ are served as-is.
           touch dist/client/.nojekyll
       - uses: actions/configure-pages@v5
-        with:
-          # Auto-enable GitHub Pages (with Actions as the source) on the
-          # first real run, so the user doesn't have to flip the Pages
-          # source manually before the first deploy.
-          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist/client
 
   deploy:
     needs: build
-    if: github.event_name == 'workflow_dispatch' || github.event.created != true
+    if: github.event_name != 'push' || github.event.created != true || github.run_attempt > 1
     runs-on: ubuntu-latest
     environment:
       name: github-pages
