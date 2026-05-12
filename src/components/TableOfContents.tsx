@@ -82,17 +82,50 @@ export function TableOfContents({ items }: Props) {
     if (!hash) return;
     const el = document.getElementById(hash);
     if (!el) return;
-    // Defer to next frame so layout is settled.
-    requestAnimationFrame(() => {
-      lockedActiveIdRef.current = hash;
-      setActiveId(hash);
-      restoringHashRef.current = true;
-      const top = el.getBoundingClientRect().top + window.scrollY - 80;
+    lockedActiveIdRef.current = hash;
+    setActiveId(hash);
+    restoringHashRef.current = true;
+
+    const scrollToHeading = () => {
+      const target = document.getElementById(hash);
+      if (!target) return;
+      const top = target.getBoundingClientRect().top + window.scrollY - 80;
       window.scrollTo({ top, behavior: "auto" });
-      requestAnimationFrame(() => {
-        restoringHashRef.current = false;
-      });
+    };
+
+    // Initial scroll
+    requestAnimationFrame(scrollToHeading);
+
+    // Re-scroll as images and other async content load and shift layout.
+    const imgs = Array.from(document.images);
+    const pending = imgs.filter((img) => !img.complete);
+    let remaining = pending.length;
+    const onImgDone = () => {
+      remaining -= 1;
+      scrollToHeading();
+    };
+    pending.forEach((img) => {
+      img.addEventListener("load", onImgDone, { once: true });
+      img.addEventListener("error", onImgDone, { once: true });
     });
+
+    // Periodic re-scroll as a safety net for fonts/KaTeX/etc.
+    const intervals = [50, 150, 300, 600, 1000, 1600].map((ms) =>
+      window.setTimeout(scrollToHeading, ms)
+    );
+    const unlockTimer = window.setTimeout(() => {
+      restoringHashRef.current = false;
+      lockedActiveIdRef.current = null;
+    }, 1800);
+
+    return () => {
+      intervals.forEach((id) => window.clearTimeout(id));
+      window.clearTimeout(unlockTimer);
+      pending.forEach((img) => {
+        img.removeEventListener("load", onImgDone);
+        img.removeEventListener("error", onImgDone);
+      });
+    };
   }, [items]);
 
   React.useEffect(() => {
