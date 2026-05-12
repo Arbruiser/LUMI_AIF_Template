@@ -1,50 +1,60 @@
-## Selected upgrades
+## Why your rename broke the site
 
-### 1. Copy-link on headings (visible affordance)
-The click-to-copy logic already exists in `MarkdownRenderer` but the autolink renders an empty span, so users can't see it.
-- Switch `rehypeAutolinkHeadings` content to a small link-icon SVG (or use a `behavior: "append"` with an `<svg>` element node).
-- Style `.heading-anchor` in `styles.css`: hidden by default, fades in on heading hover, magenta on hover, sits to the right of the heading text.
-- Show a tiny "Link copied" toast (reuse existing `sonner` already in `components/ui`).
+Two things are hardcoded to the original repo name. The base path is already auto-detected in `.github/workflows/deploy.yml` (good), but `site.config.ts` is not:
 
-### 2. Code block: filename + line numbers
-- Extend the markdown info-string parsing in `CodeBlock`. ReactMarkdown only forwards `language-xxx` in `className`, so we'll move parsing to `MarkdownRenderer`'s `pre` component: read `child.props.className` plus `child.props.metaString` (need a small remark plugin OR a regex on the meta via `remark-directive`-style — simplest is to add `remark-flexible-code-titles`, a tiny well-maintained plugin that turns ` ```python title="train.py" {1,3-5} ` into a `<div class="remark-code-title">` + className tokens).
-- Render the title as a styled chrome bar above the existing code chrome (or replace the `lang` label when title is set).
-- Line numbers: add a `pre.with-line-numbers` CSS treatment using `counter-reset` on `<code>` and `::before` on each `<span class="line">`. To get per-line spans, swap `rehype-highlight` for `rehype-pretty-code` (or keep highlight and post-process). Recommended approach: use `rehype-pretty-code` with Shiki — handles title, line numbers, and line highlighting natively in one plugin and matches the "title + highlight ranges" goal cleanly. We'd remove `rehype-highlight` and `highlight.js` styles, and ship a single Shiki theme that respects light/dark via CSS variables.
-- Terminal variant in `CodeBlock` keeps its current chrome but gains the same line-number CSS when meta requests it.
+```ts
+siteUrl: "https://arbruiser.github.io/LUMI_AIF_template_Loveable",
+githubRepo: "Arbruiser/LUMI_AIF_template_Loveable" as string | null,
+```
 
-### 3. Image lightbox
-- Wrap `img` renderer output in a `<button>` that opens a Dialog (shadcn `dialog` already present).
-- Lightbox shows the full-size image centered on a dimmed backdrop, caption from `alt`, ESC / backdrop click to close.
-- Skip wrapping for tiny inline images (e.g., badges) by checking natural width on load; default behavior: every content `<img>` is clickable.
+These feed `sitemap.xml`, `robots.txt`, canonical URL, and the "Edit this page on GitHub" link — so after a rename they all point to a repo that no longer exists, and the sitemap advertises a broken domain to search engines.
 
-### 4. Sitemap.xml + robots.txt
-- Add a build-time generator using a small Vite plugin in `vite.config.ts`:
-  - On `buildEnd` (or via `closeBundle`), read all `content/**/*.md`, derive slugs the same way `lib/content.ts` does, write `dist/sitemap.xml` with `<url><loc>${siteConfig.url}/${slug}</loc></url>` and `<lastmod>` from file mtime.
-  - Write `dist/robots.txt`:
-    ```
-    User-agent: *
-    Allow: /
-    Sitemap: ${siteConfig.url}/sitemap.xml
-    ```
-- Requires `siteConfig.url` (production URL) — add the field to `site.config.ts` if missing.
+(The "everything broke" symptom you saw is most likely the GitHub Pages URL itself changing — the new URL is `https://arbruiser.github.io/<new-repo>/`. Once a fresh build runs on the renamed repo, the auto-detected `VITE_BASE_PATH` makes assets load again. If the live site is still blank, it just needs a new commit pushed to `main` to re-trigger the deploy workflow.)
 
-### 5. Drop-cap + tighter heading rhythm
-- In `styles.css` under `.prose-lumi`:
-  - First-paragraph drop-cap: `.prose-lumi > p:first-of-type::first-letter { float: left; font-size: 3.2em; line-height: 0.9; padding-right: 0.08em; color: var(--lumi-magenta); font-weight: 700; }`. Skip when the first block is a heading (already true via `:first-of-type`) or a callout.
-  - Heading rhythm: tighten `h2 { margin-top: 2.5rem; margin-bottom: 0.75rem; }`, `h3 { margin-top: 1.75rem; margin-bottom: 0.5rem; }`, lift heading `letter-spacing: -0.01em`.
-  - Wide-screen body line-height: `@media (min-width: 1280px) { .prose-lumi p { line-height: 1.75; } }`.
+## Goal
 
-## Files to touch
-- `src/components/MarkdownRenderer.tsx` — autolink icon, lightbox wrapper, code block plugin wiring
-- `src/components/CodeBlock.tsx` — title bar, line-number support
-- `src/styles.css` — anchor styles, drop-cap, heading rhythm, line-number CSS, code theme vars
-- `vite.config.ts` — sitemap/robots plugin
-- `site.config.ts` — add `url`
-- `package.json` — add `rehype-pretty-code` + `shiki` (and `remark-flexible-code-titles` only if we keep `rehype-highlight`); remove `rehype-highlight` + `highlight.js` if we switch to Shiki
+A content creator forks the template, renames it whatever they want, edits `content/*.md`, and everything Just Works — no config edits required.
 
-## Open question
-For code blocks, two paths:
-- **A. Switch to `rehype-pretty-code` + Shiki** — best result (titles, line numbers, line highlight all built in, themable via CSS vars), but replaces the current syntax highlighter so existing colors will change.
-- **B. Keep `rehype-highlight`, add `remark-flexible-code-titles` + custom CSS for line numbers** — preserves current highlighting, more glue code, no built-in line-range highlighting.
+## Plan
 
-I'll go with **A** unless you prefer to keep current colors.
+### 1. Auto-derive repo + site URL at build time
+
+In `.github/workflows/deploy.yml`, export two more env vars alongside `VITE_BASE_PATH`:
+
+- `VITE_GITHUB_REPO` = `${GITHUB_REPOSITORY}` (e.g. `arbruiser/lumi-aif-creator-kit`)
+- `VITE_SITE_URL` = computed from `${GITHUB_REPOSITORY_OWNER}` + repo name:
+  - user/org site (`<user>.github.io`) → `https://<user>.github.io`
+  - project site → `https://<owner>.github.io/<repo>`
+- Pass `VITE_GITHUB_BRANCH=${GITHUB_REF_NAME}` so the "Edit on GitHub" link tracks the deployed branch.
+
+### 2. Make `site.config.ts` read those vars with safe fallbacks
+
+```ts
+siteUrl: import.meta.env.VITE_SITE_URL ?? "",
+githubRepo: import.meta.env.VITE_GITHUB_REPO ?? null,
+githubBranch: import.meta.env.VITE_GITHUB_BRANCH ?? "main",
+```
+
+Keep `title` and `description` and `auxLinks` as the only fields creators are expected to edit. Add a clear comment saying the URL/repo fields are auto-filled by the deploy workflow and should normally be left blank.
+
+### 3. Make `vite.config.ts` sitemap plugin use the resolved URL
+
+The plugin currently imports `siteConfig.siteUrl` at build time. Switch it to read `process.env.VITE_SITE_URL` (already available in the GitHub Actions build step) with the `siteConfig` value as fallback. If neither is set, skip sitemap generation silently (already does).
+
+### 4. README update
+
+Remove the implicit assumption that creators edit `site.config.ts`. Document that:
+- Title/description/aux links are the only fields to touch.
+- URL + GitHub repo are detected automatically from GitHub Actions.
+- After forking and renaming: just push a commit to `main` to trigger a fresh deploy.
+
+### 5. One-time fix for your current repo
+
+After the changes above land, just push any commit to `main`. The workflow will rebuild with the correct base path and site URL for `lumi-aif-creator-kit` and the site will come back.
+
+## Files to change
+
+- `.github/workflows/deploy.yml` — export `VITE_SITE_URL`, `VITE_GITHUB_REPO`, `VITE_GITHUB_BRANCH`
+- `site.config.ts` — read from env with fallbacks; add comments
+- `vite.config.ts` — sitemap plugin reads `process.env.VITE_SITE_URL`
+- `README.md` — clarify what creators need to edit (almost nothing)
