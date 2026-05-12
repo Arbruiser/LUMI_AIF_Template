@@ -24,20 +24,29 @@ jobs:
           bun-version: latest
       - name: Install dependencies
         run: bun install --frozen-lockfile
-      - name: Configure base path
+      - name: Configure base path and site URL
         run: |
           # Compute the GitHub Pages base path: "/<repo>/" for project sites,
           # "/" for user/organisation sites (repo named "<user>.github.io").
+          OWNER="${GITHUB_REPOSITORY%%/*}"
           REPO="${GITHUB_REPOSITORY#*/}"
+          OWNER_LC="${OWNER,,}"
           if [[ "$REPO" == *.github.io ]]; then
             echo "VITE_BASE_PATH=/" >> "$GITHUB_ENV"
+            echo "VITE_SITE_URL=https://${OWNER_LC}.github.io" >> "$GITHUB_ENV"
           else
             echo "VITE_BASE_PATH=/$REPO/" >> "$GITHUB_ENV"
+            echo "VITE_SITE_URL=https://${OWNER_LC}.github.io/$REPO" >> "$GITHUB_ENV"
           fi
+          echo "VITE_GITHUB_REPO=$GITHUB_REPOSITORY" >> "$GITHUB_ENV"
+          echo "VITE_GITHUB_BRANCH=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
       - name: Build
         run: bun run build
         env:
           VITE_BASE_PATH: ${{ env.VITE_BASE_PATH }}
+          VITE_SITE_URL: ${{ env.VITE_SITE_URL }}
+          VITE_GITHUB_REPO: ${{ env.VITE_GITHUB_REPO }}
+          VITE_GITHUB_BRANCH: ${{ env.VITE_GITHUB_BRANCH }}
       - name: Prepare static site
         run: |
           # TanStack Start SPA mode emits a single _shell.html in dist/client.
