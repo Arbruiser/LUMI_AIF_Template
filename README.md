@@ -11,9 +11,9 @@ This is a template for creating clean, branded self-learning course sites for th
 ## Quick start
 
 1. Click **[Use this template]** at the top of this repository to make your own copy. Name it after your study materials.
-2. In your new repository, go to **Settings → Pages → Build and deployment → Source** and select **GitHub Actions**.
-4. Click the gear icon ⚙ next to **About** on the right side of your repo, tick **Use your GitHub Pages website**, and click **Save**. The live link now appears at the top of the repo.
-5. Edit `content/index.md` and add your content. To force-refresh and skip the cache, press `Ctrl + F5` (Linux/Windows) or `Cmd + Shift + R` (Mac).
+2. Wait ~1 minute for the first deploy to finish (check the **Actions** tab). GitHub Pages is enabled automatically.
+3. Click the gear icon ⚙ next to **About** on the right side of your repo, tick **Use your GitHub Pages website**, and click **Save**. The live link now appears at the top of the repo.
+4. Edit `content/index.md` and add your content. To force-refresh and skip the cache, press `Ctrl + F5` (Linux/Windows) or `Cmd + Shift + R` (Mac).
 
 Every push a commit to your repository, the website is rebuilt and redeployed automatically (can take a minute).
 
