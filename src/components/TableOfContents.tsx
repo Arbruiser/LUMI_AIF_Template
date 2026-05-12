@@ -44,7 +44,14 @@ export function TableOfContents({ items }: Props) {
     if (headings.length === 0) return;
 
     const computeActive = (shouldUpdateHash: boolean) => {
-      const activationLine = window.scrollY + Math.min(window.innerHeight * 0.42, 360);
+      const baseOffset = Math.min(window.innerHeight * 0.42, 360);
+      const endOffset = Math.max(baseOffset, window.innerHeight - 120);
+      const remainingScroll =
+        document.documentElement.scrollHeight - (window.scrollY + window.innerHeight);
+      const bottomRamp = Math.min(1, Math.max(0, (600 - remainingScroll) / 600));
+      const easedRamp = bottomRamp * bottomRamp * (3 - 2 * bottomRamp);
+      const activationLine =
+        window.scrollY + baseOffset + (endOffset - baseOffset) * easedRamp;
       let current: string | null = null;
       for (const h of headings) {
         const top = h.getBoundingClientRect().top + window.scrollY;
