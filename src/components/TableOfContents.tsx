@@ -8,14 +8,14 @@ interface Props {
 
 export function TableOfContents({ items }: Props) {
   const [activeId, setActiveId] = React.useState<string | null>(null);
-  const userScrolledRef = React.useRef(false);
   const restoringHashRef = React.useRef(false);
 
   const replaceHash = React.useCallback((id: string) => {
     const newHash = `#${id}`;
     if (window.location.hash === newHash) return;
     const url = window.location.pathname + window.location.search + newHash;
-    window.history.replaceState(window.history.state, "", url);
+    const nativeReplaceState = Object.getPrototypeOf(window.history).replaceState;
+    nativeReplaceState.call(window.history, window.history.state, "", url);
   }, []);
 
   // On mount, if the URL has a hash, scroll to that heading once content is rendered.
@@ -71,7 +71,6 @@ export function TableOfContents({ items }: Props) {
 
     const onScroll = () => {
       const shouldUpdateHash = !restoringHashRef.current;
-      if (shouldUpdateHash) userScrolledRef.current = true;
       computeActive(shouldUpdateHash);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
