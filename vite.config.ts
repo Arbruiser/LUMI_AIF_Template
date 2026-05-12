@@ -42,7 +42,7 @@ function sitemapPlugin(): Plugin {
     closeBundle() {
       try {
         const files = walkMd("content");
-        const base = (siteConfig.siteUrl || "").replace(/\/$/, "");
+        const base = (process.env.VITE_SITE_URL || siteConfig.siteUrl || "").replace(/\/$/, "");
         if (!base) return;
         const urls = files.map((f) => {
           const slug = fileToSlug(f);
