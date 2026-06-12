@@ -1,20 +1,18 @@
 import * as React from "react";
 import { Check, X, HelpCircle, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Quiz as QuizData, QuizQuestion } from "@/lib/quiz";
+import { scoreAnswer } from "@/lib/quiz";
+import type { Quiz as QuizData } from "@/lib/quiz";
 
 type AnswerState = {
   selected: Set<number>;
   answered: boolean;
-  correct: boolean;
+  /** Fraction between 0 and 1 (1 = fully correct). */
+  score: number;
 };
 
-function isAnswerCorrect(question: QuizQuestion, selected: Set<number>): boolean {
-  const correctIdx = question.options
-    .map((o, i) => (o.correct ? i : -1))
-    .filter((i) => i >= 0);
-  if (selected.size !== correctIdx.length) return false;
-  return correctIdx.every((i) => selected.has(i));
+function formatScore(value: number): string {
+  return Number.isInteger(value) ? `${value}` : value.toFixed(1);
 }
 
 export function Quiz({ title, questions }: QuizData) {
@@ -30,7 +28,7 @@ export function Quiz({ title, questions }: QuizData) {
   const isLast = current === questions.length - 1;
   const allAnswered = questions.every((_, i) => states[i]?.answered);
   const score = questions.reduce(
-    (acc, _, i) => acc + (states[i]?.correct ? 1 : 0),
+    (acc, _, i) => acc + (states[i]?.score ?? 0),
     0
   );
 
@@ -43,13 +41,13 @@ export function Quiz({ title, questions }: QuizData) {
       const nextSelected = new Set(selected);
       if (nextSelected.has(idx)) nextSelected.delete(idx);
       else nextSelected.add(idx);
-      setState({ selected: nextSelected, answered: false, correct: false });
+      setState({ selected: nextSelected, answered: false, score: 0 });
     } else {
       const nextSelected = new Set<number>([idx]);
       setState({
         selected: nextSelected,
         answered: true,
-        correct: isAnswerCorrect(question, nextSelected),
+        score: scoreAnswer(question, nextSelected),
       });
     }
   };
@@ -59,7 +57,7 @@ export function Quiz({ title, questions }: QuizData) {
     setState({
       selected,
       answered: true,
-      correct: isAnswerCorrect(question, selected),
+      score: scoreAnswer(question, selected),
     });
   };
 
@@ -147,10 +145,18 @@ export function Quiz({ title, questions }: QuizData) {
             <p
               className={cn(
                 "text-sm font-semibold",
-                state.correct ? "text-quiz-correct" : "text-quiz-wrong"
+                state.score === 1
+                  ? "text-quiz-correct"
+                  : state.score > 0
+                    ? "text-quiz-accent"
+                    : "text-quiz-wrong"
               )}
             >
-              {state.correct ? "Correct!" : "Not quite."}
+              {state.score === 1
+                ? "Correct!"
+                : state.score > 0
+                  ? `Partially correct — ${Math.round(state.score * 100)}% credit.`
+                  : "Not quite."}
             </p>
             {question.explanation && (
               <p className="mt-1 text-sm leading-snug text-foreground/80">
@@ -164,7 +170,7 @@ export function Quiz({ title, questions }: QuizData) {
           <div className="text-xs text-muted-foreground">
             {allAnswered && (
               <span className="font-medium text-foreground">
-                Score: {score} / {questions.length} correct
+                Score: {formatScore(score)} / {questions.length} correct
               </span>
             )}
           </div>

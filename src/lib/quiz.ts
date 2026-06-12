@@ -34,6 +34,37 @@ const TITLE_RE = /^title:\s*(.*)$/i;
  *   ---
  *   Q: Next question ...
  */
+/**
+ * Score a single answer as a fraction between 0 and 1.
+ *
+ * Single-choice questions are all-or-nothing. Multiple-choice questions use
+ * partial credit: each correct option selected adds credit, while each wrong
+ * option selected subtracts credit, so blindly selecting everything cannot
+ * earn full marks. The result is clamped to [0, 1].
+ */
+export function scoreAnswer(
+  question: QuizQuestion,
+  selected: Set<number>
+): number {
+  const totalCorrect = question.options.filter((o) => o.correct).length;
+  if (totalCorrect === 0) return 0;
+
+  if (!question.multi) {
+    const idx = [...selected][0];
+    return idx !== undefined && question.options[idx]?.correct ? 1 : 0;
+  }
+
+  let correctSelected = 0;
+  let wrongSelected = 0;
+  for (const idx of selected) {
+    if (question.options[idx]?.correct) correctSelected += 1;
+    else wrongSelected += 1;
+  }
+
+  const raw = (correctSelected - wrongSelected) / totalCorrect;
+  return Math.max(0, Math.min(1, raw));
+}
+
 export function parseQuiz(source: string): Quiz {
   const lines = source.replace(/\r\n/g, "\n").split("\n");
 
