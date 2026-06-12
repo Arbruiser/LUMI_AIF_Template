@@ -7,7 +7,9 @@ nav_order: 2
 
 This is an example of an extra page. Use chapters like this to add structure and split your materials into modules instead of a single long page.
 
-A [[Supercomputer]] like LUMI is accessed through the [[Command Line]] from your [[Terminal]]. Hover over those highlighted words to see their glossary definitions — defined once in `content/glossary.md`.
+A Supercomputer* like LUMI is written about using Markdown*, just like every
+other page here. Hover over those highlighted words to see their glossary
+definitions — defined once in `content/glossary.md`.
 
 You can even **add subchapters** by creating another `.md` file (e.g. `chapter1-1.md`) and using the `parent` field. Update this file's frontmatter to mark it as a parent:
 
