@@ -119,18 +119,24 @@ export function CodeBlock({
   if (isNano) {
     return (
       <div className="nano-block group relative my-5 overflow-hidden rounded-md border border-nano-border shadow-md">
-        <div className="nano-titlebar flex items-center justify-between gap-2 px-3 py-1">
-          <span className="font-sans text-xs font-semibold">GNU nano</span>
-          <span className="font-sans text-xs truncate">{title ?? "New Buffer"}</span>
-          <button
-            type="button"
-            onClick={onCopy}
-            className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] opacity-0 transition-opacity hover:bg-black/10 group-hover:opacity-100 focus:opacity-100"
-            aria-label="Copy code"
-          >
-            {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-            {copied ? "Copied" : "Copy"}
-          </button>
+        <div className="nano-titlebar flex items-center justify-between px-3 py-1.5">
+          <span className="font-sans text-xs font-semibold truncate">
+            GNU nano — {title ?? "New Buffer"}
+          </span>
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={onCopy}
+              className="mr-2 inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] text-nano-inverse-fg/80 opacity-0 transition-opacity hover:bg-black/10 group-hover:opacity-100 focus:opacity-100"
+              aria-label="Copy code"
+            >
+              {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+              {copied ? "Copied" : "Copy"}
+            </button>
+            <span className="nano-btn" aria-hidden>−</span>
+            <span className="nano-btn" aria-hidden>▢</span>
+            <span className="nano-btn nano-btn-close" aria-hidden>×</span>
+          </div>
         </div>
         <pre
           ref={ref}
@@ -141,12 +147,6 @@ export function CodeBlock({
         >
           <code className={className}>{wrapped}</code>
         </pre>
-        <div className="nano-shortcuts grid grid-cols-2 gap-x-6 gap-y-0.5 px-3 py-1 font-sans text-[11px] sm:grid-cols-4">
-          <span><span className="nano-key">^O</span> Write Out</span>
-          <span><span className="nano-key">^W</span> Where Is</span>
-          <span><span className="nano-key">^K</span> Cut</span>
-          <span><span className="nano-key">^X</span> Exit</span>
-        </div>
       </div>
     );
   }
