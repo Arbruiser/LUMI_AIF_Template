@@ -237,7 +237,6 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
         rehypePlugins={[
           rehypeHoistCodeMeta,
           rehypeRaw,
-          rehypeGlossary,
           rehypeSlug,
           rehypeCopyHeadingButtons,
           rehypeHighlight,
