@@ -9,8 +9,6 @@ This is the official template for creating clean, branded self-learning course s
 
 For a quick overview of the Markdown syntax, see the [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/).
 
----
-
 ## Add more pages
 1. **Create a new page:** `index.md` is the 'landing page' of the website, do not rename it. You can add more pages by dropping new `.md` files into `content/` (or a subfolder). To remove the example chapter, delete `content/chapter1.md`.
 2. **Add front matter.** Every page needs these lines at the top:
@@ -27,8 +25,6 @@ Where:
 - `nav_order` controls the order pages appear in the sidebar.
 - `parent` (optional) groups a page underneath a chapter — see
   `content/chapter1.md` for an example.
-
----
 
 ## Branded callout boxes
 
@@ -52,8 +48,6 @@ The `command` callout renders a copyable terminal command:
 > srun --pty bash
 
 Make sure to leave an empty line before and after each callout.
-
----
 
 ## Technical content
 
@@ -87,8 +81,6 @@ module use /appl/local/laifs/modules
 module load lumi-aif-singularity-bindings
 ```
 
----
-
 ## Embedding pictures
 
 Drop your image in the `public/assets/` folder of the repository, then reference it from any `.md` file using the `./assets/...` form as such:
@@ -104,15 +96,11 @@ Images are clickable and can be opened full-screen.
   <figcaption><em>Figure 1: LUMI data center visual from the LUMI brand guide.</em></figcaption>
 </figure>
 
----
-
 ## Embedding YouTube videos
 
 To add a video, simply copy the **Embed code** from YouTube (Share > Embed) and paste it into the `.md` file:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/aLae9Sd2oos?si=uJ_6ccR3ArrpVXqT" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
----
 
 ## Tables
 
@@ -127,8 +115,6 @@ Tables can be added with this syntax:
 (The vertical lines don't necessarily need to align perfectly in terms of spaces between them. AI can help you in converting your material to a table like this)
 
 Always leave an empty line before and after the table.
-
----
 
 ## Mathematical formulas
 
@@ -145,34 +131,26 @@ $$
 \int_{-\infty}^{\infty} e^{-x^2}\, dx = \sqrt{\pi}
 $$
 
----
-
 ## Section links and table of contents
 
 Every heading on the page automatically gets a copy-link icon next to it on hover — clicking it copies a deep link to that section to your clipboard.
 The table of contents on the right tracks your scroll position and updates the URL link live, so the link you share always points to whatever the reader is currently looking at.
 
----
-
 ## Glossary & hover definitions
 
 Define your key terms once on the [Glossary](/glossary) page, then reference
-them anywhere by putting a single asterisk directly after the word. The reader
+them anywhere by putting a single percent sign directly after the word. The reader
 sees a dashed underline and gets the definition in a pop-up on hover — try it
-here: you write everything in Markdown*, every page starts with Front Matter*,
-and you highlight things with a Callout*.
+here: you write everything in Markdown%, every page starts with Front Matter%,
+and you highlight things with a Callout%.
 
-- Type the term and add an asterisk right after it, with no space: Markdown*.
-- Matching is case-insensitive, so markdown* also works.
-- Multi-word terms work too — put the asterisk after the last word: Front Matter*.
+- Type the term and add a percent sign right after it, with no space: Markdown%.
+- Matching is case-insensitive, so markdown% also works.
+- Multi-word terms work too — put the percent sign after the last word: Front Matter%.
 - A word that isn't in the glossary table is left exactly as you typed it, so
-  ordinary asterisks (bold, italic, lists, math) are never affected.
+  ordinary percent signs are never affected.
 
 See the [Glossary](/glossary) page for the term table you edit.
-
-
-
----
 
 ## Need help?
 
