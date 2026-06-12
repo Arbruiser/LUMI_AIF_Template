@@ -206,6 +206,10 @@ function parseCodeMeta(meta?: string): {
 
 export function MarkdownRenderer({ source }: MarkdownRendererProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const processedSource = React.useMemo(
+    () => applyGlossaryMarkers(source),
+    [source]
+  );
   const [lightbox, setLightbox] = React.useState<{
     src: string;
     alt: string;
