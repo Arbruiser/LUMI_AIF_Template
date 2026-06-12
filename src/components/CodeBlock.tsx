@@ -10,7 +10,11 @@ interface CodeBlockProps {
   highlightLines?: Set<number>;
 }
 
-const TERMINAL_LANGS = new Set(["bash", "sh", "shell", "zsh", "console"]);
+const TERMINAL_LANGS = new Set(["bash", "shell", "zsh", "console"]);
+
+/** `.sh` scripts are shown as a file being edited (nano), not a live shell,
+ *  so they get an editor chrome with no `user@machine` prompt. */
+const NANO_LANGS = new Set(["sh"]);
 
 /** Recursively split a (possibly nested) React tree into per-line arrays.
  *  Newlines may be buried inside spans emitted by rehype-highlight, so we
@@ -91,6 +95,7 @@ export function CodeBlock({
 
   const lang = className?.match(/language-(\w+)/)?.[1];
   const isTerminal = lang ? TERMINAL_LANGS.has(lang.toLowerCase()) : false;
+  const isNano = lang ? NANO_LANGS.has(lang.toLowerCase()) : false;
 
   const onCopy = async () => {
     let text = "";
@@ -110,6 +115,43 @@ export function CodeBlock({
   const wrapped = isTerminal
     ? wrapTerminalLines(children)
     : wrapLines(children, highlightLines);
+
+  if (isNano) {
+    return (
+      <div className="nano-block group relative my-5 overflow-hidden rounded-md border border-nano-border shadow-md">
+        <div className="nano-titlebar flex items-center justify-between gap-2 px-3 py-1">
+          <span className="font-sans text-xs font-semibold">GNU nano</span>
+          <span className="font-sans text-xs truncate">{title ?? "New Buffer"}</span>
+          <button
+            type="button"
+            onClick={onCopy}
+            className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] opacity-0 transition-opacity hover:bg-black/10 group-hover:opacity-100 focus:opacity-100"
+            aria-label="Copy code"
+          >
+            {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+            {copied ? "Copied" : "Copy"}
+          </button>
+        </div>
+        <pre
+          ref={ref}
+          className={cn(
+            "nano-body overflow-x-auto px-4 py-3 text-sm leading-relaxed",
+            showLineNumbers && "with-line-numbers"
+          )}
+        >
+          <code className={className}>{wrapped}</code>
+        </pre>
+        <div className="nano-shortcuts grid grid-cols-2 gap-x-6 gap-y-0.5 px-3 py-1 font-sans text-[11px] sm:grid-cols-4">
+          <span><span className="nano-key">^O</span> Write Out</span>
+          <span><span className="nano-key">^W</span> Where Is</span>
+          <span><span className="nano-key">^K</span> Cut</span>
+          <span><span className="nano-key">^X</span> Exit</span>
+        </div>
+      </div>
+    );
+  }
+
+
 
   if (isTerminal) {
     return (
