@@ -3,6 +3,7 @@ import { Check, X, HelpCircle, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { scoreAnswer } from "@/lib/quiz";
 import type { Quiz as QuizData } from "@/lib/quiz";
+import { Confetti } from "./Confetti";
 
 type AnswerState = {
   selected: Set<number>;
@@ -70,8 +71,11 @@ export function Quiz({ title, questions }: QuizData) {
     setCurrent(0);
   };
 
+  const perfectScore = allAnswered && score === questions.length;
+
   return (
-    <section className="quiz-card my-6 overflow-hidden rounded-lg border">
+    <section className="quiz-card relative my-6 overflow-hidden rounded-lg border">
+      <Confetti active={perfectScore && answered && isLast} />
       <div className="quiz-header flex items-center justify-between gap-3 px-5 py-3">
         <div className="flex items-center gap-2">
           <HelpCircle className="h-4 w-4 shrink-0 text-quiz-accent" />
