@@ -127,7 +127,7 @@ export function CodeBlock({
             <button
               type="button"
               onClick={onCopy}
-              className="mr-2 inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] text-nano-inverse-fg/80 opacity-0 transition-opacity hover:bg-black/10 group-hover:opacity-100 focus:opacity-100"
+              className="mr-2 inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] text-white/80 opacity-0 transition-opacity hover:bg-white/10 group-hover:opacity-100 focus:opacity-100"
               aria-label="Copy code"
             >
               {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
