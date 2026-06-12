@@ -170,7 +170,7 @@ export function Quiz({ title, questions }: QuizData) {
           <div className="text-xs text-muted-foreground">
             {allAnswered && (
               <span className="font-medium text-foreground">
-                Score: {score} / {questions.length} correct
+                Score: {formatScore(score)} / {questions.length} correct
               </span>
             )}
           </div>
