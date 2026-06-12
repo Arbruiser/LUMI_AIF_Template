@@ -10,14 +10,15 @@
 
 /*
  * LUMI AI Factory design tokens.
- * All colours derived from the official LUMI AIF brand palette.
- *   white   #ffffff
- *   black   #231f20
- *   purple  #7477b8
- *   blue    #2c6789
- *   magenta #ec008c
- *   teal    #28c0d2  (effect colour)
+ * The ONLY LUMI AIF brand colours (per the brand "Colours" screenshot):
+ *   white   #ffffff  (main)
+ *   black   #231f20  (main, "dark-dark-grey")
+ *   purple  #7477b8  (additional)
+ *   blue    #2c6789  (additional)
+ *   magenta #ec008c  (effect colour)
  *
+ * Every token below is one of these five colours, or a mix of one of them
+ * with white or black. No other hues (no teal, no green, no light-blue).
  * Light theme = brand colours mixed with white.
  * Dark theme  = brand colours mixed with brand black.
  */
