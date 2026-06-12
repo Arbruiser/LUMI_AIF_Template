@@ -27,7 +27,8 @@ export function GlossaryList() {
   if (entries.length === 0) return null;
 
   return (
-    <dl className="mt-6 max-w-[78ch] divide-y divide-border rounded-lg border border-border not-prose">
+    <div className="prose-lumi mt-6">
+      <dl className="w-full divide-y divide-border rounded-lg border border-border not-prose">
       {entries.map((entry) => {
         const id = termToId(entry.term);
         return (
@@ -52,6 +53,7 @@ export function GlossaryList() {
           </div>
         );
       })}
-    </dl>
+      </dl>
+    </div>
   );
 }
