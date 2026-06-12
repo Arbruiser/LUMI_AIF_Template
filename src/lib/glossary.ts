@@ -129,16 +129,12 @@ function processSegment(
 ): string {
   pattern.lastIndex = 0;
   return text.replace(pattern, (full, termText: string, pct: string) => {
+    // Only an explicit `%` marker creates a link — no automatic matching, so
+    // there are never false positives on ordinary prose.
+    if (pct !== "%") return full;
     const key = termText.replace(/\s+/g, " ").trim().toLowerCase();
     const entry = glossary.get(key);
     if (!entry) return full;
-    // An explicit `%` marker always links and drops the marker character.
-    if (pct === "%") {
-      linked.add(key);
-      return spanFor(entry, termText);
-    }
-    // Otherwise auto-link only the first occurrence of the term per page.
-    if (linked.has(key)) return full;
     linked.add(key);
     return spanFor(entry, termText);
   });
@@ -162,10 +158,9 @@ function processLine(
 /**
  * Turn glossary terms in a markdown source into glossary `<span>` HTML.
  *
- * - Terms are auto-linked on their FIRST occurrence per page — creators don't
- *   need to mark anything.
- * - The legacy `Term%` marker still works and forces a link (handy to link a
- *   later occurrence too); the `%` itself is removed from the output.
+ * - Only the explicit `Term%` marker creates a link; the `%` itself is removed
+ *   from the output. There is no automatic matching, so ordinary prose never
+ *   produces false-positive links.
  * - Matching is case-insensitive and multi-word terms win over shorter ones.
  * - Headings, table rows, fenced code, inline code, and links are skipped.
  */

@@ -27,16 +27,16 @@ export function GlossaryList() {
   if (entries.length === 0) return null;
 
   return (
-    <dl className="mt-6 grid gap-3 not-prose">
+    <dl className="mt-6 max-w-2xl divide-y divide-border rounded-lg border border-border not-prose">
       {entries.map((entry) => {
         const id = termToId(entry.term);
         return (
           <div
             key={entry.term}
             id={id}
-            className="group scroll-mt-24 rounded-lg border border-border bg-card/40 p-4 transition-colors hover:border-lumi-magenta/60"
+            className="group scroll-mt-24 grid grid-cols-1 gap-1 px-4 py-3 transition-colors hover:bg-muted/40 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-4"
           >
-            <dt className="flex items-center gap-2 font-semibold text-foreground">
+            <dt className="flex items-baseline gap-1.5 font-semibold text-foreground">
               <a
                 href={`#${id}`}
                 aria-label={`Link to ${entry.term}`}
@@ -44,9 +44,9 @@ export function GlossaryList() {
               >
                 #
               </a>
-              {entry.term}
+              <span>{entry.term}</span>
             </dt>
-            <dd className="mt-1 leading-relaxed text-muted-foreground">
+            <dd className="text-sm leading-relaxed text-muted-foreground">
               {entry.definition}
             </dd>
           </div>
