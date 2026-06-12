@@ -290,12 +290,33 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
         rehypePlugins={[
           rehypeHoistCodeMeta,
           rehypeRaw,
+          rehypeGlossary,
           rehypeSlug,
           rehypeCopyHeadingButtons,
           rehypeHighlight,
           rehypeKatex,
         ]}
         components={{
+          span(props) {
+            const p = props as Record<string, unknown>;
+            const node = p.node as
+              | { properties?: Record<string, unknown> }
+              | undefined;
+            const className = node?.properties?.className;
+            const isGlossary = Array.isArray(className)
+              ? className.includes("glossary-term")
+              : className === "glossary-term";
+            if (isGlossary) {
+              const term = node?.properties?.["data-term"];
+              return (
+                <GlossaryTerm term={typeof term === "string" ? term : ""}>
+                  {props.children}
+                </GlossaryTerm>
+              );
+            }
+            const { node: _node, ...rest } = props as Record<string, unknown>;
+            return <span {...(rest as React.HTMLProps<HTMLSpanElement>)} />;
+          },
           blockquote({ children }) {
             const callout = extractCallout(children);
             if (callout) {
