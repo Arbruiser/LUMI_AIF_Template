@@ -41,3 +41,34 @@ The `parent` value must match the parent page's `title` exactly.
 > [!warning]
 > Don't rename `index.md` — it's the home page of the site. All other pages can be named arbitrarily. 
 > All `.md` files in `content/` (except `index.md`) can be named anything you like. The URL is derived from the filename.
+
+## Quick quiz
+
+Test what you picked up in this chapter:
+
+```quiz
+title: Getting started with LUMI
+
+Q: Which file is always the home page of the site?
+- [ ] home.md
+- [x] index.md
+- [ ] readme.md
+> index.md is special — every other page can be named freely.
+
+---
+
+Q: Which front matter fields control where a page sits in the sidebar? (select all)
+- [x] nav_order
+- [x] parent
+- [ ] slug
+- [ ] author
+> nav_order sets the order and parent nests a page under another. The URL comes from the filename, not a slug field.
+
+---
+
+Q: How do you mark the correct answer in a quiz block?
+- [ ] With an asterisk before the option
+- [x] With a checked Markdown checkbox, [x]
+- [ ] By writing "correct" after it
+> Use - [x] for correct answers and - [ ] for wrong ones.
+```
