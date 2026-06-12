@@ -253,7 +253,8 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
               ? className.includes("glossary-term")
               : className === "glossary-term";
             if (isGlossary) {
-              const term = node?.properties?.["data-term"];
+              const props2 = node?.properties ?? {};
+              const term = props2["dataTerm"] ?? props2["data-term"];
               return (
                 <GlossaryTerm term={typeof term === "string" ? term : ""}>
                   {props.children}
