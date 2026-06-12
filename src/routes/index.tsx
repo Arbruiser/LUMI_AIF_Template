@@ -1,5 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { findPage } from "@/lib/content";
+import { findPage, getPageDescription } from "@/lib/content";
 import { PageLayout } from "@/components/PageLayout";
 import { siteConfig } from "../../site.config";
 
@@ -10,10 +10,33 @@ export const Route = createFileRoute("/")({
     const title = page?.frontmatter.title
       ? `${page.frontmatter.title} — ${siteConfig.title}`
       : siteConfig.title;
+    const description = page
+      ? getPageDescription(page) || siteConfig.description
+      : siteConfig.description;
     return {
       meta: [
         { title },
+        { name: "description", content: description },
         { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: "/" },
+      ],
+      links: [{ rel: "canonical", href: "/" }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Course",
+            name: siteConfig.title,
+            description,
+            provider: {
+              "@type": "Organization",
+              name: siteConfig.title,
+            },
+          }),
+        },
       ],
     };
   },
