@@ -248,8 +248,8 @@ html {
   --quiz-card-border: oklch(1 0 0 / 12%);
   --quiz-header-bg: oklch(0.27 0.03 290);
   --quiz-accent: oklch(0.72 0.092 237);
-  --quiz-correct: oklch(0.7 0.1 237);
-  --quiz-wrong: oklch(0.72 0.2 355);
+  --quiz-correct: oklch(0.74 0.14 165);  /* green */
+  --quiz-wrong: oklch(0.7 0.2 27);       /* red */
   --quiz-correct-bg: color-mix(in oklab, var(--quiz-correct) 16%, transparent);
   --quiz-correct-border: color-mix(in oklab, var(--quiz-correct) 50%, transparent);
   --quiz-wrong-bg: color-mix(in oklab, var(--quiz-wrong) 16%, transparent);
