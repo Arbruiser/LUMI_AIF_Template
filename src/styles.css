@@ -207,8 +207,8 @@ html {
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 16%);
-  --ring: oklch(0.7 0.1 207);
-  --link: oklch(0.78 0.1 207);
+  --ring: oklch(0.7 0.092 237);
+  --link: oklch(0.74 0.092 237);
 
   --sidebar: oklch(0.22 0.014 252);
   --sidebar-foreground: oklch(0.95 0.005 240);
