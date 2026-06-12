@@ -489,7 +489,7 @@ html {
 }
 
 /* ============= Syntax highlighting (LUMI palette only) =============
-   Hues used: 237 (blue), 281 (purple), 355 (magenta), 207 (teal).
+   Hues used: 237 (blue), 281 (purple), 355 (magenta) — LUMI AIF only.
    Lightness adjusted for sufficient contrast in light vs dark mode. */
 .hljs {
   background: transparent !important;
