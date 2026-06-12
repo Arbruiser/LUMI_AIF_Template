@@ -120,7 +120,28 @@ Q: Which of these are valid GPU partitions? (select all)
 - A question with a single `[x]` reveals feedback as soon as the reader clicks an option.
 - A question with **two or more** `[x]` answers becomes a "select all that apply" question: the reader ticks several boxes, then clicks **Check answer**.
 
-See [Chapter 1](/chapter1) for a live example.
+And here is exactly that example, live — try answering it:
+
+```quiz
+title: Check your understanding
+
+Q: Which workload manager does LUMI use?
+- [ ] PBS
+- [x] Slurm
+- [ ] LSF
+> LUMI runs all batch jobs through the Slurm workload manager.
+
+---
+
+Q: Which of these are valid GPU partitions? (select all)
+- [x] standard-g
+- [x] small-g
+- [ ] turbo-x
+> standard-g and small-g exist; turbo-x is made up.
+```
+
+See [Chapter 1](/chapter1) for another example in context.
+
 
 ## Embedding pictures
 
