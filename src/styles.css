@@ -438,19 +438,20 @@ html {
 /* Glossary terms: marked with [[term]] in markdown. Subtle dashed underline
    in the LUMI link colour signals the word is interactive; magenta on hover. */
 .glossary-term {
-  color: var(--link);
+  color: inherit;
   text-decoration: underline;
   text-decoration-style: dashed;
+  text-decoration-color: var(--link);
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
   cursor: help;
-  transition: color 0.15s ease;
+  transition: text-decoration-color 0.15s ease;
   outline: none;
 }
 
 .glossary-term:hover,
 .glossary-term:focus-visible {
-  color: var(--lumi-magenta);
+  text-decoration-color: var(--lumi-magenta);
 }
 
 .glossary-term:focus-visible {
