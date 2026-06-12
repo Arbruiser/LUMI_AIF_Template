@@ -154,6 +154,27 @@ The table of contents on the right tracks your scroll position and updates the U
 
 ---
 
+## Glossary & hover definitions
+
+Define your key terms once on the [Glossary](/glossary) page, then reference them
+anywhere with double square brackets. The reader sees the word in the LUMI link
+colour and gets the definition in a pop-up on hover:
+
+```markdown
+Connect to the [[Supercomputer]] using the [[Command Line]].
+```
+
+Renders as: Connect to the [[Supercomputer]] using the [[Command Line]].
+
+- Matching is **case-insensitive** — `[[supercomputer]]` also works.
+- For a different wording (e.g. a plural), use `[[display text|Term]]`, such as
+  `[[supercomputers|Supercomputer]]`.
+- A term that isn't in the glossary table simply renders as plain text.
+
+See `content/glossary.md` for the term table you edit.
+
+---
+
 ## Need help?
 
 If you have ideas on how to make this template even better, I’d love to hear them! Send me an email at `name.surname@csc.fi` where name is Artur and surname is Voit-Antal (anti-spam measure).
