@@ -78,6 +78,98 @@ function rehypeCopyHeadingButtons() {
   };
 }
 
+/** Match [[term]] or [[display text|term]] glossary references. */
+const GLOSSARY_RE = /\[\[([^\]|]+?)(?:\|([^\]]+?))?\]\]/g;
+
+/** Replace [[term]] markers in text with <span class="glossary-term"> nodes.
+ *  Skips text inside code/pre/headings so commands and titles are untouched. */
+function rehypeGlossary() {
+  return (tree: unknown) => {
+    visit(
+      tree as never,
+      "text",
+      (
+        node: { type: "text"; value: string },
+        index: number | undefined,
+        parent:
+          | { tagName?: string; children: unknown[] }
+          | undefined
+      ) => {
+        if (!parent || index === undefined) return;
+        const tag = parent.tagName ?? "";
+        if (tag === "code" || tag === "pre" || /^h[1-6]$/.test(tag)) return;
+        const value = node.value;
+        if (!value.includes("[[")) return;
+
+        GLOSSARY_RE.lastIndex = 0;
+        const out: unknown[] = [];
+        let last = 0;
+        let match: RegExpExecArray | null;
+        while ((match = GLOSSARY_RE.exec(value)) !== null) {
+          if (match.index > last) {
+            out.push({ type: "text", value: value.slice(last, match.index) });
+          }
+          const display = (match[1] ?? "").trim();
+          const termKey = (match[2] ?? match[1] ?? "").trim();
+          out.push({
+            type: "element",
+            tagName: "span",
+            properties: { className: ["glossary-term"], "data-term": termKey },
+            children: [{ type: "text", value: display }],
+          });
+          last = GLOSSARY_RE.lastIndex;
+        }
+
+        if (out.length === 0) return;
+        if (last < value.length) {
+          out.push({ type: "text", value: value.slice(last) });
+        }
+        parent.children.splice(index, 1, ...out);
+        return index + out.length;
+      }
+    );
+  };
+}
+
+/** Inline glossary term with a hover/focus popover showing its definition.
+ *  Falls back to plain text when the term isn't in the glossary. */
+function GlossaryTerm({
+  term,
+  children,
+}: {
+  term: string;
+  children: React.ReactNode;
+}) {
+  const entry = lookupTerm(term);
+  if (!entry) {
+    if (import.meta.env.DEV && term) {
+      // eslint-disable-next-line no-console
+      console.warn(`[glossary] no definition found for "${term}"`);
+    }
+    return <>{children}</>;
+  }
+  return (
+    <HoverCard openDelay={120} closeDelay={80}>
+      <HoverCardTrigger asChild>
+        <span
+          className="glossary-term"
+          tabIndex={0}
+          role="button"
+          aria-label={`Glossary definition: ${entry.term}`}
+        >
+          {children}
+        </span>
+      </HoverCardTrigger>
+      <HoverCardContent className="w-72 text-sm">
+        <p className="font-semibold text-foreground">{entry.term}</p>
+        <p className="mt-1 leading-snug text-muted-foreground">
+          {entry.definition}
+        </p>
+      </HoverCardContent>
+    </HoverCard>
+  );
+}
+
 interface MarkdownRendererProps {
   source: string;
 }
