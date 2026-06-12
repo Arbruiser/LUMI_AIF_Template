@@ -158,10 +158,9 @@ function processLine(
 /**
  * Turn glossary terms in a markdown source into glossary `<span>` HTML.
  *
- * - Terms are auto-linked on their FIRST occurrence per page — creators don't
- *   need to mark anything.
- * - The legacy `Term%` marker still works and forces a link (handy to link a
- *   later occurrence too); the `%` itself is removed from the output.
+ * - Only the explicit `Term%` marker creates a link; the `%` itself is removed
+ *   from the output. There is no automatic matching, so ordinary prose never
+ *   produces false-positive links.
  * - Matching is case-insensitive and multi-word terms win over shorter ones.
  * - Headings, table rows, fenced code, inline code, and links are skipped.
  */
