@@ -178,12 +178,12 @@ html {
   --quiz-card-border: oklch(0.86 0.04 290);
   --quiz-header-bg: color-mix(in oklab, var(--lumi-purple) 8%, white);
   --quiz-accent: var(--lumi-blue);
-  --quiz-correct: var(--lumi-blue);
-  --quiz-wrong: var(--lumi-magenta);
+  --quiz-correct: oklch(0.52 0.13 165);  /* green */
+  --quiz-wrong: oklch(0.55 0.21 27);     /* red */
   --quiz-correct-bg: color-mix(in oklab, var(--quiz-correct) 12%, white);
   --quiz-correct-border: color-mix(in oklab, var(--quiz-correct) 45%, white);
-  --quiz-wrong-bg: color-mix(in oklab, var(--lumi-magenta) 10%, white);
-  --quiz-wrong-border: color-mix(in oklab, var(--lumi-magenta) 42%, white);
+  --quiz-wrong-bg: color-mix(in oklab, var(--quiz-wrong) 10%, white);
+  --quiz-wrong-border: color-mix(in oklab, var(--quiz-wrong) 42%, white);
   --quiz-selected-border: var(--lumi-purple);
 }
 
