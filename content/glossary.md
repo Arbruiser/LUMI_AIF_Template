@@ -5,10 +5,7 @@ nav_order: 99
 
 # Glossary
 
-Define your course's key terms here, once. Any term in this table can then be
-referenced from any page by putting a single **percent sign** directly after the
-word — readers see a dashed underline and get the definition in a small pop-up
-when they hover over it (or focus it with the keyboard).
+This page is just a normal `.md` file in the `content/` folder, but it **must be named exactly `glossary.md`** (all lowercase). It needs the same front matter as any other page (`title` and `nav_order`). The first two-column markdown table below is automatically turned into the glossary — every term in the **Term** column can then be referenced from any page by putting a single **percent sign** directly after the word. The reader sees a dashed underline and gets the definition in a small pop-up when they hover over it (or focus it with the keyboard).
 
 > [!tip] How to reference a term
 > In any `.md` file, type the term and add a percent sign right after it, with no
