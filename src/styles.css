@@ -654,3 +654,75 @@ pre.with-line-numbers .code-line::before {
 .terminal-block .hljs-params {
   color: oklch(0.82 0.08 290) !important;
 }
+
+/* ============= nano editor styled .sh blocks ============= */
+.nano-block {
+  --nano-bg: #1b1b2b;
+  --nano-fg: #e8e8ef;
+  --nano-inverse: #e8e8ef;
+  --nano-inverse-fg: #1b1b2b;
+  background: var(--nano-bg);
+  color: var(--nano-fg);
+  border-color: #33334d;
+}
+
+.nano-block pre {
+  background: var(--nano-bg) !important;
+  color: var(--nano-fg) !important;
+}
+
+.nano-block pre code {
+  display: block;
+  color: var(--nano-fg) !important;
+}
+
+/* nano's inverse-video header */
+.nano-titlebar {
+  background: var(--nano-inverse);
+  color: var(--nano-inverse-fg);
+}
+
+/* nano's bottom shortcut bar */
+.nano-shortcuts {
+  background: var(--nano-bg);
+  color: var(--nano-fg);
+  border-top: 1px solid #33334d;
+}
+
+.nano-key {
+  display: inline-block;
+  background: var(--nano-inverse);
+  color: var(--nano-inverse-fg);
+  padding: 0 0.3rem;
+  margin-right: 0.35rem;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+/* hljs token colors tuned for the dark nano body */
+.nano-block .hljs,
+.nano-block .hljs-keyword,
+.nano-block .hljs-built_in,
+.nano-block .hljs-name,
+.nano-block .hljs-title,
+.nano-block .hljs-section {
+  color: var(--nano-fg) !important;
+}
+
+.nano-block .hljs-string,
+.nano-block .hljs-attr,
+.nano-block .hljs-literal,
+.nano-block .hljs-number {
+  color: color-mix(in oklab, var(--lumi-magenta) 70%, white) !important;
+}
+
+.nano-block .hljs-comment,
+.nano-block .hljs-meta {
+  color: oklch(0.65 0.02 240) !important;
+  font-style: italic;
+}
+
+.nano-block .hljs-variable,
+.nano-block .hljs-params {
+  color: oklch(0.82 0.08 290) !important;
+}
