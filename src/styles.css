@@ -242,6 +242,18 @@ html {
   --callout-tip-border: oklch(0.45 0.1 207);
   --callout-command-bg: oklch(0.23 0.012 250);
   --callout-command-border: oklch(1 0 0 / 12%);
+
+  --quiz-card-bg: oklch(0.23 0.014 252);
+  --quiz-card-border: oklch(1 0 0 / 12%);
+  --quiz-header-bg: oklch(0.27 0.03 290);
+  --quiz-accent: oklch(0.78 0.1 207);
+  --quiz-correct: oklch(0.74 0.14 165);
+  --quiz-wrong: oklch(0.72 0.2 355);
+  --quiz-correct-bg: color-mix(in oklab, var(--quiz-correct) 16%, transparent);
+  --quiz-correct-border: color-mix(in oklab, var(--quiz-correct) 50%, transparent);
+  --quiz-wrong-bg: color-mix(in oklab, var(--quiz-wrong) 16%, transparent);
+  --quiz-wrong-border: color-mix(in oklab, var(--quiz-wrong) 50%, transparent);
+  --quiz-selected-border: oklch(0.78 0.1 207);
 }
 
 @layer base {
