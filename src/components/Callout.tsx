@@ -19,7 +19,7 @@ const variantStyles: Record<CalloutProps["variant"], string> = {
 const variantAccent: Record<CalloutProps["variant"], string> = {
   note: "bg-lumi-purple",
   warning: "bg-lumi-magenta",
-  info: "bg-lumi-blue",
+  info: "bg-lumi-blue/55",
   tip: "bg-lumi-blue",
   command: "bg-lumi-blue",
 };

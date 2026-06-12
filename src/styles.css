@@ -166,10 +166,11 @@ html {
   --callout-note-border: oklch(0.85 0.04 290);
   --callout-warning-bg: color-mix(in oklab, var(--lumi-magenta) 8%, white);
   --callout-warning-border: color-mix(in oklab, var(--lumi-magenta) 28%, white);
-  --callout-info-bg: oklch(0.965 0.018 240);
-  --callout-info-border: oklch(0.84 0.05 240);
-  --callout-tip-bg: color-mix(in oklab, var(--lumi-blue) 7%, white);
-  --callout-tip-border: color-mix(in oklab, var(--lumi-blue) 30%, white);
+  /* Info = lighter blue, Tip = deeper blue (same hue, different intensity) */
+  --callout-info-bg: color-mix(in oklab, var(--lumi-blue) 6%, white);
+  --callout-info-border: color-mix(in oklab, var(--lumi-blue) 24%, white);
+  --callout-tip-bg: color-mix(in oklab, var(--lumi-blue) 18%, white);
+  --callout-tip-border: color-mix(in oklab, var(--lumi-blue) 52%, white);
   --callout-command-bg: oklch(0.96 0.012 240);
   --callout-command-border: oklch(0.83 0.04 240);
 
@@ -235,10 +236,11 @@ html {
   --callout-note-border: oklch(0.4 0.08 290);
   --callout-warning-bg: oklch(0.32 0.13 355.14);
   --callout-warning-border: oklch(0.7 0.28 355.14);
-  --callout-info-bg: oklch(0.26 0.04 240);
-  --callout-info-border: oklch(0.42 0.08 240);
-  --callout-tip-bg: oklch(0.26 0.05 237);
-  --callout-tip-border: oklch(0.45 0.1 237);
+  /* Info = lighter blue, Tip = deeper blue — mirrors the light-theme split */
+  --callout-info-bg: color-mix(in oklab, var(--lumi-blue) 16%, #231f20);
+  --callout-info-border: color-mix(in oklab, var(--lumi-blue) 36%, #231f20);
+  --callout-tip-bg: color-mix(in oklab, var(--lumi-blue) 34%, #231f20);
+  --callout-tip-border: color-mix(in oklab, var(--lumi-blue) 62%, #231f20);
   --callout-command-bg: oklch(0.23 0.012 250);
   --callout-command-border: oklch(1 0 0 / 12%);
 
