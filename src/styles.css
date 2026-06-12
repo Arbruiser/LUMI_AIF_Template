@@ -237,10 +237,10 @@ html {
   --callout-warning-bg: oklch(0.32 0.13 355.14);
   --callout-warning-border: oklch(0.7 0.28 355.14);
   /* Info = lighter blue, Tip = deeper blue — mirrors the light-theme split */
-  --callout-info-bg: color-mix(in oklab, var(--lumi-blue) 16%, #231f20);
-  --callout-info-border: color-mix(in oklab, var(--lumi-blue) 36%, #231f20);
-  --callout-tip-bg: color-mix(in oklab, var(--lumi-blue) 34%, #231f20);
-  --callout-tip-border: color-mix(in oklab, var(--lumi-blue) 62%, #231f20);
+  --callout-info-bg: oklch(0.28 0.045 237);
+  --callout-info-border: oklch(0.44 0.08 237);
+  --callout-tip-bg: oklch(0.36 0.075 237);
+  --callout-tip-border: oklch(0.56 0.11 237);
   --callout-command-bg: oklch(0.23 0.012 250);
   --callout-command-border: oklch(1 0 0 / 12%);
 
