@@ -413,7 +413,7 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
           </VisuallyHidden>
           {lightbox && (
             <div
-              className="flex min-h-[85vh] w-full cursor-zoom-out items-center justify-center"
+              className="flex min-h-[85vh] w-full items-center justify-center"
               onClick={() => setLightbox(null)}
             >
               <figure
@@ -423,7 +423,8 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
                 <img
                   src={lightbox.src}
                   alt={lightbox.alt}
-                  className="max-h-[85vh] w-auto rounded-lg object-contain"
+                  onClick={() => setLightbox(null)}
+                  className="max-h-[85vh] w-auto cursor-zoom-out rounded-lg object-contain"
                 />
                 {lightbox.alt && (
                   <figcaption className="mt-3 text-center text-sm text-white/90">
