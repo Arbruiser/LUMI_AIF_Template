@@ -195,7 +195,7 @@ html {
   --card-foreground: var(--foreground);
   --popover: oklch(0.22 0.012 250);
   --popover-foreground: var(--foreground);
-  --primary: oklch(0.78 0.1 207);            /* brighter teal-ish */
+  --primary: oklch(0.72 0.092 237);          /* lighter LUMI blue for dark bg */
   --primary-foreground: oklch(0.18 0.01 250);
   --secondary: oklch(0.27 0.02 250);
   --secondary-foreground: var(--foreground);
