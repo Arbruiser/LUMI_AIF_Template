@@ -14,6 +14,7 @@ const linkIconSvg = fromHtmlIsomorphic(
   { fragment: true }
 ).children;
 import { toast } from "sonner";
+import { Link } from "@tanstack/react-router";
 import { visit } from "unist-util-visit";
 import { Callout } from "./Callout";
 import { CodeBlock } from "./CodeBlock";
@@ -347,16 +348,40 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
             return <code className={className}>{children}</code>;
           },
           a({ href, children }) {
-            const isExternal = href?.startsWith("http");
+            const className =
+              "text-link underline-offset-2 hover:text-lumi-magenta hover:underline";
+            // External, protocol-relative, mailto/tel, and pure-hash links stay
+            // as plain anchors.
+            const isExternal =
+              !href ||
+              /^[a-z]+:/i.test(href) ||
+              href.startsWith("//") ||
+              href.startsWith("#");
+            if (isExternal) {
+              const isHttp = href?.startsWith("http");
+              return (
+                <a
+                  href={href}
+                  target={isHttp ? "_blank" : undefined}
+                  rel={isHttp ? "noreferrer noopener" : undefined}
+                  className={className}
+                >
+                  {children}
+                </a>
+              );
+            }
+            // Internal links go through the router so the GitHub Pages base
+            // path (e.g. "/<repo>/") is applied automatically.
+            const [path, hash] = href.split("#");
+            const to = path.startsWith("/") ? path : `/${path}`;
             return (
-              <a
-                href={href}
-                target={isExternal ? "_blank" : undefined}
-                rel={isExternal ? "noreferrer noopener" : undefined}
-                className="text-link underline-offset-2 hover:text-lumi-magenta hover:underline"
+              <Link
+                to={to as string}
+                hash={hash || undefined}
+                className={className}
               >
                 {children}
-              </a>
+              </Link>
             );
           },
           img(props) {
