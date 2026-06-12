@@ -1,5 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { findPage } from "@/lib/content";
+import { findPage, getBreadcrumbs, getPageDescription } from "@/lib/content";
 import { PageLayout } from "@/components/PageLayout";
 import { siteConfig } from "../../site.config";
 
@@ -11,10 +11,51 @@ export const Route = createFileRoute("/$")({
     const title = page?.frontmatter.title
       ? `${page.frontmatter.title} — ${siteConfig.title}`
       : siteConfig.title;
+    if (!page) {
+      return { meta: [{ title }, { property: "og:title", content: title }] };
+    }
+
+    const description = getPageDescription(page) || siteConfig.description;
+    const url = `/${slug}`;
+    const crumbs = getBreadcrumbs(slug);
+
     return {
       meta: [
         { title },
+        { name: "description", content: description },
         { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: page.frontmatter.title,
+            description,
+            isPartOf: {
+              "@type": "Course",
+              name: siteConfig.title,
+            },
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: crumbs.map((crumb, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              name: crumb.frontmatter.title,
+              item: crumb.slug === "" ? "/" : `/${crumb.slug}`,
+            })),
+          }),
+        },
       ],
     };
   },

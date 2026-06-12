@@ -122,6 +122,8 @@ function GlossaryTerm({
 
 interface MarkdownRendererProps {
   source: string;
+  /** When false, glossary auto-linking is skipped (e.g. the glossary page). */
+  enableGlossary?: boolean;
 }
 
 function resolveAssetUrl(src: string | undefined): string | undefined {
@@ -220,11 +222,14 @@ function nodeToText(node: React.ReactNode): string {
   return "";
 }
 
-export function MarkdownRenderer({ source }: MarkdownRendererProps) {
+export function MarkdownRenderer({
+  source,
+  enableGlossary = true,
+}: MarkdownRendererProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const processedSource = React.useMemo(
-    () => applyGlossaryMarkers(source),
-    [source]
+    () => (enableGlossary ? applyGlossaryMarkers(source) : source),
+    [source, enableGlossary]
   );
   const [lightbox, setLightbox] = React.useState<{
     src: string;

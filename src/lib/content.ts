@@ -10,6 +10,8 @@ export interface PageFrontmatter {
   nav_order?: number;
   parent?: string;
   has_children?: boolean;
+  /** Optional meta description. When omitted, one is derived from the body. */
+  description?: string;
 }
 
 export interface Page {
@@ -52,6 +54,69 @@ export const pages: Page[] = Object.entries(rawModules)
 
 export function findPage(slug: string): Page | undefined {
   return pages.find((p) => p.slug === slug);
+}
+
+/**
+ * Produce a meta description for a page. Uses the front-matter `description`
+ * when an author set one, otherwise auto-derives it from the first real
+ * paragraph of the markdown body — so creators never have to write one.
+ */
+export function getPageDescription(page: Page, maxLen = 155): string {
+  const fm = page.frontmatter.description?.trim();
+  if (fm) return fm;
+
+  const lines = page.body.split(/\r?\n/);
+  const paragraph: string[] = [];
+  let inFence = false;
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (/^(```|~~~)/.test(line)) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
+    // Skip headings, callout markers, blockquotes, list markers, images,
+    // tables, html, and front-matter fences.
+    if (
+      line === "" ||
+      line === "---" ||
+      /^#{1,6}\s/.test(line) ||
+      /^>\s*\[!/.test(line) ||
+      /^[-*+]\s/.test(line) ||
+      /^\d+\.\s/.test(line) ||
+      /^\|/.test(line) ||
+      /^!\[/.test(line) ||
+      /^<\w/.test(line)
+    ) {
+      if (paragraph.length) break; // paragraph already collected
+      continue;
+    }
+    if (line.startsWith(">")) {
+      if (paragraph.length) break;
+      continue;
+    }
+    paragraph.push(line);
+  }
+
+  let text = paragraph.join(" ");
+  // Strip the most common inline markdown so the description reads cleanly.
+  text = text
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "") // images
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1") // links -> text
+    .replace(/`([^`]*)`/g, "$1") // inline code
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\*([^*]+)\*/g, "$1")
+    .replace(/__([^_]+)__/g, "$1")
+    .replace(/_([^_]+)_/g, "$1")
+    .replace(/%/g, "") // glossary markers
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!text) return "";
+  if (text.length <= maxLen) return text;
+  const truncated = text.slice(0, maxLen);
+  const lastSpace = truncated.lastIndexOf(" ");
+  return `${(lastSpace > 40 ? truncated.slice(0, lastSpace) : truncated).trimEnd()}…`;
 }
 
 /** Linear list of pages in sidebar order — used for prev/next navigation. */
