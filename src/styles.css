@@ -88,6 +88,11 @@
   --color-callout-command-bg: var(--callout-command-bg);
   --color-callout-command-border: var(--callout-command-border);
 
+  /* Quiz */
+  --color-quiz-accent: var(--quiz-accent);
+  --color-quiz-correct: var(--quiz-correct);
+  --color-quiz-wrong: var(--quiz-wrong);
+
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
