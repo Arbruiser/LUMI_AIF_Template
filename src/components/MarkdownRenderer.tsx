@@ -202,6 +202,8 @@ function parseCodeMeta(meta?: string): {
       for (let i = start; i <= end; i++) set.add(i);
     }
     if (set.size) out.highlightLines = set;
+  }
+  return out;
 }
 
 /** Recursively extract plain text from React children (used for quiz fences,
@@ -215,8 +217,6 @@ function nodeToText(node: React.ReactNode): string {
     return nodeToText((node.props as { children?: React.ReactNode }).children);
   }
   return "";
-}
-  return out;
 }
 
 export function MarkdownRenderer({ source }: MarkdownRendererProps) {
