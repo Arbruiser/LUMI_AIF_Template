@@ -27,7 +27,4 @@ other asterisk in your text is left untouched.
 | **Markdown** | A lightweight plain-text formatting syntax used to write all the content in this template. |
 | **Front Matter** | The block of metadata at the very top of a page, between the `---` lines, that sets the page title and sidebar order. |
 | **Callout** | A coloured box used to highlight a note, warning, info side-note, tip, or copyable command for your students. |
-| **Code Block** | A fenced section of code rendered with syntax highlighting and a copy button in the top-right corner. |
-| **KaTeX** | The typesetting engine that renders LaTeX mathematical formulas, like inline and block equations, on the page. |
-| **Slug** | The URL-friendly identifier of a page, derived automatically from its filename. |
-| **Supercomputer** | A very powerful computing system made up of thousands of interconnected computers (nodes) working together. |
+
