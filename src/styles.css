@@ -758,3 +758,79 @@ pre.with-line-numbers .code-line::before {
 .nano-block .hljs-params {
   color: oklch(0.82 0.08 290) !important;
 }
+
+/* ---------- Quiz blocks ---------- */
+.quiz-card {
+  background: var(--quiz-card-bg);
+  border-color: var(--quiz-card-border);
+}
+
+.quiz-header {
+  background: var(--quiz-header-bg);
+  border-bottom: 1px solid var(--quiz-card-border);
+}
+
+.quiz-prompt {
+  font-size: 1.02rem;
+  line-height: 1.5;
+}
+
+.quiz-option {
+  background: var(--background);
+  border-color: var(--border);
+}
+
+.quiz-option .quiz-marker {
+  border-color: var(--border);
+  color: var(--muted-foreground);
+}
+
+.quiz-option-selected {
+  border-color: var(--quiz-selected-border);
+}
+
+.quiz-option-selected .quiz-marker {
+  border-color: var(--quiz-selected-border);
+  color: var(--quiz-accent);
+}
+
+.quiz-option-correct {
+  background: var(--quiz-correct-bg);
+  border-color: var(--quiz-correct-border);
+}
+
+.quiz-option-correct .quiz-marker {
+  border-color: var(--quiz-correct);
+  color: var(--quiz-correct);
+}
+
+.quiz-option-wrong {
+  background: var(--quiz-wrong-bg);
+  border-color: var(--quiz-wrong-border);
+}
+
+.quiz-option-wrong .quiz-marker {
+  border-color: var(--quiz-wrong);
+  color: var(--quiz-wrong);
+}
+
+.quiz-btn {
+  background: var(--quiz-accent);
+  color: oklch(1 0 0);
+  transition: opacity 0.15s ease;
+}
+
+.quiz-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.quiz-btn-secondary {
+  background: transparent;
+  color: var(--quiz-accent);
+  border: 1px solid var(--quiz-card-border);
+  transition: background-color 0.15s ease;
+}
+
+.quiz-btn-secondary:hover {
+  background: color-mix(in oklab, var(--quiz-accent) 12%, transparent);
+}
