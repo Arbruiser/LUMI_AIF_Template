@@ -36,10 +36,10 @@ Use callout boxes to highlight information for your students. Just start a block
 > [!warning] LUMI Magenta — Warning
 > Use this for critical warnings, security notices, or common errors to avoid.
 
-> [!info] LUMI Blue — Info
+> [!info] Light Blue — Info
 > Use this for neutral side-notes, references, or background information.
 
-> [!tip] LUMI Teal — Tip
+> [!tip] Deep Blue — Tip
 > Use this for pro-tips, shortcuts, or recommended best practices.
 
 The `command` callout renders a copyable terminal command:
