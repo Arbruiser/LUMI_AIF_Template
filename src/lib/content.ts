@@ -10,6 +10,8 @@ export interface PageFrontmatter {
   nav_order?: number;
   parent?: string;
   has_children?: boolean;
+  /** Optional meta description. When omitted, one is derived from the body. */
+  description?: string;
 }
 
 export interface Page {
