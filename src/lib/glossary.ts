@@ -129,16 +129,12 @@ function processSegment(
 ): string {
   pattern.lastIndex = 0;
   return text.replace(pattern, (full, termText: string, pct: string) => {
+    // Only an explicit `%` marker creates a link — no automatic matching, so
+    // there are never false positives on ordinary prose.
+    if (pct !== "%") return full;
     const key = termText.replace(/\s+/g, " ").trim().toLowerCase();
     const entry = glossary.get(key);
     if (!entry) return full;
-    // An explicit `%` marker always links and drops the marker character.
-    if (pct === "%") {
-      linked.add(key);
-      return spanFor(entry, termText);
-    }
-    // Otherwise auto-link only the first occurrence of the term per page.
-    if (linked.has(key)) return full;
     linked.add(key);
     return spanFor(entry, termText);
   });
