@@ -91,7 +91,39 @@ module load lumi-aif-singularity-bindings
 srun python train.py
 ```
 
+## Quizzes
+
+Tag a code block with `quiz` to turn it into an interactive multiple-choice box in LUMI colours. Readers pick an answer, instantly see whether they were right (and which option was correct), read an optional explanation, then click **Next question** to move on. A running score appears once every question is answered.
+
+One `quiz` block can hold several questions, separated by a line of `---`. Mark answers with Markdown checkboxes — `[x]` for correct, `[ ]` for wrong. Start each question with `Q:`, add an optional `title:` line at the top, and an optional explanation line starting with `>`:
+
+````text
+```quiz
+title: Check your understanding
+
+Q: Which workload manager does LUMI use?
+- [ ] PBS
+- [x] Slurm
+- [ ] LSF
+> LUMI runs all batch jobs through the Slurm workload manager.
+
+---
+
+Q: Which of these are valid GPU partitions? (select all)
+- [x] standard-g
+- [x] small-g
+- [ ] turbo-x
+> standard-g and small-g exist; turbo-x is made up.
+```
+````
+
+- A question with a single `[x]` reveals feedback as soon as the reader clicks an option.
+- A question with **two or more** `[x]` answers becomes a "select all that apply" question: the reader ticks several boxes, then clicks **Check answer**.
+
+See [Chapter 1](/chapter1) for a live example.
+
 ## Embedding pictures
+
 
 Drop your image in the `public/assets/` folder of the repository, then reference it from any `.md` file using the `./assets/...` form as such:
 
