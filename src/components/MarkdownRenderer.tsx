@@ -376,7 +376,7 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
           },
         }}
       >
-        {source}
+        {processedSource}
       </ReactMarkdown>
 
       <Dialog
