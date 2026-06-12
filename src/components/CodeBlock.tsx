@@ -10,7 +10,11 @@ interface CodeBlockProps {
   highlightLines?: Set<number>;
 }
 
-const TERMINAL_LANGS = new Set(["bash", "sh", "shell", "zsh", "console"]);
+const TERMINAL_LANGS = new Set(["bash", "shell", "zsh", "console"]);
+
+/** `.sh` scripts are shown as a file being edited (nano), not a live shell,
+ *  so they get an editor chrome with no `user@machine` prompt. */
+const NANO_LANGS = new Set(["sh"]);
 
 /** Recursively split a (possibly nested) React tree into per-line arrays.
  *  Newlines may be buried inside spans emitted by rehype-highlight, so we
