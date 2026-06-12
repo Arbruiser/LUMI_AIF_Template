@@ -376,7 +376,7 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
             const to = path.startsWith("/") ? path : `/${path}`;
             return (
               <Link
-                to={to}
+                to={to as string}
                 hash={hash || undefined}
                 className={className}
               >
