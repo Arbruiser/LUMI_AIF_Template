@@ -27,7 +27,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { lookupTerm } from "@/lib/glossary";
+import { applyGlossaryMarkers, lookupTerm } from "@/lib/glossary";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 /** Hoist `data.meta` from <code> onto its parent <pre> so it survives the
@@ -73,59 +73,6 @@ function rehypeCopyHeadingButtons() {
           },
           children: linkIconSvg,
         });
-      }
-    );
-  };
-}
-
-/** Match [[term]] or [[display text|term]] glossary references. */
-const GLOSSARY_RE = /\[\[([^\]|]+?)(?:\|([^\]]+?))?\]\]/g;
-
-/** Replace [[term]] markers in text with <span class="glossary-term"> nodes.
- *  Skips text inside code/pre/headings so commands and titles are untouched. */
-function rehypeGlossary() {
-  return (tree: unknown) => {
-    visit(
-      tree as never,
-      "text",
-      (
-        node: { type: "text"; value: string },
-        index: number | undefined,
-        parent:
-          | { tagName?: string; children: unknown[] }
-          | undefined
-      ) => {
-        if (!parent || index === undefined) return;
-        const tag = parent.tagName ?? "";
-        if (tag === "code" || tag === "pre" || /^h[1-6]$/.test(tag)) return;
-        const value = node.value;
-        if (!value.includes("[[")) return;
-
-        GLOSSARY_RE.lastIndex = 0;
-        const out: unknown[] = [];
-        let last = 0;
-        let match: RegExpExecArray | null;
-        while ((match = GLOSSARY_RE.exec(value)) !== null) {
-          if (match.index > last) {
-            out.push({ type: "text", value: value.slice(last, match.index) });
-          }
-          const display = (match[1] ?? "").trim();
-          const termKey = (match[2] ?? match[1] ?? "").trim();
-          out.push({
-            type: "element",
-            tagName: "span",
-            properties: { className: ["glossary-term"], "data-term": termKey },
-            children: [{ type: "text", value: display }],
-          });
-          last = GLOSSARY_RE.lastIndex;
-        }
-
-        if (out.length === 0) return;
-        if (last < value.length) {
-          out.push({ type: "text", value: value.slice(last) });
-        }
-        parent.children.splice(index, 1, ...out);
-        return index + out.length;
       }
     );
   };
@@ -259,6 +206,10 @@ function parseCodeMeta(meta?: string): {
 
 export function MarkdownRenderer({ source }: MarkdownRendererProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const processedSource = React.useMemo(
+    () => applyGlossaryMarkers(source),
+    [source]
+  );
   const [lightbox, setLightbox] = React.useState<{
     src: string;
     alt: string;
@@ -290,7 +241,6 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
         rehypePlugins={[
           rehypeHoistCodeMeta,
           rehypeRaw,
-          rehypeGlossary,
           rehypeSlug,
           rehypeCopyHeadingButtons,
           rehypeHighlight,
@@ -307,7 +257,8 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
               ? className.includes("glossary-term")
               : className === "glossary-term";
             if (isGlossary) {
-              const term = node?.properties?.["data-term"];
+              const props2 = node?.properties ?? {};
+              const term = props2["dataTerm"] ?? props2["data-term"];
               return (
                 <GlossaryTerm term={typeof term === "string" ? term : ""}>
                   {props.children}
@@ -425,7 +376,7 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
           },
         }}
       >
-        {source}
+        {processedSource}
       </ReactMarkdown>
 
       <Dialog
