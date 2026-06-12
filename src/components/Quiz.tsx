@@ -113,7 +113,8 @@ export function Quiz({ title, questions }: QuizData) {
                     !answered && "hover:border-quiz-accent",
                     isSelected && !answered && "quiz-option-selected",
                     showCorrect && "quiz-option-correct",
-                    showWrong && "quiz-option-wrong"
+                    showWrong && "quiz-option-wrong",
+                    answered && isSelected && "quiz-option-chosen"
                   )}
                 >
                   <span
@@ -130,6 +131,11 @@ export function Quiz({ title, questions }: QuizData) {
                     )}
                   </span>
                   <span className="flex-1 text-foreground">{option.text}</span>
+                  {answered && isSelected && (
+                    <span className="quiz-chosen-badge shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide">
+                      Your answer
+                    </span>
+                  )}
                 </button>
               </li>
             );
