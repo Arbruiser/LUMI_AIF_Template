@@ -804,6 +804,12 @@ pre.with-line-numbers .code-line::before {
   color: var(--quiz-correct);
 }
 
+.quiz-option-correct .quiz-marker-filled {
+  background: var(--quiz-correct);
+  border-color: var(--quiz-correct);
+  color: oklch(1 0 0);
+}
+
 .quiz-option-wrong {
   background: var(--quiz-wrong-bg);
   border-color: var(--quiz-wrong-border);
@@ -812,6 +818,12 @@ pre.with-line-numbers .code-line::before {
 .quiz-option-wrong .quiz-marker {
   border-color: var(--quiz-wrong);
   color: var(--quiz-wrong);
+}
+
+.quiz-option-wrong .quiz-marker-filled {
+  background: var(--quiz-wrong);
+  border-color: var(--quiz-wrong);
+  color: oklch(1 0 0);
 }
 
 .quiz-btn {
