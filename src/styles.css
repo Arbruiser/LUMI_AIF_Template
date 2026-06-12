@@ -212,7 +212,7 @@ html {
 
   --sidebar: oklch(0.22 0.014 252);
   --sidebar-foreground: oklch(0.95 0.005 240);
-  --sidebar-primary: oklch(0.78 0.1 207);
+  --sidebar-primary: oklch(0.72 0.092 237);
   --sidebar-primary-foreground: oklch(0.18 0.01 250);
   --sidebar-accent: oklch(0.3 0.04 290);
   --sidebar-accent-foreground: oklch(0.95 0.02 290);
