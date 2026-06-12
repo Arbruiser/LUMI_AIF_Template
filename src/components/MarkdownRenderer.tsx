@@ -125,7 +125,7 @@ function rehypeGlossary() {
           out.push({ type: "text", value: value.slice(last) });
         }
         parent.children.splice(index, 1, ...out);
-        return index + out.length;
+        return ["skip", index + out.length];
       }
     );
   };
