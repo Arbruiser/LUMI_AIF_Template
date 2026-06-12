@@ -27,7 +27,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { lookupTerm } from "@/lib/glossary";
+import { applyGlossaryMarkers, lookupTerm } from "@/lib/glossary";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 /** Hoist `data.meta` from <code> onto its parent <pre> so it survives the
