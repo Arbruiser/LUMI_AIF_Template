@@ -844,11 +844,7 @@ pre.with-line-numbers .code-line::before {
   color: currentColor;
 }
 
-.quiz-option-chosen .quiz-option-label,
-.quiz-option-chosen > span:first-of-type {
-  /* keep option text at full contrast even though the row carries a color */
-}
-
+.quiz-btn {
   background: var(--quiz-accent);
   color: oklch(1 0 0);
   transition: opacity 0.15s ease;
