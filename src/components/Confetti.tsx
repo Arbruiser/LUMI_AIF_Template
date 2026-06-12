@@ -16,7 +16,6 @@ const COLORS = [
   "#7477b8", // lumi-purple
   "#2c6789", // lumi-blue
   "#ec008c", // lumi-magenta
-  "#28c0d2", // lumi-teal
 ];
 
 export function Confetti({ active }: { active: boolean }) {
