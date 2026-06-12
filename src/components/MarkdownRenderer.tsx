@@ -17,6 +17,8 @@ import { toast } from "sonner";
 import { visit } from "unist-util-visit";
 import { Callout } from "./Callout";
 import { CodeBlock } from "./CodeBlock";
+import { Quiz } from "./Quiz";
+import { parseQuiz } from "@/lib/quiz";
 import {
   Dialog,
   DialogContent,
@@ -204,6 +206,19 @@ function parseCodeMeta(meta?: string): {
   return out;
 }
 
+/** Recursively extract plain text from React children (used for quiz fences,
+ *  whose raw text may be wrapped in highlight spans). */
+function nodeToText(node: React.ReactNode): string {
+  if (node == null || typeof node === "boolean") return "";
+  if (typeof node === "string") return node;
+  if (typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(nodeToText).join("");
+  if (React.isValidElement(node)) {
+    return nodeToText((node.props as { children?: React.ReactNode }).children);
+  }
+  return "";
+}
+
 export function MarkdownRenderer({ source }: MarkdownRendererProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const processedSource = React.useMemo(
@@ -302,6 +317,13 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
             const child = React.Children.only(
               children
             ) as React.ReactElement<{ className?: string; children?: React.ReactNode }>;
+
+            const childClassName = child.props.className ?? "";
+            if (/\blanguage-quiz\b/.test(childClassName)) {
+              const quiz = parseQuiz(nodeToText(child.props.children));
+              return <Quiz title={quiz.title} questions={quiz.questions} />;
+            }
+
             const parsed = parseCodeMeta(dataMeta);
             return (
               <CodeBlock
