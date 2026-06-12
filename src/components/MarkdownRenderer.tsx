@@ -122,6 +122,8 @@ function GlossaryTerm({
 
 interface MarkdownRendererProps {
   source: string;
+  /** When false, glossary auto-linking is skipped (e.g. the glossary page). */
+  enableGlossary?: boolean;
 }
 
 function resolveAssetUrl(src: string | undefined): string | undefined {
