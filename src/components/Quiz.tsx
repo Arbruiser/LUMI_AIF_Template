@@ -118,8 +118,9 @@ export function Quiz({ title, questions }: QuizData) {
                 >
                   <span
                     className={cn(
-                      "quiz-marker flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-xs",
-                      question.multi && !answered && "rounded-[4px]"
+                      "quiz-marker flex h-5 w-5 shrink-0 items-center justify-center border text-xs",
+                      question.multi ? "rounded-[4px]" : "rounded-full",
+                      answered && isSelected && "quiz-marker-filled"
                     )}
                   >
                     {showCorrect && <Check className="h-3.5 w-3.5" />}
