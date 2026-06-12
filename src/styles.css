@@ -155,12 +155,12 @@ html {
   --inline-code-bg: oklch(0.945 0.008 240);
   --inline-code-fg: var(--lumi-blue);
 
-  --terminal-bg: color-mix(in oklab, var(--lumi-magenta) 22%, #231f20); /* deep magenta */
-  --terminal-chrome: oklch(0.32 0.012 280);     /* dark purple-grey titlebar */
+  --terminal-bg: #3d0a2c;                       /* classic Ubuntu aubergine */
+  --terminal-chrome: oklch(0.32 0.012 280);     /* Ubuntu titlebar */
   --terminal-chrome-fg: oklch(0.96 0.005 280);
-  --terminal-border: oklch(0.18 0.04 350);      /* dark magenta */
+  --terminal-border: oklch(0.18 0.04 350);
   --terminal-fg: #ffffff;
-  --terminal-prompt: color-mix(in oklab, var(--lumi-purple) 45%, white); /* light purple prompt */
+  --terminal-prompt: oklch(0.78 0.18 142);      /* Ubuntu green prompt */
 
   --callout-note-bg: oklch(0.97 0.018 290);
   --callout-note-border: oklch(0.85 0.04 290);
@@ -178,12 +178,12 @@ html {
   --quiz-card-border: oklch(0.86 0.04 290);
   --quiz-header-bg: color-mix(in oklab, var(--lumi-purple) 8%, white);
   --quiz-accent: var(--lumi-blue);
-  --quiz-correct: var(--lumi-blue);
-  --quiz-wrong: var(--lumi-magenta);
+  --quiz-correct: oklch(0.52 0.13 165);  /* green */
+  --quiz-wrong: oklch(0.55 0.21 27);     /* red */
   --quiz-correct-bg: color-mix(in oklab, var(--quiz-correct) 12%, white);
   --quiz-correct-border: color-mix(in oklab, var(--quiz-correct) 45%, white);
-  --quiz-wrong-bg: color-mix(in oklab, var(--lumi-magenta) 10%, white);
-  --quiz-wrong-border: color-mix(in oklab, var(--lumi-magenta) 42%, white);
+  --quiz-wrong-bg: color-mix(in oklab, var(--quiz-wrong) 10%, white);
+  --quiz-wrong-border: color-mix(in oklab, var(--quiz-wrong) 42%, white);
   --quiz-selected-border: var(--lumi-purple);
 }
 
@@ -225,22 +225,22 @@ html {
   --inline-code-bg: oklch(0.28 0.018 250);
   --inline-code-fg: oklch(0.8 0.08 237);
 
-  --terminal-bg: color-mix(in oklab, var(--lumi-magenta) 22%, #231f20);
+  --terminal-bg: #3d0a2c;
   --terminal-chrome: oklch(0.28 0.012 280);
   --terminal-chrome-fg: oklch(0.96 0.005 280);
   --terminal-border: oklch(0.16 0.04 350);
   --terminal-fg: #ffffff;
-  --terminal-prompt: color-mix(in oklab, var(--lumi-purple) 45%, white);
+  --terminal-prompt: oklch(0.78 0.18 142);
 
   --callout-note-bg: oklch(0.27 0.04 290);
   --callout-note-border: oklch(0.4 0.08 290);
   --callout-warning-bg: oklch(0.32 0.13 355.14);
   --callout-warning-border: oklch(0.7 0.28 355.14);
   /* Info = lighter blue, Tip = deeper blue — mirrors the light-theme split */
-  --callout-info-bg: color-mix(in oklab, var(--lumi-blue) 16%, #231f20);
-  --callout-info-border: color-mix(in oklab, var(--lumi-blue) 36%, #231f20);
-  --callout-tip-bg: color-mix(in oklab, var(--lumi-blue) 34%, #231f20);
-  --callout-tip-border: color-mix(in oklab, var(--lumi-blue) 62%, #231f20);
+  --callout-info-bg: oklch(0.28 0.045 237);
+  --callout-info-border: oklch(0.44 0.08 237);
+  --callout-tip-bg: oklch(0.36 0.075 237);
+  --callout-tip-border: oklch(0.56 0.11 237);
   --callout-command-bg: oklch(0.23 0.012 250);
   --callout-command-border: oklch(1 0 0 / 12%);
 
@@ -248,8 +248,8 @@ html {
   --quiz-card-border: oklch(1 0 0 / 12%);
   --quiz-header-bg: oklch(0.27 0.03 290);
   --quiz-accent: oklch(0.72 0.092 237);
-  --quiz-correct: oklch(0.7 0.1 237);
-  --quiz-wrong: oklch(0.72 0.2 355);
+  --quiz-correct: oklch(0.74 0.14 165);  /* green */
+  --quiz-wrong: oklch(0.7 0.2 27);       /* red */
   --quiz-correct-bg: color-mix(in oklab, var(--quiz-correct) 16%, transparent);
   --quiz-correct-border: color-mix(in oklab, var(--quiz-correct) 50%, transparent);
   --quiz-wrong-bg: color-mix(in oklab, var(--quiz-wrong) 16%, transparent);
@@ -688,13 +688,13 @@ pre.with-line-numbers .code-line::before {
 
 /* ============= nano editor styled .sh blocks ============= */
 .nano-block {
-  --nano-bg: color-mix(in oklab, var(--lumi-purple) 14%, #231f20);
-  --nano-fg: color-mix(in oklab, #ffffff 92%, var(--lumi-purple));
-  --nano-inverse: color-mix(in oklab, #ffffff 92%, var(--lumi-purple));
-  --nano-inverse-fg: color-mix(in oklab, var(--lumi-purple) 14%, #231f20);
+  --nano-bg: #1b1b2b;
+  --nano-fg: #e8e8ef;
+  --nano-inverse: #e8e8ef;
+  --nano-inverse-fg: #1b1b2b;
   background: var(--nano-bg);
   color: var(--nano-fg);
-  border-color: color-mix(in oklab, var(--lumi-purple) 28%, #231f20);
+  border-color: #33334d;
 }
 
 .nano-block pre {
