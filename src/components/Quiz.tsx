@@ -145,10 +145,18 @@ export function Quiz({ title, questions }: QuizData) {
             <p
               className={cn(
                 "text-sm font-semibold",
-                state.correct ? "text-quiz-correct" : "text-quiz-wrong"
+                state.score === 1
+                  ? "text-quiz-correct"
+                  : state.score > 0
+                    ? "text-quiz-accent"
+                    : "text-quiz-wrong"
               )}
             >
-              {state.correct ? "Correct!" : "Not quite."}
+              {state.score === 1
+                ? "Correct!"
+                : state.score > 0
+                  ? `Partially correct — ${Math.round(state.score * 100)}% credit.`
+                  : "Not quite."}
             </p>
             {question.explanation && (
               <p className="mt-1 text-sm leading-snug text-foreground/80">
