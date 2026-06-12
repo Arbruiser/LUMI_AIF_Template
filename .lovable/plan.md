@@ -1,68 +1,37 @@
-## Goal
+# Glossary marker → `%`, and clean up `---` rules
 
-Let content creators define terms once in a `Glossary` page, then mark any word in their chapters with a simple `[[term]]` syntax. Readers see those words in a LUMI accent color with a dotted underline; hovering (or focusing) shows a small popover with the definition.
+## 1. Change the marker from `*` to `%`
 
-## How it will work for content creators
+Content creators will mark a glossary term by typing the term followed immediately by a percent sign, no space: `Markdown%`. Multi-word terms put the `%` after the last word: `Front Matter%`. Matching stays case-insensitive, and only words that exist in the glossary table are converted — every other `%` in the text is left untouched.
 
-1. **One glossary page** — `content/glossary.md`, a normal page with a markdown table:
+`%` is a better fit than `*` because it never overlaps with bold (`**`), italic (`*`), list bullets, or math.
 
-   ```markdown
-   ---
-   title: "Glossary"
-   nav_order: 99
-   ---
+### Code change — `src/lib/glossary.ts`
+- In `processSegment`, detect `%` instead of `*` as the trigger character.
+- Drop the now-unneeded bold-delimiter check (`isBoldDelim`) that only existed to avoid clashing with `**`/`*...*`.
+- Keep the rest of the logic identical: still require a word/number/closing bracket immediately before the marker, still look back for the longest matching glossary phrase, still skip fenced code blocks and inline code spans.
+- Update the doc comment on `applyGlossaryMarkers` to describe the `%` syntax.
 
-   | Term | Definition |
-   |:-----|:-----------|
-   | **Supercomputer** | A very powerful computing system made up of thousands of interconnected nodes working together. |
-   | **Command Line** | A text-based interface where you type commands instead of clicking. |
-   ```
+## 2. Update the docs and examples
 
-2. **Marking a term anywhere** — wrap the word in double square brackets in any `.md` file:
+### `content/glossary.md`
+- Rewrite the "How to reference a term" tip and the intro/closing text to say "percent sign" and show `Supercomputer%` / `Front Matter%` instead of the asterisk versions.
 
-   ```markdown
-   Connect to the [[Supercomputer]] using the [[Command Line]].
-   ```
+### `content/index.md`
+- In the "Glossary & hover definitions" section, change `Markdown*`, `Front Matter*`, `Callout*`, and `markdown*` to their `%` equivalents, and reword the instruction lines to reference `%` instead of asterisks.
 
-   - Matching against the glossary table is **case-insensitive**, so `[[supercomputer]]` works too.
-   - Optional alias for plurals/different wording: `[[supercomputers|Supercomputer]]` shows "supercomputers" but links to the "Supercomputer" definition.
-   - If a term isn't found in the glossary, it renders as plain text (no broken-looking styling) and logs a dev warning.
+### `content/chapter1.md`
+- Change `Markdown*` and `Front Matter*` to `Markdown%` and `Front Matter%`.
 
-3. **Appearance** — defined terms use the LUMI link color (`--link`, brand blue / brighter teal in dark mode) with a subtle dashed underline and a `help` cursor, turning LUMI magenta on hover — visible but not extreme, consistent with the existing link styling.
+## 3. Remove the `---` horizontal rules from `index.md`
 
-## Technical implementation
+Delete the standalone horizontal-rule separator lines (currently at lines 12, 31, 56, 90, 107, 115, 131, 148, 155, 175), tidying the surrounding blank lines so sections still have clean spacing.
 
-### New: `src/lib/glossary.ts`
-- Imports the already-loaded `pages` from `content.ts`, finds the page with slug `glossary`, and parses its first markdown table into a `Map<lowercasedTerm, { term, definition }>` (skipping the header/separator rows, stripping `**`, `*`, backticks from cells).
-- Exports a memoized `getGlossary()`.
+Explicitly kept:
+- The front-matter block at the top (the first `---` / `---` pair) — required for the page to work.
+- Any `---` that appears *inside* a fenced code block (those are front-matter examples being demonstrated, not real separators).
 
-### New: rehype plugin inside `MarkdownRenderer.tsx`
-- A small `rehypeGlossary` plugin that visits text nodes, skips any inside `code`/`pre`/headings, and replaces `[[...]]` occurrences with a `span` element node carrying `className: ["glossary-term"]` and a `data-term` property. (Done at the hast level so it composes cleanly with the existing rehypeRaw/slug/highlight pipeline.)
+`chapter1.md` has no horizontal-rule separators (only front matter and code-block examples), so nothing is removed there.
 
-### New: `GlossaryTerm` component (in `MarkdownRenderer.tsx` or its own file)
-- Renders a Radix **HoverCard** (already in the project at `src/components/ui/hover-card.tsx`) — opens on hover and on keyboard focus.
-- Looks up the term via `getGlossary()`. If missing → plain text. If present → the styled trigger + a popover showing the definition.
-
-### Edit: `MarkdownRenderer.tsx`
-- Add `rehypeGlossary` to the `rehypePlugins` array and add a `span` entry to `components` that detects the `glossary-term` class and renders `<GlossaryTerm>`.
-
-### Edit: `src/styles.css`
-- Add a `.glossary-term` rule (dashed underline, link color, `cursor: help`, magenta on hover) for light and dark mode.
-
-### Content edits (examples for creators)
-- Create `content/glossary.md` with the example terms you provided.
-- Add a short "Glossary & term definitions" section to `content/index.md` documenting the `[[term]]` syntax, and show one live `[[Supercomputer]]` example in `content/chapter1.md`.
-
-## Files
-
-- `src/lib/glossary.ts` — new (parse glossary table)
-- `src/components/MarkdownRenderer.tsx` — add rehype plugin, span mapping, GlossaryTerm
-- `src/styles.css` — `.glossary-term` styling
-- `content/glossary.md` — new example page
-- `content/index.md` — document the syntax
-- `content/chapter1.md` — one live example
-
-## Notes / decisions
-- Filename will be `glossary.md` (lowercase) so the URL is a clean `/glossary`; the sidebar/title still reads "Glossary".
-- HoverCard works on hover + focus; on touch devices it opens on tap/focus of the term.
-- No backend or build-config changes needed; everything runs in the existing markdown pipeline and prerenders fine.
+## Verification
+After the edits, load the home, chapter 1, and glossary pages in the preview to confirm the `%`-marked terms render with the dashed underline + hover definition, and that the `---` separators are gone from the home page while front matter and code examples remain intact.
