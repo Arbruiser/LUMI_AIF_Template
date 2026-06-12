@@ -3,6 +3,7 @@ import { Check, X, HelpCircle, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { scoreAnswer } from "@/lib/quiz";
 import type { Quiz as QuizData } from "@/lib/quiz";
+import { Confetti } from "./Confetti";
 
 type AnswerState = {
   selected: Set<number>;
