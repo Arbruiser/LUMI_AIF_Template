@@ -138,17 +138,14 @@ The table of contents on the right tracks your scroll position and updates the U
 
 ## Glossary & hover definitions
 
-Define your key terms once on the [Glossary](/glossary) page, then reference
-them anywhere by putting a single percent sign directly after the word. The reader
-sees a dashed underline and gets the definition in a pop-up on hover — try it
-here: you write everything in Markdown%, every page starts with Front Matter%,
-and you highlight things with a Callout%.
+The [Glossary](/glossary) page is a normal `.md` file that lives right next to `index.md` and the chapter files in the `content/` folder. It **must be named exactly `glossary.md`** (all lowercase) and needs the same front matter as any other page. The first `| Term | Definition |` table in that file is automatically parsed into the glossary.
+
+Once a term is defined there, you can reference it anywhere by putting a single percent sign directly after the word. The reader sees a dashed underline and gets the definition in a pop-up on hover — try it here: you write everything in Markdown%, every page starts with Front Matter%, and you highlight things with a Callout%.
 
 - Type the term and add a percent sign right after it, with no space: Markdown%.
 - Matching is case-insensitive, so markdown% also works.
 - Multi-word terms work too — put the percent sign after the last word: Front Matter%.
-- A word that isn't in the glossary table is left exactly as you typed it, so
-  ordinary percent signs are never affected.
+- A word that isn't in the glossary table is left exactly as you typed it, so ordinary percent signs are never affected.
 
 See the [Glossary](/glossary) page for the term table you edit.
 
