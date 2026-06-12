@@ -1,20 +1,18 @@
 import * as React from "react";
 import { Check, X, HelpCircle, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Quiz as QuizData, QuizQuestion } from "@/lib/quiz";
+import { scoreAnswer } from "@/lib/quiz";
+import type { Quiz as QuizData } from "@/lib/quiz";
 
 type AnswerState = {
   selected: Set<number>;
   answered: boolean;
-  correct: boolean;
+  /** Fraction between 0 and 1 (1 = fully correct). */
+  score: number;
 };
 
-function isAnswerCorrect(question: QuizQuestion, selected: Set<number>): boolean {
-  const correctIdx = question.options
-    .map((o, i) => (o.correct ? i : -1))
-    .filter((i) => i >= 0);
-  if (selected.size !== correctIdx.length) return false;
-  return correctIdx.every((i) => selected.has(i));
+function formatScore(value: number): string {
+  return Number.isInteger(value) ? `${value}` : value.toFixed(1);
 }
 
 export function Quiz({ title, questions }: QuizData) {
