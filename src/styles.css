@@ -155,12 +155,12 @@ html {
   --inline-code-bg: oklch(0.945 0.008 240);
   --inline-code-fg: var(--lumi-blue);
 
-  --terminal-bg: color-mix(in oklab, var(--lumi-magenta) 22%, #231f20); /* deep magenta */
-  --terminal-chrome: oklch(0.32 0.012 280);     /* dark purple-grey titlebar */
+  --terminal-bg: #3d0a2c;                       /* classic Ubuntu aubergine */
+  --terminal-chrome: oklch(0.32 0.012 280);     /* Ubuntu titlebar */
   --terminal-chrome-fg: oklch(0.96 0.005 280);
-  --terminal-border: oklch(0.18 0.04 350);      /* dark magenta */
+  --terminal-border: oklch(0.18 0.04 350);
   --terminal-fg: #ffffff;
-  --terminal-prompt: color-mix(in oklab, var(--lumi-purple) 45%, white); /* light purple prompt */
+  --terminal-prompt: oklch(0.78 0.18 142);      /* Ubuntu green prompt */
 
   --callout-note-bg: oklch(0.97 0.018 290);
   --callout-note-border: oklch(0.85 0.04 290);
