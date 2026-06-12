@@ -168,8 +168,8 @@ html {
   --callout-warning-border: color-mix(in oklab, var(--lumi-magenta) 28%, white);
   --callout-info-bg: oklch(0.965 0.018 240);
   --callout-info-border: oklch(0.84 0.05 240);
-  --callout-tip-bg: oklch(0.97 0.022 207);
-  --callout-tip-border: oklch(0.84 0.06 207);
+  --callout-tip-bg: color-mix(in oklab, var(--lumi-blue) 7%, white);
+  --callout-tip-border: color-mix(in oklab, var(--lumi-blue) 30%, white);
   --callout-command-bg: oklch(0.96 0.012 240);
   --callout-command-border: oklch(0.83 0.04 240);
 
