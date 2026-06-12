@@ -6,19 +6,19 @@ nav_order: 99
 # Glossary
 
 Define your course's key terms here, once. Any term in this table can then be
-referenced from any page by putting a single **asterisk** directly after the
-word — readers see the term in the LUMI link colour and get the definition in a
-small pop-up when they hover over it (or focus it with the keyboard).
+referenced from any page by putting a single **percent sign** directly after the
+word — readers see a dashed underline and get the definition in a small pop-up
+when they hover over it (or focus it with the keyboard).
 
 > [!tip] How to reference a term
-> In any `.md` file, type the term and add an asterisk right after it, with no
-> space in between: `Supercomputer*`. Matching is **case-insensitive**, so
-> `supercomputer*` works too. Multi-word terms work as well — just put the
-> asterisk after the last word: `Front Matter*`.
+> In any `.md` file, type the term and add a percent sign right after it, with no
+> space in between: `Supercomputer%`. Matching is **case-insensitive**, so
+> `supercomputer%` works too. Multi-word terms work as well — just put the
+> percent sign after the last word: `Front Matter%`.
 
 To add a term, just add a row to the table below. Keep the two columns **Term**
 and **Definition**. Only words that appear in this table become links; every
-other asterisk in your text is left untouched.
+other percent sign in your text is left untouched.
 
 ## Template terms
 

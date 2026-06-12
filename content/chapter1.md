@@ -7,7 +7,7 @@ nav_order: 2
 
 This is an example of an extra page. Use chapters like this to add structure and split your materials into modules instead of a single long page.
 
-Every page here is written in Markdown* and starts with Front Matter*. Hover
+Every page here is written in Markdown% and starts with Front Matter%. Hover
 over those highlighted words to see their glossary definitions — defined once in
 `content/glossary.md`.
 
