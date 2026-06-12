@@ -157,26 +157,19 @@ The table of contents on the right tracks your scroll position and updates the U
 ## Glossary & hover definitions
 
 Define your key terms once on the [Glossary](/glossary) page, then reference
-them anywhere by putting a single **asterisk** directly after the word. The
-reader sees the term in the LUMI link colour and gets the definition in a pop-up
-on hover:
+them anywhere by putting a single asterisk directly after the word. The reader
+sees a dashed underline and gets the definition in a pop-up on hover — try it
+here: you write everything in Markdown*, every page starts with Front Matter*,
+and you highlight things with a Callout*.
 
-```markdown
-Every page needs Front Matter*, and you write everything in Markdown*.
-```
-
-Renders as: Every page needs Front Matter*, and you write everything in Markdown*.
-
-A few more live examples you can hover over: a Callout*, a Code Block*, KaTeX*,
-the page Slug*, and a Supercomputer*.
-
-- Type the term and add an asterisk right after it, with no space: `Markdown*`.
-- Matching is **case-insensitive** — `markdown*` also works.
-- Multi-word terms work too — put the asterisk after the last word: `Front Matter*`.
+- Type the term and add an asterisk right after it, with no space: Markdown*.
+- Matching is case-insensitive, so markdown* also works.
+- Multi-word terms work too — put the asterisk after the last word: Front Matter*.
 - A word that isn't in the glossary table is left exactly as you typed it, so
   ordinary asterisks (bold, italic, lists, math) are never affected.
 
-See `content/glossary.md` for the term table you edit.
+See the [Glossary](/glossary) page for the term table you edit.
+
 
 
 ---
