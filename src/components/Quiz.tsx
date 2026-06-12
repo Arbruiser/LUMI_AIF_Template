@@ -113,7 +113,8 @@ export function Quiz({ title, questions }: QuizData) {
                     !answered && "hover:border-quiz-accent",
                     isSelected && !answered && "quiz-option-selected",
                     showCorrect && "quiz-option-correct",
-                    showWrong && "quiz-option-wrong"
+                    showWrong && "quiz-option-wrong",
+                    answered && isSelected && "quiz-option-chosen"
                   )}
                 >
                   <span
