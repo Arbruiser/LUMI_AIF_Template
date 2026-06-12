@@ -304,6 +304,13 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
             const child = React.Children.only(
               children
             ) as React.ReactElement<{ className?: string; children?: React.ReactNode }>;
+
+            const childClassName = child.props.className ?? "";
+            if (/\blanguage-quiz\b/.test(childClassName)) {
+              const quiz = parseQuiz(nodeToText(child.props.children));
+              return <Quiz title={quiz.title} questions={quiz.questions} />;
+            }
+
             const parsed = parseCodeMeta(dataMeta);
             return (
               <CodeBlock
