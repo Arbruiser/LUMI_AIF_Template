@@ -6,25 +6,28 @@ nav_order: 99
 # Glossary
 
 Define your course's key terms here, once. Any term in this table can then be
-referenced from any page with the `[[term]]` syntax — readers see the word in
-the LUMI link colour and get the definition in a small pop-up when they hover
-over it (or focus it with the keyboard).
+referenced from any page by putting a single **asterisk** directly after the
+word — readers see the term in the LUMI link colour and get the definition in a
+small pop-up when they hover over it (or focus it with the keyboard).
 
 > [!tip] How to reference a term
-> In any `.md` file, wrap a word in double square brackets: `[[Supercomputer]]`.
-> Matching is **case-insensitive**, so `[[supercomputer]]` works too. For a
-> different wording (e.g. a plural), use `[[display text|Term]]` —
-> for example `[[supercomputers|Supercomputer]]` shows "supercomputers" but
-> links to the "Supercomputer" definition below.
+> In any `.md` file, type the term and add an asterisk right after it, with no
+> space in between: `Supercomputer*`. Matching is **case-insensitive**, so
+> `supercomputer*` works too. Multi-word terms work as well — just put the
+> asterisk after the last word: `Front Matter*`.
 
-To add a term, just add a row to the table. Keep the two columns **Term** and
-**Definition**.
+To add a term, just add a row to the table below. Keep the two columns **Term**
+and **Definition**. Only words that appear in this table become links; every
+other asterisk in your text is left untouched.
 
-## Chapter 1: Welcome
+## Template terms
 
 | Term | Definition |
 |:-----|:-----------|
+| **Markdown** | A lightweight plain-text formatting syntax used to write all the content in this template. |
+| **Front Matter** | The block of metadata at the very top of a page, between the `---` lines, that sets the page title and sidebar order. |
+| **Callout** | A coloured box used to highlight a note, warning, info side-note, tip, or copyable command for your students. |
+| **Code Block** | A fenced section of code rendered with syntax highlighting and a copy button in the top-right corner. |
+| **KaTeX** | The typesetting engine that renders LaTeX mathematical formulas, like inline and block equations, on the page. |
+| **Slug** | The URL-friendly identifier of a page, derived automatically from its filename. |
 | **Supercomputer** | A very powerful computing system made up of thousands of interconnected computers (nodes) working together. |
-| **Command Line** | A text-based interface where you type commands to interact with a computer, instead of clicking with a mouse. |
-| **HPC (High-Performance Computing)** | The use of supercomputers and parallel processing to solve large computational problems. |
-| **Terminal** | The application on your computer that provides access to the command line (Terminal on Mac/Linux, PowerShell on Windows). |
