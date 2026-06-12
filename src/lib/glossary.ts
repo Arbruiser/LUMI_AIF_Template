@@ -123,22 +123,20 @@ function processSegment(
   let out = "";
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
-    if (ch !== "*") {
+    if (ch !== "%") {
       out += ch;
       continue;
     }
     const prev = text[i - 1];
-    const next = text[i + 1];
     const wordBefore = prev !== undefined && /[\p{L}\p{N})\]]/u.test(prev);
-    const isBoldDelim = next === "*" || prev === "*";
-    if (wordBefore && !isBoldDelim) {
+    if (wordBefore) {
       const match = matchPrecedingTerm(out, glossary);
       if (match) {
         out = out.slice(0, out.length - match.phrase.length);
         out += `<span class="glossary-term" data-term="${escapeHtml(
           match.entry.term
         )}">${escapeHtml(match.phrase)}</span>`;
-        continue; // consume the asterisk marker
+        continue; // consume the percent-sign marker
       }
     }
     out += ch;
@@ -160,13 +158,13 @@ function processLine(
 }
 
 /**
- * Convert `term*` markers in a markdown source into glossary `<span>` HTML.
+ * Convert `term%` markers in a markdown source into glossary `<span>` HTML.
  *
- * - Put a single asterisk directly after a term: `Supercomputer*`.
- * - Multi-word terms work too (`Front Matter*`) — the longest matching
- *   glossary phrase ending at the asterisk is used.
+ * - Put a single percent sign directly after a term: `Supercomputer%`.
+ * - Multi-word terms work too (`Front Matter%`) — the longest matching
+ *   glossary phrase ending at the percent sign is used.
  * - Only words that exist in the glossary table are converted, so ordinary
- *   asterisks (bold, italic, lists, math) are left alone.
+ *   percent signs are left alone.
  * - Fenced code blocks and inline code spans are skipped.
  */
 export function applyGlossaryMarkers(source: string): string {
