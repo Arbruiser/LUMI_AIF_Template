@@ -80,9 +80,6 @@ export function lookupTerm(term: string): GlossaryEntry | undefined {
   return getGlossary().get(term.trim().toLowerCase());
 }
 
-/** Longest glossary phrase that the preceding words can form. */
-const MAX_TERM_WORDS = 6;
-
 const HTML_ESCAPE: Record<string, string> = {
   "&": "&amp;",
   "<": "&lt;",
@@ -94,82 +91,90 @@ function escapeHtml(value: string): string {
   return value.replace(/[&<>"]/g, (c) => HTML_ESCAPE[c]);
 }
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+let patternCache: RegExp | null = null;
+
 /**
- * Look back over the text rendered so far and return the longest run of
- * trailing words that exactly matches a glossary entry, or null.
+ * One regex that matches any glossary term (longest first so multi-word terms
+ * win), captured in group 1, with an optional trailing percent marker in
+ * group 2. Word boundaries keep "Markdown" from matching inside "Markdownish".
  */
-function matchPrecedingTerm(
-  rendered: string,
-  glossary: Map<string, GlossaryEntry>
-): { phrase: string; entry: GlossaryEntry } | null {
-  // Only consider the trailing text that isn't inside a previously
-  // inserted HTML tag (stop at the last < or >).
-  const tail = (rendered.match(/[^<>]*$/) || [""])[0];
-  const tokens = [...tail.matchAll(/\S+/g)];
-  for (let k = Math.min(MAX_TERM_WORDS, tokens.length); k >= 1; k--) {
-    const start = tokens[tokens.length - k].index ?? 0;
-    const phrase = tail.slice(start);
-    const key = phrase.replace(/\s+/g, " ").trim().toLowerCase();
-    const entry = glossary.get(key);
-    if (entry) return { phrase, entry };
-  }
-  return null;
+function buildPattern(glossary: Map<string, GlossaryEntry>): RegExp {
+  if (patternCache) return patternCache;
+  const terms = [...glossary.values()]
+    .map((e) => e.term)
+    .sort((a, b) => b.length - a.length)
+    .map(escapeRegExp);
+  patternCache = new RegExp(
+    `(?<![\\p{L}\\p{N}])(${terms.join("|")})(?![\\p{L}\\p{N}])(%?)`,
+    "giu"
+  );
+  return patternCache;
+}
+
+function spanFor(entry: GlossaryEntry, displayed: string): string {
+  return `<span class="glossary-term" data-term="${escapeHtml(
+    entry.term
+  )}">${escapeHtml(displayed)}</span>`;
 }
 
 function processSegment(
   text: string,
-  glossary: Map<string, GlossaryEntry>
+  glossary: Map<string, GlossaryEntry>,
+  pattern: RegExp,
+  linked: Set<string>
 ): string {
-  let out = "";
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
-    if (ch !== "%") {
-      out += ch;
-      continue;
+  pattern.lastIndex = 0;
+  return text.replace(pattern, (full, termText: string, pct: string) => {
+    const key = termText.replace(/\s+/g, " ").trim().toLowerCase();
+    const entry = glossary.get(key);
+    if (!entry) return full;
+    // An explicit `%` marker always links and drops the marker character.
+    if (pct === "%") {
+      linked.add(key);
+      return spanFor(entry, termText);
     }
-    const prev = text[i - 1];
-    const wordBefore = prev !== undefined && /[\p{L}\p{N})\]]/u.test(prev);
-    if (wordBefore) {
-      const match = matchPrecedingTerm(out, glossary);
-      if (match) {
-        out = out.slice(0, out.length - match.phrase.length);
-        out += `<span class="glossary-term" data-term="${escapeHtml(
-          match.entry.term
-        )}">${escapeHtml(match.phrase)}</span>`;
-        continue; // consume the percent-sign marker
-      }
-    }
-    out += ch;
-  }
-  return out;
+    // Otherwise auto-link only the first occurrence of the term per page.
+    if (linked.has(key)) return full;
+    linked.add(key);
+    return spanFor(entry, termText);
+  });
 }
 
 function processLine(
   line: string,
-  glossary: Map<string, GlossaryEntry>
+  glossary: Map<string, GlossaryEntry>,
+  pattern: RegExp,
+  linked: Set<string>
 ): string {
-  // Leave inline code spans (`...`) untouched.
-  const parts = line.split(/(`[^`]*`)/);
+  // Leave inline code spans and markdown links untouched.
+  const parts = line.split(/(`[^`]*`|\[[^\]]*\]\([^)]*\))/g);
   for (let i = 0; i < parts.length; i++) {
-    if (i % 2 === 1) continue; // odd parts are code spans
-    parts[i] = processSegment(parts[i], glossary);
+    if (i % 2 === 1) continue; // odd parts are protected (code / links)
+    parts[i] = processSegment(parts[i], glossary, pattern, linked);
   }
   return parts.join("");
 }
 
 /**
- * Convert `term%` markers in a markdown source into glossary `<span>` HTML.
+ * Turn glossary terms in a markdown source into glossary `<span>` HTML.
  *
- * - Put a single percent sign directly after a term: `Supercomputer%`.
- * - Multi-word terms work too (`Front Matter%`) — the longest matching
- *   glossary phrase ending at the percent sign is used.
- * - Only words that exist in the glossary table are converted, so ordinary
- *   percent signs are left alone.
- * - Fenced code blocks and inline code spans are skipped.
+ * - Terms are auto-linked on their FIRST occurrence per page — creators don't
+ *   need to mark anything.
+ * - The legacy `Term%` marker still works and forces a link (handy to link a
+ *   later occurrence too); the `%` itself is removed from the output.
+ * - Matching is case-insensitive and multi-word terms win over shorter ones.
+ * - Headings, table rows, fenced code, inline code, and links are skipped.
  */
 export function applyGlossaryMarkers(source: string): string {
   const glossary = getGlossary();
   if (glossary.size === 0) return source;
+
+  const pattern = buildPattern(glossary);
+  const linked = new Set<string>();
 
   const lines = source.split(/\r?\n/);
   let inFence = false;
@@ -179,7 +184,31 @@ export function applyGlossaryMarkers(source: string): string {
       continue;
     }
     if (inFence) continue;
-    lines[i] = processLine(lines[i], glossary);
+    // Don't link inside headings or markdown table rows.
+    if (/^\s*#{1,6}\s/.test(lines[i]) || /^\s*\|/.test(lines[i])) continue;
+    lines[i] = processLine(lines[i], glossary, pattern, linked);
   }
   return lines.join("\n");
 }
+
+/**
+ * Remove the first contiguous markdown table block from a body. Used to hide
+ * the raw glossary table once it's re-rendered as a styled list.
+ */
+export function stripFirstTable(source: string): string {
+  const lines = source.split(/\r?\n/);
+  let start = -1;
+  let end = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (/^\s*\|/.test(lines[i])) {
+      if (start === -1) start = i;
+      end = i;
+    } else if (start !== -1) {
+      break;
+    }
+  }
+  if (start === -1) return source;
+  lines.splice(start, end - start + 1);
+  return lines.join("\n").replace(/\n{3,}/g, "\n\n");
+}
+
