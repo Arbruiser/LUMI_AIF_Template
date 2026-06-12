@@ -229,7 +229,7 @@ html {
   --terminal-chrome-fg: oklch(0.96 0.005 280);
   --terminal-border: oklch(0.16 0.04 350);
   --terminal-fg: #ffffff;
-  --terminal-prompt: oklch(0.78 0.18 142);
+  --terminal-prompt: color-mix(in oklab, var(--lumi-purple) 45%, white);
 
   --callout-note-bg: oklch(0.27 0.04 290);
   --callout-note-border: oklch(0.4 0.08 290);
