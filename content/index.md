@@ -73,12 +73,22 @@ import torch
 model = torch.nn.Linear(10, 1)
 ```
 
-- **Terminal blocks**: tag a code block with `bash`, `sh`, `shell`, or `zsh` and it renders as an Ubuntu styled terminal window with a `user@lumi:~$` prompt on every line. The copy button only copies the actual commands — not the prompt — so students can paste straight into their shell:
+- **Terminal blocks**: tag a code block with `bash`, `shell`, `zsh`, or `console` and it renders as an Ubuntu styled terminal window with a `user@lumi:~$` prompt on every line. The copy button only copies the actual commands — not the prompt — so students can paste straight into their shell:
 
 ```bash
 module purge
 module use /appl/local/laifs/modules
 module load lumi-aif-singularity-bindings
+```
+
+- **Shell scripts**: tag a code block with `sh` and it renders as a nano editor window instead — a file being edited, with no `user@lumi:~$` prompt. Use this for `.sh` scripts students save and run, rather than commands typed live:
+
+```sh title="submit.sh"
+#!/bin/bash
+#SBATCH --partition=standard-g
+#SBATCH --nodes=1
+
+srun python train.py
 ```
 
 ## Embedding pictures
