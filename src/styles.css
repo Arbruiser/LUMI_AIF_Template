@@ -834,3 +834,14 @@ pre.with-line-numbers .code-line::before {
 .quiz-btn-secondary:hover {
   background: color-mix(in oklab, var(--quiz-accent) 12%, transparent);
 }
+
+.quiz-card ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+}
+
+.quiz-card li {
+  padding-left: 0;
+  margin: 0;
+}
