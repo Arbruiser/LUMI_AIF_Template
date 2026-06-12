@@ -541,7 +541,7 @@ html {
 .dark .hljs-tag,
 .dark .hljs-title,
 .dark .hljs-section {
-  color: oklch(0.78 0.1 207); /* brighter teal — readable on dark bg */
+  color: oklch(0.78 0.1 237); /* lighter LUMI blue — readable on dark bg */
 }
 
 .dark .hljs-string,
