@@ -14,7 +14,12 @@ interface Props {
 }
 
 export function PageLayout({ page }: Props) {
+  const isGlossary = page.slug === "glossary";
   const toc = React.useMemo(() => extractToc(page.body), [page.body]);
+  const body = React.useMemo(
+    () => (isGlossary ? stripFirstTable(page.body) : page.body),
+    [isGlossary, page.body]
+  );
   const breadcrumbs = React.useMemo(
     () => getBreadcrumbs(page.slug),
     [page.slug]
