@@ -435,6 +435,29 @@ html {
   margin: 0.5rem 0;
 }
 
+/* Glossary terms: marked with [[term]] in markdown. Subtle dashed underline
+   in the LUMI link colour signals the word is interactive; magenta on hover. */
+.glossary-term {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  cursor: help;
+  transition: color 0.15s ease;
+  outline: none;
+}
+
+.glossary-term:hover,
+.glossary-term:focus-visible {
+  color: var(--lumi-magenta);
+}
+
+.glossary-term:focus-visible {
+  border-radius: 2px;
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--lumi-magenta) 45%, transparent);
+}
+
 /* ============= Syntax highlighting (LUMI palette only) =============
    Hues used: 237 (blue), 281 (purple), 355 (magenta), 207 (teal).
    Lightness adjusted for sufficient contrast in light vs dark mode. */
