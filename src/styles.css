@@ -222,7 +222,7 @@ html {
   --code-bg: oklch(0.24 0.014 250);
   --code-border: oklch(1 0 0 / 10%);
   --inline-code-bg: oklch(0.28 0.018 250);
-  --inline-code-fg: oklch(0.82 0.08 207);
+  --inline-code-fg: oklch(0.8 0.08 237);
 
   --terminal-bg: #3d0a2c;
   --terminal-chrome: oklch(0.28 0.012 280);
