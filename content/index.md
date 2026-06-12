@@ -168,7 +168,7 @@ and you highlight things with a Callout*.
 - A word that isn't in the glossary table is left exactly as you typed it, so
   ordinary asterisks (bold, italic, lists, math) are never affected.
 
-See the Glossary* page for the term table you edit.
+See the [Glossary](/glossary) page for the term table you edit.
 
 
 
