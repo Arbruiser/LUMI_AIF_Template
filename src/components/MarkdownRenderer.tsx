@@ -412,18 +412,26 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
             <DialogTitle>{lightbox?.alt || "Image preview"}</DialogTitle>
           </VisuallyHidden>
           {lightbox && (
-            <figure className="flex flex-col items-center">
-              <img
-                src={lightbox.src}
-                alt={lightbox.alt}
-                className="max-h-[85vh] w-auto rounded-lg object-contain"
-              />
-              {lightbox.alt && (
-                <figcaption className="mt-3 text-center text-sm text-white/90">
-                  {lightbox.alt}
-                </figcaption>
-              )}
-            </figure>
+            <div
+              className="flex min-h-[85vh] w-full cursor-zoom-out items-center justify-center"
+              onClick={() => setLightbox(null)}
+            >
+              <figure
+                className="flex flex-col items-center"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <img
+                  src={lightbox.src}
+                  alt={lightbox.alt}
+                  className="max-h-[85vh] w-auto rounded-lg object-contain"
+                />
+                {lightbox.alt && (
+                  <figcaption className="mt-3 text-center text-sm text-white/90">
+                    {lightbox.alt}
+                  </figcaption>
+                )}
+              </figure>
+            </div>
           )}
         </DialogContent>
       </Dialog>
