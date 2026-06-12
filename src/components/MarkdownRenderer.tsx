@@ -17,6 +17,8 @@ import { toast } from "sonner";
 import { visit } from "unist-util-visit";
 import { Callout } from "./Callout";
 import { CodeBlock } from "./CodeBlock";
+import { Quiz } from "./Quiz";
+import { parseQuiz } from "@/lib/quiz";
 import {
   Dialog,
   DialogContent,
