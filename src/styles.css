@@ -252,7 +252,7 @@ html {
   --quiz-correct-border: color-mix(in oklab, var(--quiz-correct) 50%, transparent);
   --quiz-wrong-bg: color-mix(in oklab, var(--quiz-wrong) 16%, transparent);
   --quiz-wrong-border: color-mix(in oklab, var(--quiz-wrong) 50%, transparent);
-  --quiz-selected-border: oklch(0.78 0.1 207);
+  --quiz-selected-border: oklch(0.72 0.09 290);
 }
 
 @layer base {
