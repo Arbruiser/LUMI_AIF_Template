@@ -217,7 +217,7 @@ html {
   --sidebar-accent: oklch(0.3 0.04 290);
   --sidebar-accent-foreground: oklch(0.95 0.02 290);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.7 0.1 207);
+  --sidebar-ring: oklch(0.7 0.092 237);
 
   --code-bg: oklch(0.24 0.014 250);
   --code-border: oklch(1 0 0 / 10%);
