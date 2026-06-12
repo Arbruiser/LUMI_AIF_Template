@@ -686,13 +686,13 @@ pre.with-line-numbers .code-line::before {
 
 /* ============= nano editor styled .sh blocks ============= */
 .nano-block {
-  --nano-bg: #1b1b2b;
-  --nano-fg: #e8e8ef;
-  --nano-inverse: #e8e8ef;
-  --nano-inverse-fg: #1b1b2b;
+  --nano-bg: color-mix(in oklab, var(--lumi-purple) 14%, #231f20);
+  --nano-fg: color-mix(in oklab, #ffffff 92%, var(--lumi-purple));
+  --nano-inverse: color-mix(in oklab, #ffffff 92%, var(--lumi-purple));
+  --nano-inverse-fg: color-mix(in oklab, var(--lumi-purple) 14%, #231f20);
   background: var(--nano-bg);
   color: var(--nano-fg);
-  border-color: #33334d;
+  border-color: color-mix(in oklab, var(--lumi-purple) 28%, #231f20);
 }
 
 .nano-block pre {
