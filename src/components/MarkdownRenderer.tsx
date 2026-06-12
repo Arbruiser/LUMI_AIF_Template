@@ -14,6 +14,7 @@ const linkIconSvg = fromHtmlIsomorphic(
   { fragment: true }
 ).children;
 import { toast } from "sonner";
+import { Link } from "@tanstack/react-router";
 import { visit } from "unist-util-visit";
 import { Callout } from "./Callout";
 import { CodeBlock } from "./CodeBlock";
