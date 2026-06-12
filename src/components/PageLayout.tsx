@@ -3,8 +3,10 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 import { TableOfContents } from "./TableOfContents";
+import { GlossaryList } from "./GlossaryList";
 import { extractToc } from "@/lib/toc";
 import { getBreadcrumbs, getPrevNext, type Page } from "@/lib/content";
+import { stripFirstTable } from "@/lib/glossary";
 
 
 interface Props {
