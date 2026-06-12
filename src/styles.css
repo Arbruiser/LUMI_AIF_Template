@@ -676,27 +676,29 @@ pre.with-line-numbers .code-line::before {
   color: var(--nano-fg) !important;
 }
 
-/* nano's inverse-video header */
+/* nano's titlebar — styled like a terminal header for coherence */
 .nano-titlebar {
-  background: var(--nano-inverse);
-  color: var(--nano-inverse-fg);
+  background: #2c2c2c;
+  color: #ffffff;
+  border-bottom: 1px solid #1a1a1a;
 }
 
-/* nano's bottom shortcut bar */
-.nano-shortcuts {
-  background: var(--nano-bg);
-  color: var(--nano-fg);
-  border-top: 1px solid #33334d;
+.nano-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 9999px;
+  background: #4a4a4a;
+  color: #ffffff;
+  font-size: 0.7rem;
+  line-height: 1;
 }
 
-.nano-key {
-  display: inline-block;
-  background: var(--nano-inverse);
-  color: var(--nano-inverse-fg);
-  padding: 0 0.3rem;
-  margin-right: 0.35rem;
-  border-radius: 2px;
-  font-weight: 600;
+.nano-btn-close {
+  background: transparent;
+  color: #ffffff;
 }
 
 /* hljs token colors tuned for the dark nano body */
