@@ -20,7 +20,7 @@ const variantAccent: Record<CalloutProps["variant"], string> = {
   note: "bg-lumi-purple",
   warning: "bg-lumi-magenta",
   info: "bg-lumi-blue",
-  tip: "bg-lumi-teal",
+  tip: "bg-lumi-blue",
   command: "bg-lumi-blue",
 };
 
