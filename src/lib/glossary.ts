@@ -109,7 +109,7 @@ function buildPattern(glossary: Map<string, GlossaryEntry>): RegExp {
     .sort((a, b) => b.length - a.length)
     .map(escapeRegExp);
   patternCache = new RegExp(
-    `(?<![\\p{L}\\p{N}])(${terms.join("|")})(?![\\p{L}\\p{N}])(%?)`,
+    `(?<![\\p{L}\\p{N}])((?:${terms.join("|")})s?)(?![\\p{L}\\p{N}])(%?)`,
     "giu"
   );
   return patternCache;
@@ -133,9 +133,18 @@ function processSegment(
     // there are never false positives on ordinary prose.
     if (pct !== "%") return full;
     const key = termText.replace(/\s+/g, " ").trim().toLowerCase();
-    const entry = glossary.get(key);
+    
+    let entry = glossary.get(key);
+    let canonicalKey = key;
+    
+    // Fallback: If not found and ends with 's', try the singular form
+    if (!entry && key.endsWith("s")) {
+      canonicalKey = key.slice(0, -1);
+      entry = glossary.get(canonicalKey);
+    }
+    
     if (!entry) return full;
-    linked.add(key);
+    linked.add(canonicalKey);
     return spanFor(entry, termText);
   });
 }
