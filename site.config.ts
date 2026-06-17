@@ -10,7 +10,7 @@ export const siteConfig = {
   /** Shown in the browser tab and the header. */
   title: "LUMI AIF Learning Materials",
   /** Default meta description and og:description. */
-  description: "Official training documentation for CSC staff and partners.",
+  description: "Official training documentation from LUMI AI Factory.",
   /**
    * Canonical site URL (no trailing slash). Auto-detected at build time from
    * GITHUB_REPOSITORY in the deploy workflow. Only set this manually when
