@@ -1,8 +1,11 @@
 import matter from "gray-matter";
-// Buffer polyfill needed by gray-matter in browser builds.
-import { Buffer } from "buffer";
+// Minimal Buffer shim so gray-matter works in the browser without
+// pulling in the full buffer polyfill (Vite externalises it).
 if (typeof globalThis !== "undefined" && !(globalThis as any).Buffer) {
-  (globalThis as any).Buffer = Buffer;
+  (globalThis as any).Buffer = {
+    from: (input: string) => input,
+    isBuffer: () => false,
+  };
 }
 
 export interface PageFrontmatter {

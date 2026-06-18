@@ -112,7 +112,7 @@ export function Confetti({ active }: { active: boolean }) {
   return (
     <canvas
       ref={canvasRef}
-      className="pointer-events-none absolute inset-0 z-10 h-full w-full"
+      className="pointer-events-none fixed inset-0 z-50 h-full w-full"
       style={{ imageRendering: "auto" }}
     />
   );
