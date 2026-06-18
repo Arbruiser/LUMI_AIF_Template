@@ -1,10 +1,22 @@
 import { Buffer } from "buffer/";
-import matter from "gray-matter";
-// gray-matter references the global `Buffer`, which doesn't exist in the
-// browser. Provide the real polyfill (already a dependency) on the global so
-// frontmatter parsing works correctly in the client bundle.
-if (typeof globalThis !== "undefined" && !(globalThis as any).Buffer) {
-  (globalThis as any).Buffer = Buffer;
+import { load as parseYaml } from "js-yaml";
+
+/**
+ * Split a markdown string into its YAML frontmatter and body.
+ *
+ * Replaces `gray-matter`, which pulled Node's `Buffer`/`fs` into the browser
+ * bundle. Our content only uses a leading `---` fenced YAML block, so a small
+ * pure-JS parser handles it without any Node polyfills.
+ */
+function parseFrontmatter(raw: string): { data: Record<string, unknown>; content: string } {
+  // Strip a leading BOM, then match an opening `---` fence at the very start.
+  const text = raw.replace(/^\uFEFF/, "");
+  const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(text);
+  if (!match) return { data: {}, content: text };
+  const parsed = parseYaml(match[1]);
+  const data =
+    parsed && typeof parsed === "object" ? (parsed as Record<string, unknown>) : {};
+  return { data, content: text.slice(match[0].length) };
 }
 
 export interface PageFrontmatter {
