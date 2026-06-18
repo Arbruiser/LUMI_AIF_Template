@@ -1,4 +1,3 @@
-import { Buffer } from "buffer/";
 import { load as parseYaml } from "js-yaml";
 
 /**
