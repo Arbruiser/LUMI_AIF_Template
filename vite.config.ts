@@ -112,6 +112,6 @@ export default defineConfig({
   },
   vite: {
     base: basePath,
-    plugins: [sitemapPlugin()],
+    plugins: [sitemapPlugin(), serverJsCompatPlugin()],
   },
 });
