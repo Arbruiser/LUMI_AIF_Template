@@ -67,6 +67,27 @@ function sitemapPlugin(): Plugin {
   };
 }
 
+// Work around a TanStack Start preview-server plugin bug: it hardcodes
+// `dist/server/server.js` but Nitro (cloudflare-module) outputs `index.mjs`.
+function serverJsCompatPlugin(): Plugin {
+  return {
+    name: "lumi-server-js-compat",
+    apply: "build",
+    closeBundle() {
+      try {
+        const serverDir = join(process.cwd(), "dist", "server");
+        const indexPath = join(serverDir, "index.mjs");
+        const serverPath = join(serverDir, "server.js");
+        if (existsSync(indexPath) && !existsSync(serverPath)) {
+          copyFileSync(indexPath, serverPath);
+        }
+      } catch {
+        // ignore
+      }
+    },
+  };
+}
+
 export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
@@ -75,6 +96,6 @@ export default defineConfig({
   },
   vite: {
     base: basePath,
-    plugins: [sitemapPlugin()],
+    plugins: [sitemapPlugin(), serverJsCompatPlugin()],
   },
 });
