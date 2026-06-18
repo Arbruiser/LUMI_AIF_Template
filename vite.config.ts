@@ -67,8 +67,10 @@ function sitemapPlugin(): Plugin {
   };
 }
 
-// Work around a TanStack Start preview-server plugin bug: it hardcodes
-// `dist/server/server.js` but Nitro (cloudflare-module) outputs `index.mjs`.
+// Work around three TanStack Start / Nitro preview issues:
+// 1) preview-server plugin hardcodes `dist/server/server.js` but Nitro outputs `index.mjs`.
+// 2) Nitro's Cloudflare preset mutates `req.ip`, but srvx NodeRequest has it as read-only.
+// 3) Cloudflare preset expects `env.ASSETS`, but preview server doesn't pass `env`.
 function serverJsCompatPlugin(): Plugin {
   return {
     name: "lumi-server-js-compat",
@@ -78,8 +80,22 @@ function serverJsCompatPlugin(): Plugin {
         const serverDir = join(process.cwd(), "dist", "server");
         const indexPath = join(serverDir, "index.mjs");
         const serverPath = join(serverDir, "server.js");
-        if (existsSync(indexPath) && !existsSync(serverPath)) {
-          copyFileSync(indexPath, serverPath);
+        if (existsSync(indexPath)) {
+          let code = readFileSync(indexPath, "utf-8");
+          // Patch augmentReq so the preview server doesn't crash on read-only ip
+          code = code.replace(
+            "req.ip = cfReq.headers.get(\"cf-connecting-ip\") || void 0;",
+            "try { req.ip = cfReq.headers.get(\"cf-connecting-ip\") || void 0; } catch {}"
+          );
+          // Patch env.ASSETS access when env is undefined in preview
+          code = code.replace(
+            "if (env.ASSETS && isPublicAssetURL(url.pathname)) {",
+            "if (env?.ASSETS && isPublicAssetURL(url.pathname)) {"
+          );
+          writeFileSync(indexPath, code);
+          if (!existsSync(serverPath)) {
+            copyFileSync(indexPath, serverPath);
+          }
         }
       } catch {
         // ignore
