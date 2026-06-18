@@ -1,11 +1,10 @@
+import { Buffer } from "buffer";
 import matter from "gray-matter";
-// Minimal Buffer shim so gray-matter works in the browser without
-// pulling in the full buffer polyfill (Vite externalises it).
+// gray-matter references the global `Buffer`, which doesn't exist in the
+// browser. Provide the real polyfill (already a dependency) on the global so
+// frontmatter parsing works correctly in the client bundle.
 if (typeof globalThis !== "undefined" && !(globalThis as any).Buffer) {
-  (globalThis as any).Buffer = {
-    from: (input: string) => input,
-    isBuffer: () => false,
-  };
+  (globalThis as any).Buffer = Buffer;
 }
 
 export interface PageFrontmatter {
