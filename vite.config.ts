@@ -67,10 +67,16 @@ function sitemapPlugin(): Plugin {
   };
 }
 
-// Work around three TanStack Start / Nitro preview issues:
-// 1) preview-server plugin hardcodes `dist/server/server.js` but Nitro outputs `index.mjs`.
-// 2) Nitro's Cloudflare preset mutates `req.ip`, but srvx NodeRequest has it as read-only.
-// 3) Cloudflare preset expects `env.ASSETS`, but preview server doesn't pass `env`.
+// REQUIRED build-time workaround (verified: removing it crashes `bun run build`
+// during the prerender step). Patches three TanStack Start / Nitro issues seen
+// with @tanstack/react-start ^1.167 + the bundled Nitro Cloudflare preset:
+// 1) the prerender/preview server looks for `dist/server/server.js`, but Nitro
+//    only outputs `index.mjs`, so we copy it across.
+// 2) Nitro's Cloudflare preset assigns `req.ip`, but srvx's NodeRequest exposes
+//    it as read-only — wrap in try/catch.
+// 3) the preset reads `env.ASSETS`, but the preview server passes no `env`.
+// Re-check on the next TanStack Start / Nitro upgrade; this can likely be dropped
+// once the preview server resolves the Nitro output entry by itself.
 function serverJsCompatPlugin(): Plugin {
   return {
     name: "lumi-server-js-compat",
