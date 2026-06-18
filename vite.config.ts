@@ -53,9 +53,11 @@ function sitemapPlugin(): Plugin {
         });
         const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`;
         const robots = `User-agent: *\nAllow: /\n\nSitemap: ${joinUrl(base, "sitemap.xml")}\n`;
-        mkdirSync(outDir, { recursive: true });
-        writeFileSync(join(outDir, "sitemap.xml"), xml);
-        writeFileSync(join(outDir, "robots.txt"), robots);
+        // Force write to dist/client so it gets uploaded to GitHub Pages
+        const finalDir = join(process.cwd(), "dist", "client");
+        mkdirSync(finalDir, { recursive: true });
+        writeFileSync(join(finalDir, "sitemap.xml"), xml);
+        writeFileSync(join(finalDir, "robots.txt"), robots);
       } catch (e) {
         // Don't fail the build on sitemap errors.
         // eslint-disable-next-line no-console
