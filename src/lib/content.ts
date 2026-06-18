@@ -1,4 +1,4 @@
-import { Buffer } from "buffer";
+import { Buffer } from "buffer/";
 import matter from "gray-matter";
 // gray-matter references the global `Buffer`, which doesn't exist in the
 // browser. Provide the real polyfill (already a dependency) on the global so
