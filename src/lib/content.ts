@@ -57,7 +57,7 @@ export const pages: Page[] = Object.entries(rawModules)
     return {
       slug: fileToSlug(filePath),
       path: filePath.replace(/^\//, ""),
-      frontmatter: parsed.data as PageFrontmatter,
+      frontmatter: parsed.data as unknown as PageFrontmatter,
       body: parsed.content,
     };
   })
