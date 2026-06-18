@@ -45,7 +45,7 @@ export function Confetti({ active }: { active: boolean }) {
     for (let i = 0; i < count; i++) {
       particles.push({
         x: canvas.clientWidth / 2 + (Math.random() - 0.5) * 400,
-        y: canvas.clientHeight / 2 - 20,
+        y: canvas.clientHeight - 100,
         vx: (Math.random() - 0.5) * 24,
         vy: Math.random() * -20 - 8,
         size: Math.random() * 4 + 2,
