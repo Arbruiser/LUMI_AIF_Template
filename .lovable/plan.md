@@ -1,55 +1,43 @@
-## Goal
+# Audit: the two confetti-era workarounds
 
-Improve glossary UX, SEO, and fix the hydration error — **without adding any work for content creators**. Everything stays driven by the same markdown files and the same glossary table they already edit.
+Neither workaround is about confetti. Both patch the **production build path**, which only got exercised while iterating on confetti. Here's what each one is, and whether it should stay.
 
----
+## 1. `src/lib/content.ts` — the fake `Buffer` shim
 
-## 1. Per-page descriptions & JSON-LD (zero creator work)
+```ts
+(globalThis as any).Buffer = { from: (i) => i, isBuffer: () => false };
+```
 
-**Answer to your question:** No, creators will NOT have to set a description per page. We auto-derive it.
+**Why it exists:** `gray-matter` (used to parse markdown frontmatter) references the global `Buffer`. The content is parsed in the browser bundle (`import.meta.glob(..., { query: '?raw', eager: true })`), so `Buffer` must exist there.
 
-- Add a helper that, for any page, produces a description by taking the **first real paragraph** of the markdown body (strip headings, callout markers, code, links → plain text, truncate ~155 chars). If a creator *happens* to add `description:` in front matter, we use that; otherwise we fall back to the auto-derived text. Either way it's optional.
-- Wire this into `head()` in `src/routes/index.tsx` and `src/routes/$.tsx` so every page emits a unique `description`, `og:title`, `og:description`, and `og:type` (`website` for home, `article` for content pages).
-- **JSON-LD:**
-  - Root (`__root.tsx`): a sitewide `Course` schema (name + description from `site.config.ts`) — represents the whole learning site once.
-  - Content pages (`$.tsx`, `index.tsx`): an `Article` schema (headline = page title, description = derived description) plus a `BreadcrumbList` built from the existing breadcrumb trail.
-- No new front matter is required. Creators keep writing plain markdown.
+**Why it's not great:** It's a fake object that lies — `from` returns the input unchanged and `isBuffer` always returns `false`. It happens to work only because, for string input, gray-matter never actually needs a real Buffer. If gray-matter ever hits its `toBuffer`/stringify path, this silently breaks.
 
-## 2. Auto-generated glossary linking (less work, more consistent)
+**The clean fix:** The real `buffer` polyfill is *already* a dependency (`"buffer": "^6.0.3"`). Assign the real thing to the global instead of a fake:
 
-Today a creator must type `Term%` everywhere they want a glossary link, which is easy to forget — so the same term gets linked on one page and not another (inconsistent).
+```ts
+import { Buffer } from "buffer";
+if (typeof globalThis !== "undefined" && !(globalThis as any).Buffer) {
+  (globalThis as any).Buffer = Buffer;
+}
+```
 
-- Change `applyGlossaryMarkers` so glossary terms are linked **automatically**, no `%` needed. To avoid clutter we link the **first occurrence of each term per page** only.
-- The existing `%` marker still works (forces a link) so nothing breaks for current content, but it becomes optional.
-- Safety exclusions (unchanged behavior): never link inside headings, code spans/fences, existing links, or on the glossary page itself. Longest-match wins for multi-word terms.
-- Result: creators write normal prose and glossary terms light up consistently everywhere.
+I confirmed this exact pattern parses the project's frontmatter correctly. The earlier note that "`import from 'buffer'` caused Rollup errors" was most likely a misdiagnosis — importing the *named* `Buffer` and assigning it to the global is different from relying on auto-injection, and I'll confirm with a real build.
 
-## 3. Dedicated glossary page layout
+## 2. `vite.config.ts` — `serverJsCompatPlugin`
 
-- Add a `GlossaryList` component that renders the parsed glossary as a clean, **alphabetically sorted** definition list (styled term/definition cards using existing LUMI tokens), each with an `id` anchor so terms are deep-linkable (`/glossary#markdown`).
-- On the glossary route, render this styled list **in place of** the raw markdown table (the instructional text above the table stays as-is). Creators still edit the exact same markdown table — only the presentation improves, so it's zero extra work.
+This post-processes `dist/server/index.mjs` after build to work around three TanStack Start / Nitro **preview-server** quirks: the `server.js` filename mismatch, a read-only `req.ip` assignment, and `env.ASSETS` being undefined.
 
-## 4. Fix the hydration warning
+**The open question:** these were added to stop 500s during a *local* `vite preview` / prerender run. It's unclear whether the actual Lovable preview pipeline needs them. The only honest way to know is to build with and without it.
 
-- Root cause: `HoverCardContent` renders its `<div>` inline (no portal), and glossary terms sit inside markdown `<p>` elements → `<div>` inside `<p>` → hydration error.
-- Fix: wrap the content in `@radix-ui/react-hover-card`'s `Portal` in `src/components/ui/hover-card.tsx`. This moves the popover to the document body, eliminating the invalid nesting. No visual change.
+## Plan
 
----
+1. **`src/lib/content.ts`** — replace the fake shim with the real `buffer` import (above). Keep `gray-matter` and the `buffer` dependency as-is.
+2. **Verify the build** — run a full production build. Confirm content pages render and frontmatter (`title`, `nav_order`, glossary) is parsed correctly.
+3. **Test `serverJsCompatPlugin` necessity** — temporarily disable it and rebuild/preview:
+   - If the preview still works → remove the plugin entirely (dead workaround).
+   - If it 500s → keep it, but tighten the comment to state exactly which framework versions need it so it can be removed on the next upgrade.
+4. **Leave alone:** `src/components/Confetti.tsx` (working as intended), `sitemapPlugin` (unrelated, fine), and the `buffer` dependency (now legitimately used).
 
-## Technical details
+## Out of scope
 
-- **Files touched:**
-  - `src/lib/content.ts` — add `getPageDescription(page)` helper (front matter override → first-paragraph fallback). Extend `PageFrontmatter` with optional `description`.
-  - `src/routes/__root.tsx` — sitewide `Course` JSON-LD.
-  - `src/routes/index.tsx`, `src/routes/$.tsx` — per-page description/OG meta + `Article` + `BreadcrumbList` JSON-LD.
-  - `src/lib/glossary.ts` — auto-link first occurrence per page; keep `%` as optional force.
-  - `src/components/GlossaryList.tsx` — new styled, anchored definition list.
-  - `src/components/PageLayout.tsx` (or MarkdownRenderer) — render `GlossaryList` and suppress the raw table on the glossary page.
-  - `src/components/ui/hover-card.tsx` — add `Portal`.
-- **No new dependencies.** `@radix-ui/react-hover-card` is already installed.
-- **Verification:** check the console hydration warning is gone, confirm glossary terms auto-link on a page without `%`, confirm the glossary page renders the styled list, and inspect page source/head for unique descriptions + JSON-LD.
-
-## Out of scope / unchanged
-
-- No required front matter changes; the glossary table format is unchanged.
-- No search, progress tracking, or new content blocks (can be follow-ups).
+No visual/behavioral changes to confetti or any UI. This is purely replacing a hacky shim with the correct polyfill and removing build-pipeline cruft that isn't pulling its weight.
