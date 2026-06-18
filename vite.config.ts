@@ -97,5 +97,10 @@ export default defineConfig({
   vite: {
     base: basePath,
     plugins: [sitemapPlugin(), serverJsCompatPlugin()],
+    resolve: {
+      alias: {
+        buffer: "buffer/index.js",
+      },
+    },
   },
 });
