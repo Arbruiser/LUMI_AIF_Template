@@ -53,7 +53,7 @@ function fileToSlug(filePath: string): string {
 
 export const pages: Page[] = Object.entries(rawModules)
   .map(([filePath, raw]) => {
-    const parsed = matter(raw);
+    const parsed = parseFrontmatter(raw);
     return {
       slug: fileToSlug(filePath),
       path: filePath.replace(/^\//, ""),
