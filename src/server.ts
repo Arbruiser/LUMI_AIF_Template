@@ -66,11 +66,36 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   return brandedErrorResponse();
 }
 
+function makeRequestWritableIp(req: Request): Request {
+  // Nitro's Cloudflare preset tries to assign req.ip, but srvx NodeRequest
+  // exposes ip as a read-only getter in the preview server.  The Proxy
+  // lets the assignment succeed without touching the underlying getter.
+  let ipValue: string | undefined;
+  return new Proxy(req, {
+    get(target, prop) {
+      if (prop === "ip") return ipValue;
+      const val = Reflect.get(target, prop);
+      return typeof val === "function" ? val.bind(target) : val;
+    },
+    set(target, prop, value) {
+      if (prop === "ip") {
+        ipValue = value;
+        return true;
+      }
+      return Reflect.set(target, prop, value);
+    },
+  });
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
       const handler = await getServerEntry();
-      const response = await handler.fetch(request, env, ctx);
+      const response = await handler.fetch(
+        makeRequestWritableIp(request),
+        env,
+        ctx,
+      );
       return await normalizeCatastrophicSsrResponse(response);
     } catch (error) {
       console.error(error);
