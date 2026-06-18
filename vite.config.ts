@@ -4,7 +4,7 @@
 //     componentTagger (dev-only), VITE_* env injection, @ path alias, React/TanStack dedupe,
 //     error logger plugins, and sandbox detection (port/host/strictPort).
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
-import { readdirSync, readFileSync, statSync, writeFileSync, mkdirSync } from "node:fs";
+import { readdirSync, readFileSync, statSync, writeFileSync, mkdirSync, copyFileSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 import type { Plugin } from "vite";
 // Note: do NOT import ./site.config here — it reads import.meta.env, which is
