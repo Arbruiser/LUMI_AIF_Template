@@ -57,11 +57,20 @@ export function Confetti({ active }: { active: boolean }) {
     }
     particlesRef.current = particles;
 
-    let frame = 0;
+    let lastTime: number | null = null;
+    let elapsedTime = 0;
     const gravity = 0.175;
     const drag = 0.98;
 
-    const draw = () => {
+    const draw = (time: number) => {
+      if (lastTime === null) {
+        lastTime = time;
+      }
+      const dt = time - lastTime;
+      lastTime = time;
+      elapsedTime += dt;
+      const timeScale = dt / 16.666;
+
       const rect = canvas.getBoundingClientRect();
       ctx.clearRect(0, 0, rect.width, rect.height);
 
@@ -70,15 +79,15 @@ export function Confetti({ active }: { active: boolean }) {
         if (p.opacity <= 0) continue;
         alive++;
 
-        p.vy += gravity;
-        p.vx *= drag;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.rotation += p.rotationSpeed;
+        p.vy += gravity * timeScale;
+        p.vx *= Math.pow(drag, timeScale);
+        p.x += p.vx * timeScale;
+        p.y += p.vy * timeScale;
+        p.rotation += p.rotationSpeed * timeScale;
 
-        // Fade out after apex
-        if (frame > 60) {
-          p.opacity -= 0.006;
+        // Fade out after apex (~1000ms is equivalent to 60 frames at 60Hz)
+        if (elapsedTime > 1000) {
+          p.opacity -= 0.006 * timeScale;
         }
 
         ctx.save();
@@ -94,7 +103,6 @@ export function Confetti({ active }: { active: boolean }) {
         ctx.restore();
       }
 
-      frame++;
       if (alive > 0) {
         rafRef.current = requestAnimationFrame(draw);
       }
