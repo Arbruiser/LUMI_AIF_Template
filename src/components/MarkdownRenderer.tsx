@@ -161,24 +161,47 @@ function extractCallout(
 
   const variant = match[1].toLowerCase() as CalloutVariant;
   const matchedLen = match[0].length;
-  const remainderHead = head.slice(matchedLen);
 
-  // Build title from all inline children of the first paragraph,
-  // since inline code (and other inline elements) split the text into
-  // multiple React children.
-  const titleParts: React.ReactNode[] = [];
-  if (remainderHead) {
-    titleParts.push(remainderHead);
+  // `match[2]` is the title text captured from the marker line (up to the first
+  // newline). Inline elements (e.g. `code`) split the first paragraph into
+  // multiple React children, and a soft line break between the title line and
+  // the body shows up as a "\n" inside one of those text nodes. We walk the
+  // first paragraph's children and split at the first newline: everything
+  // before it is the title, everything after it is the start of the body.
+  const afterMarker: React.ReactNode[] = [head.slice(matchedLen), ...inner.slice(1)];
+  const titleRest: React.ReactNode[] = [];
+  const bodyFromFirstParagraph: React.ReactNode[] = [];
+  let didSplit = false;
+  for (const node of afterMarker) {
+    if (!didSplit && typeof node === "string") {
+      const nl = node.indexOf("\n");
+      if (nl !== -1) {
+        const before = node.slice(0, nl);
+        const after = node.slice(nl + 1);
+        if (before) titleRest.push(before);
+        if (after) bodyFromFirstParagraph.push(after);
+        didSplit = true;
+        continue;
+      }
+    }
+    (didSplit ? bodyFromFirstParagraph : titleRest).push(node);
   }
-  for (let i = 1; i < inner.length; i++) {
-    titleParts.push(inner[i]);
+
+  const titleParts: React.ReactNode[] = [];
+  if (match[2]) titleParts.push(match[2]);
+  for (const node of titleRest) {
+    if (typeof node === "string" && node === "") continue;
+    titleParts.push(node);
   }
   const title: React.ReactNode | undefined =
     titleParts.length > 0 ? titleParts : undefined;
 
-  // The first paragraph is consumed entirely as the callout title;
-  // everything after it becomes the body.
-  const rest = [...arr.slice(0, firstIdx), ...arr.slice(firstIdx + 1)];
+  // Body = remainder of the first paragraph (after the title line) plus every
+  // following block (additional paragraphs, lists, code, etc.).
+  const rest: React.ReactNode[] = [
+    ...bodyFromFirstParagraph,
+    ...arr.slice(firstIdx + 1),
+  ];
 
   return { variant, title, rest };
 }
