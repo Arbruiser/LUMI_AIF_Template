@@ -42,8 +42,6 @@ Use callout boxes to highlight information for your students. Just start a block
 > [!tip] Deep Blue — Tip
 > Use this for pro-tips, shortcuts, or recommended best practices.
 
-> [!info] Using `nano`
-> The command `nano <filename>` is used to open an existing file or create a new file with that name if it doesn't exist.
 
 The `command` callout renders a copyable terminal command:
 
