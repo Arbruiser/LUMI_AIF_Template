@@ -110,11 +110,25 @@ function serverJsCompatPlugin(): Plugin {
   };
 }
 
+// Prerender one HTML file per content page so deep links (opened directly or
+// in a new tab) are served their own fully-rendered HTML — with the correct
+// sidebar item highlighted — instead of falling back to the "/" shell (which
+// would always show the first/home chapter as active until JS hydrates).
+function contentPages() {
+  const slugs = walkMd("content").map(fileToSlug);
+  const paths = new Set<string>(["/"]);
+  for (const slug of slugs) paths.add(slug === "" ? "/" : `/${slug}`);
+  return Array.from(paths).map((path) => ({
+    path,
+    prerender: { enabled: true, crawlLinks: true },
+  }));
+}
+
 export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
     spa: { enabled: true },
-    pages: [{ path: "/", prerender: { enabled: true, crawlLinks: true } }],
+    pages: contentPages(),
   },
   vite: {
     base: basePath,
