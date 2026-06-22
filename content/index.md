@@ -211,8 +211,6 @@ Once a term is defined there, you can reference it anywhere by putting a single 
 - Multi-word terms work too — put the percent sign after the last word: Front Matter%.
 - A word that isn't in the glossary table is left exactly as you typed it, so ordinary percent signs are never affected.
 
-The glossary is also smart enough to recognise plural nouns — if you define `Supercomputer`, you can write `Supercomputers%` and the link still works.
-
 See the [Glossary](/glossary) page for the term table you edit.
 
 ## Need help?
