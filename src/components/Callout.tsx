@@ -63,7 +63,7 @@ function CommandCallout({
   title,
   children,
 }: {
-  title?: string;
+  title?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const [copied, setCopied] = React.useState(false);
