@@ -141,7 +141,7 @@ type CalloutVariant = "note" | "warning" | "info" | "tip" | "command";
 
 function extractCallout(
   children: React.ReactNode
-): { variant: CalloutVariant; title?: string; rest: React.ReactNode } | null {
+): { variant: CalloutVariant; title?: React.ReactNode; rest: React.ReactNode } | null {
   const arr = React.Children.toArray(children);
   const firstIdx = arr.findIndex(
     (c) => !(typeof c === "string" && c.trim() === "")
@@ -160,23 +160,25 @@ function extractCallout(
   if (!match) return null;
 
   const variant = match[1].toLowerCase() as CalloutVariant;
-  const title = match[2].trim() || undefined;
-
   const matchedLen = match[0].length;
-  const remainderHead = head.slice(matchedLen).replace(/^\n+/, "");
-  const restOfFirst: React.ReactNode[] = [
-    ...(remainderHead ? [remainderHead] : []),
-    ...inner.slice(1),
-  ];
-  const newFirst = React.cloneElement(
-    first as React.ReactElement<{ children?: React.ReactNode }>,
-    { children: restOfFirst }
-  );
-  const rest = [
-    ...arr.slice(0, firstIdx),
-    ...(restOfFirst.length > 0 ? [newFirst] : []),
-    ...arr.slice(firstIdx + 1),
-  ];
+  const remainderHead = head.slice(matchedLen);
+
+  // Build title from all inline children of the first paragraph,
+  // since inline code (and other inline elements) split the text into
+  // multiple React children.
+  const titleParts: React.ReactNode[] = [];
+  if (remainderHead) {
+    titleParts.push(remainderHead);
+  }
+  for (let i = 1; i < inner.length; i++) {
+    titleParts.push(inner[i]);
+  }
+  const title: React.ReactNode | undefined =
+    titleParts.length > 0 ? titleParts : undefined;
+
+  // The first paragraph is consumed entirely as the callout title;
+  // everything after it becomes the body.
+  const rest = [...arr.slice(0, firstIdx), ...arr.slice(firstIdx + 1)];
 
   return { variant, title, rest };
 }

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 interface CalloutProps {
   variant: "note" | "warning" | "info" | "tip" | "command";
-  title?: string;
+  title?: React.ReactNode;
   children: React.ReactNode;
 }
 
@@ -63,7 +63,7 @@ function CommandCallout({
   title,
   children,
 }: {
-  title?: string;
+  title?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const [copied, setCopied] = React.useState(false);
