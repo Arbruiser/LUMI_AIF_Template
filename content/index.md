@@ -209,7 +209,7 @@ Once a term is defined there, you can reference it anywhere by putting a single 
 - Type the term and add a percent sign right after it, with no space: Markdown%.
 - Matching is case-insensitive, so markdown% also works.
 - Multi-word terms work too — put the percent sign after the last word: Front Matter%.
-- Plural forms are also recognised — if the glossary defines **Front Matter**, then `Front Matters%` works just as well.
+- Plural forms are also recognised — if the glossary defines **Front Matter**, then `Front Matters%` works just as well. Even back-ticked code terms work: `` `Front Matters%` `` is recognised too.
 - A word that isn't in the glossary table is left exactly as you typed it, so ordinary percent signs are never affected.
 
 See the [Glossary](/glossary) page for the term table you edit.
