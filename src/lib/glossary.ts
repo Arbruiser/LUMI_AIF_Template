@@ -240,24 +240,3 @@ export function applyGlossaryMarkers(source: string): string {
   return lines.join("\n");
 }
 
-/**
- * Remove the first contiguous markdown table block from a body. Used to hide
- * the raw glossary table once it's re-rendered as a styled list.
- */
-export function stripFirstTable(source: string): string {
-  const lines = source.split(/\r?\n/);
-  let start = -1;
-  let end = -1;
-  for (let i = 0; i < lines.length; i++) {
-    if (/^\s*\|/.test(lines[i])) {
-      if (start === -1) start = i;
-      end = i;
-    } else if (start !== -1) {
-      break;
-    }
-  }
-  if (start === -1) return source;
-  lines.splice(start, end - start + 1);
-  return lines.join("\n").replace(/\n{3,}/g, "\n\n");
-}
-
