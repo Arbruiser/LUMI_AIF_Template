@@ -96,7 +96,6 @@ export function useScrollMemory(
       const threshold = HEADER_OFFSET;
       const r = el.getBoundingClientRect();
       const delta = r.top - (threshold - saved.offset);
-      console.log("[scrollmem] apply", { slug, saved, deltaY: delta, scrollY: window.scrollY });
       if (Math.abs(delta) > 1) {
         window.scrollBy(0, delta);
       }
