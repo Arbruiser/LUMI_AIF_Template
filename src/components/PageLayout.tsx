@@ -3,10 +3,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 import { TableOfContents } from "./TableOfContents";
-import { GlossaryList } from "./GlossaryList";
 import { extractToc } from "@/lib/toc";
 import { getBreadcrumbs, getPrevNext, type Page } from "@/lib/content";
-import { stripFirstTable } from "@/lib/glossary";
 
 
 interface Props {
@@ -16,10 +14,6 @@ interface Props {
 export function PageLayout({ page }: Props) {
   const isGlossary = page.slug === "glossary";
   const toc = React.useMemo(() => extractToc(page.body), [page.body]);
-  const body = React.useMemo(
-    () => (isGlossary ? stripFirstTable(page.body) : page.body),
-    [isGlossary, page.body]
-  );
   const breadcrumbs = React.useMemo(
     () => getBreadcrumbs(page.slug),
     [page.slug]
