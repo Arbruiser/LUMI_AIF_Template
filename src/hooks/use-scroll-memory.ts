@@ -101,7 +101,7 @@ export function useScrollMemory(
       }
     };
 
-    console.log("[scrollmem] restore mount", slug, saved);
+
 
 
     apply();
