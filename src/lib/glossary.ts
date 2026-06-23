@@ -49,20 +49,27 @@ export function getGlossary(): Map<string, GlossaryEntry> {
   }
 
   const lines = page.body.split(/\r?\n/);
-  let seenSeparator = false;
+  // The glossary page can hold several term tables (e.g. one per chapter).
+  // `inTable` is true once we've passed a table's header separator; any
+  // non-table line (blank line, heading, `---` rule) ends the current table
+  // so the next table's header row is skipped instead of parsed as an entry.
+  let inTable = false;
 
   for (const line of lines) {
     const cells = parseRow(line);
-    if (!cells || cells.length < 2) continue;
-
-    if (isSeparatorRow(cells)) {
-      seenSeparator = true;
+    if (!cells || cells.length < 2) {
+      inTable = false;
       continue;
     }
 
-    // Skip rows until we've passed the header separator, so the literal
-    // "Term | Definition" header is never treated as an entry.
-    if (!seenSeparator) continue;
+    if (isSeparatorRow(cells)) {
+      inTable = true;
+      continue;
+    }
+
+    // Skip the literal "Term | Definition" header row that precedes each
+    // separator — only data rows below a separator become entries.
+    if (!inTable) continue;
 
     const term = stripInlineMarkdown(cells[0]);
     const definition = stripInlineMarkdown(cells[1]);
