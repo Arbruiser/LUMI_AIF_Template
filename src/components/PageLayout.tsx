@@ -55,8 +55,7 @@ export function PageLayout({ page }: Props) {
           </nav>
         )}
 
-        <MarkdownRenderer source={body} enableGlossary={!isGlossary} />
-        {isGlossary && <GlossaryList />}
+        <MarkdownRenderer source={page.body} enableGlossary={!isGlossary} />
 
         {(prev || next) && (
           <nav
