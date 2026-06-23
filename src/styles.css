@@ -317,7 +317,7 @@ html {
    text, painted in LUMI magenta. Skipped automatically when the first block
    is a heading or callout (because :first-of-type only matches paragraphs). */
 .prose-lumi > p:first-of-type::first-letter {
-  font-family: var(--font-sans);
+  font-family: Georgia, Cambria, "Times New Roman", Times, serif;
   font-size: 1.6em;
   font-weight: 700;
   color: var(--lumi-magenta);
