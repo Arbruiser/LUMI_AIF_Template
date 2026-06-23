@@ -274,6 +274,7 @@ html {
   pre,
   kbd {
     font-family: var(--font-mono);
+     font-variant-ligatures: none;
   }
 }
 
