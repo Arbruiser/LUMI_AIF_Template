@@ -247,6 +247,31 @@ function nodeToText(node: React.ReactNode): string {
   return "";
 }
 
+/** 
+ * Wraps the ends of inline code blocks to prevent tiny orphans (like a lonely `/`) 
+ * when the block wraps across lines.
+ */
+function formatInlineCode(node: React.ReactNode): React.ReactNode {
+  const text = nodeToText(node);
+  const MIN_CHUNK = 6;
+  
+  if (text.length <= MIN_CHUNK * 2) {
+    return <span className="whitespace-nowrap">{node}</span>;
+  }
+  
+  const start = text.slice(0, MIN_CHUNK);
+  const middle = text.slice(MIN_CHUNK, -MIN_CHUNK);
+  const end = text.slice(-MIN_CHUNK);
+
+  return (
+    <>
+      <span className="whitespace-nowrap">{start}</span>
+      {middle}
+      <span className="whitespace-nowrap">{end}</span>
+    </>
+  );
+}
+
 export function MarkdownRenderer({
   source,
   enableGlossary = true,
@@ -370,8 +395,8 @@ export function MarkdownRenderer({
           code({ className, children }) {
             if (!className) {
               return (
-                <code className="rounded bg-inline-code-bg px-1.5 py-0.5 font-mono text-[0.9em] text-inline-code-fg">
-                  {children}
+                <code className="rounded bg-inline-code-bg px-1.5 py-0.5 font-mono text-[0.9em] text-inline-code-fg break-words">
+                  {formatInlineCode(children)}
                 </code>
               );
             }
