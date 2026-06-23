@@ -43,7 +43,6 @@ export function useScrollMemory(
 ) {
   // Save position as the user scrolls.
   React.useEffect(() => {
-    console.log("[scrollmem] save-effect mount", slug, !!containerRef.current);
     const container = containerRef.current;
     if (!container || typeof window === "undefined") return;
 
