@@ -32,3 +32,16 @@ export const siteConfig = {
 };
 
 export type SiteConfig = typeof siteConfig;
+
+/**
+ * Build an absolute URL for a site-relative path (e.g. "/Chapter_2" or "/").
+ * Canonical links and og:url must be absolute — a relative "/" resolves
+ * against the current page's own URL, which for a GitHub Pages *project*
+ * site (served from a subpath) points at the domain root instead of this
+ * site. Falls back to the relative path when siteUrl isn't known yet (e.g.
+ * local dev), since there's no absolute origin to anchor to.
+ */
+export function absoluteUrl(path: string): string {
+  if (!siteConfig.siteUrl) return path;
+  return `${siteConfig.siteUrl}${path}`;
+}
