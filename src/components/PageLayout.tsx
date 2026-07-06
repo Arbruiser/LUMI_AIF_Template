@@ -6,6 +6,7 @@ import { TableOfContents } from "./TableOfContents";
 import { extractToc } from "@/lib/toc";
 import { getBreadcrumbs, getPrevNext, type Page } from "@/lib/content";
 import { useScrollMemory } from "@/hooks/use-scroll-memory";
+import { siteConfig } from "../../site.config";
 
 
 interface Props {
@@ -99,6 +100,14 @@ export function PageLayout({ page }: Props) {
               </Link>
             ) : null}
           </nav>
+        )}
+
+        {siteConfig.fundingNotice && (
+          <footer className="mt-12 border-t border-border pt-6 pb-2">
+            <p className="mx-auto max-w-md text-center text-xs leading-relaxed text-muted-foreground/70">
+              {siteConfig.fundingNotice}
+            </p>
+          </footer>
         )}
       </article>
 

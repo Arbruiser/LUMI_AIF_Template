@@ -21,6 +21,9 @@ export const siteConfig = {
   auxLinks: [
     { label: "LUMI AIF Website", href: "https://lumi-ai-factory.eu/" },
   ],
+  /** Funding acknowledgement shown at the end of every page. Set to "" to hide. */
+  fundingNotice:
+    "The LUMI AI Factory Service Center is funded jointly by the EuroHPC Joint Undertaking and the Participating States FI, CZ, DK, EE, NO, PL.",
   /**
    * GitHub repository in the form "owner/repo". Auto-detected from
    * GITHUB_REPOSITORY in the deploy workflow. Used to render the
