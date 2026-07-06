@@ -49,7 +49,7 @@ export function PageLayout({ page }: Props) {
                     </span>
                   ) : (
                     <Link
-                      to={href}
+                      to={href as any}
                       className="hover:text-lumi-magenta hover:underline"
                     >
                       {crumb.frontmatter.title}
@@ -70,7 +70,7 @@ export function PageLayout({ page }: Props) {
           >
             {prev ? (
               <Link
-                to={prev.slug === "" ? "/" : `/${prev.slug}`}
+                to={(prev.slug === "" ? "/" : `/${prev.slug}`) as any}
                 className="group flex flex-col rounded-lg border border-border p-4 text-left transition-colors hover:border-lumi-magenta"
               >
                 <span className="flex items-center gap-1 text-xs uppercase tracking-wide text-muted-foreground">
@@ -86,7 +86,7 @@ export function PageLayout({ page }: Props) {
             )}
             {next ? (
               <Link
-                to={next.slug === "" ? "/" : `/${next.slug}`}
+                to={(next.slug === "" ? "/" : `/${next.slug}`) as any}
                 className="group flex flex-col rounded-lg border border-border p-4 text-right transition-colors hover:border-lumi-magenta sm:col-start-2"
               >
                 <span className="flex items-center justify-end gap-1 text-xs uppercase tracking-wide text-muted-foreground">
