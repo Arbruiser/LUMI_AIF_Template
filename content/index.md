@@ -217,4 +217,4 @@ See the [Glossary](/glossary) page for the term table you edit.
 
 ## Need help?
 
-If you have ideas on how to make this template even better, I’d love to hear them! Send me an email at `name.surname@csc.fi` where name is Artur and surname is Voit-Antal (anti-spam measure).
+If you have ideas on how to make this template even better, I’d love to hear them! Send me an email at `name.surname@csc.fi` where name is Artur and surname is Vojt-Antal (anti-spam measure).
