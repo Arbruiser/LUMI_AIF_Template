@@ -1,9 +1,8 @@
-// @lovable.dev/vite-tanstack-config already includes the following — do NOT add them manually
-// or the app will break with duplicate plugins:
-//   - tanstackStart, viteReact, tailwindcss, tsConfigPaths, cloudflare (build-only),
-//     componentTagger (dev-only), VITE_* env injection, @ path alias, React/TanStack dedupe,
-//     error logger plugins, and sandbox detection (port/host/strictPort).
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { defineConfig } from "vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import viteReact from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import tsConfigPaths from "vite-tsconfig-paths";
 import { readdirSync, readFileSync, statSync, writeFileSync, mkdirSync, copyFileSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 import type { Plugin } from "vite";
@@ -125,13 +124,44 @@ function contentPages() {
 }
 
 export default defineConfig({
-  tanstackStart: {
-    server: { entry: "server" },
-    spa: { enabled: true },
-    pages: contentPages(),
+  base: basePath,
+  // Match the build's CSS pipeline in dev. @tailwindcss/vite runs Lightning CSS
+  // at build, so build-time transforms (e.g. collapsing a hand-written
+  // `-webkit-backdrop-filter` to the prefixed form Chrome ignores) would break
+  // the built/static output while the dev preview looks fine. Running Lightning
+  // CSS in both keeps the preview honest.
+  css: { transformer: "lightningcss" },
+  resolve: {
+    alias: {
+      "@": `${process.cwd()}/src`,
+    },
+    dedupe: [
+      "react",
+      "react-dom",
+      "react/jsx-runtime",
+      "react/jsx-dev-runtime",
+      "@tanstack/react-query",
+      "@tanstack/query-core",
+    ],
   },
-  vite: {
-    base: basePath,
-    plugins: [sitemapPlugin(), serverJsCompatPlugin()],
-  },
+  server: { host: "::", port: 8080 },
+  plugins: [
+    tailwindcss(),
+    tsConfigPaths({ projects: ["./tsconfig.json"] }),
+    tanstackStart({
+      importProtection: {
+        behavior: "error",
+        client: {
+          files: ["**/server/**"],
+          specifiers: ["server-only"],
+        },
+      },
+      server: { entry: "server" },
+      spa: { enabled: true },
+      pages: contentPages(),
+    }),
+    viteReact(),
+    sitemapPlugin(),
+    serverJsCompatPlugin(),
+  ],
 });
