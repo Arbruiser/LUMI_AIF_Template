@@ -117,14 +117,14 @@ function buildPattern(glossary: Map<string, GlossaryEntry>): RegExp {
     .map(escapeRegExp);
   patternCache = new RegExp(
     `(?<![\\p{L}\\p{N}])((?:${terms.join("|")})s?)(?![\\p{L}\\p{N}])(%?)`,
-    "giu"
+    "giu",
   );
   return patternCache;
 }
 
 function spanFor(entry: GlossaryEntry, displayed: string): string {
   return `<span class="glossary-term" data-term="${escapeHtml(
-    entry.term
+    entry.term,
   )}">${escapeHtml(displayed)}</span>`;
 }
 
@@ -132,7 +132,7 @@ function processSegment(
   text: string,
   glossary: Map<string, GlossaryEntry>,
   pattern: RegExp,
-  linked: Set<string>
+  linked: Set<string>,
 ): string {
   pattern.lastIndex = 0;
   return text.replace(pattern, (full, termText: string, pct: string) => {
@@ -160,7 +160,7 @@ function processSegment(
 function resolveEntry(
   rawTerm: string,
   glossary: Map<string, GlossaryEntry>,
-  linked: Set<string>
+  linked: Set<string>,
 ): GlossaryEntry | undefined {
   const key = rawTerm.replace(/\s+/g, " ").trim().toLowerCase();
   let entry = glossary.get(key);
@@ -186,7 +186,7 @@ function processLine(
   line: string,
   glossary: Map<string, GlossaryEntry>,
   pattern: RegExp,
-  linked: Set<string>
+  linked: Set<string>,
 ): string {
   // Leave markdown links untouched; everything else is processed.
   const parts = line.split(/(\[[^\]]*\]\([^)]*\))/g);
@@ -208,7 +208,7 @@ function processLine(
         const entry = resolveEntry(term.trim(), glossary, linked);
         if (!entry) return full;
         return spanFor(entry, `${delim}${term}${delim}`);
-      }
+      },
     );
 
     // 2) Plain-text terms with a trailing `%`.
@@ -248,4 +248,3 @@ export function applyGlossaryMarkers(source: string): string {
   }
   return lines.join("\n");
 }
-

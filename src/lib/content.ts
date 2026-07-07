@@ -13,8 +13,7 @@ function parseFrontmatter(raw: string): { data: Record<string, unknown>; content
   const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(text);
   if (!match) return { data: {}, content: text };
   const parsed = parseYaml(match[1]);
-  const data =
-    parsed && typeof parsed === "object" ? (parsed as Record<string, unknown>) : {};
+  const data = parsed && typeof parsed === "object" ? (parsed as Record<string, unknown>) : {};
   return { data, content: text.slice(match[0].length) };
 }
 
@@ -60,10 +59,7 @@ export const pages: Page[] = Object.entries(rawModules)
       body: parsed.content,
     };
   })
-  .sort(
-    (a, b) =>
-      (a.frontmatter.nav_order ?? 999) - (b.frontmatter.nav_order ?? 999)
-  );
+  .sort((a, b) => (a.frontmatter.nav_order ?? 999) - (b.frontmatter.nav_order ?? 999));
 
 export function findPage(slug: string): Page | undefined {
   return pages.find((p) => p.slug === slug);
@@ -205,9 +201,7 @@ export function buildNavTree(): NavNode[] {
 
   const sortChildren = (nodes: NavNode[]) => {
     nodes.sort(
-      (a, b) =>
-        (a.page.frontmatter.nav_order ?? 999) -
-        (b.page.frontmatter.nav_order ?? 999)
+      (a, b) => (a.page.frontmatter.nav_order ?? 999) - (b.page.frontmatter.nav_order ?? 999),
     );
     nodes.forEach((n) => sortChildren(n.children));
   };

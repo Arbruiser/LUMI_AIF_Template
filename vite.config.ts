@@ -3,7 +3,15 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import tsConfigPaths from "vite-tsconfig-paths";
-import { readdirSync, readFileSync, statSync, writeFileSync, mkdirSync, copyFileSync, existsSync } from "node:fs";
+import {
+  readdirSync,
+  readFileSync,
+  statSync,
+  writeFileSync,
+  mkdirSync,
+  copyFileSync,
+  existsSync,
+} from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join, relative } from "node:path";
 import type { Plugin } from "vite";
@@ -76,7 +84,7 @@ function sitemapPlugin(): Plugin {
         writeFileSync(join(finalDir, "robots.txt"), robots);
       } catch (e) {
         // Don't fail the build on sitemap errors.
-        // eslint-disable-next-line no-console
+
         console.warn("[lumi-sitemap] skipped:", e);
       }
     },
@@ -106,13 +114,13 @@ function serverJsCompatPlugin(): Plugin {
           let code = readFileSync(indexPath, "utf-8");
           // Patch augmentReq so the preview server doesn't crash on read-only ip
           code = code.replace(
-            "req.ip = cfReq.headers.get(\"cf-connecting-ip\") || void 0;",
-            "try { req.ip = cfReq.headers.get(\"cf-connecting-ip\") || void 0; } catch {}"
+            'req.ip = cfReq.headers.get("cf-connecting-ip") || void 0;',
+            'try { req.ip = cfReq.headers.get("cf-connecting-ip") || void 0; } catch {}',
           );
           // Patch env.ASSETS access when env is undefined in preview
           code = code.replace(
             "if (env.ASSETS && isPublicAssetURL(url.pathname)) {",
-            "if (env?.ASSETS && isPublicAssetURL(url.pathname)) {"
+            "if (env?.ASSETS && isPublicAssetURL(url.pathname)) {",
           );
           writeFileSync(indexPath, code);
           if (!existsSync(serverPath)) {

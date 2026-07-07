@@ -10,19 +10,14 @@ type Anchor = { index: number; offset: number };
 const store = new Map<string, Anchor>();
 
 /** Selectors for "content" elements we can anchor to. */
-const CANDIDATE_SELECTOR =
-  "h1,h2,h3,h4,h5,h6,p,li,pre,img,table,blockquote,figure";
+const CANDIDATE_SELECTOR = "h1,h2,h3,h4,h5,h6,p,li,pre,img,table,blockquote,figure";
 
 /** Sticky header is h-14 (56px). Reading "top" sits just below it. */
 const HEADER_OFFSET = 56;
 
-function useIsomorphicLayoutEffect(
-  effect: React.EffectCallback,
-  deps?: React.DependencyList
-) {
-  const useEffectImpl =
-    typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+function useIsomorphicLayoutEffect(effect: React.EffectCallback, deps?: React.DependencyList) {
+  const useEffectImpl = typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
+
   useEffectImpl(effect, deps);
 }
 
@@ -37,10 +32,7 @@ function useIsomorphicLayoutEffect(
  * back to the same spot — re-applying as images load so layout shifts above
  * the anchor don't throw the position off.
  */
-export function useScrollMemory(
-  slug: string,
-  containerRef: React.RefObject<HTMLElement | null>
-) {
+export function useScrollMemory(slug: string, containerRef: React.RefObject<HTMLElement | null>) {
   // Save position as the user scrolls.
   React.useEffect(() => {
     const container = containerRef.current;
@@ -100,9 +92,6 @@ export function useScrollMemory(
         window.scrollBy(0, delta);
       }
     };
-
-
-
 
     apply();
 

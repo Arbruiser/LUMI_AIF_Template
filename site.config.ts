@@ -18,9 +18,7 @@ export const siteConfig = {
    */
   siteUrl: import.meta.env.VITE_SITE_URL ?? "",
   /** External links shown on the right of the header. */
-  auxLinks: [
-    { label: "LUMI AIF Website", href: "https://lumi-ai-factory.eu/" },
-  ],
+  auxLinks: [{ label: "LUMI AIF Website", href: "https://lumi-ai-factory.eu/" }],
   /** Funding acknowledgement shown at the end of every page. Set to "" to hide. */
   fundingNotice:
     "The LUMI AI Factory Service Center is funded jointly by the EuroHPC Joint Undertaking and the Participating States FI, CZ, DK, EE, NO, PL.",
