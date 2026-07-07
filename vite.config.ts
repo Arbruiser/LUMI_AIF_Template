@@ -3,15 +3,7 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import tsConfigPaths from "vite-tsconfig-paths";
-import {
-  readdirSync,
-  readFileSync,
-  statSync,
-  writeFileSync,
-  mkdirSync,
-  copyFileSync,
-  existsSync,
-} from "node:fs";
+import { readdirSync, statSync, writeFileSync, mkdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join, relative } from "node:path";
 import type { Plugin } from "vite";
@@ -57,13 +49,9 @@ function lastModified(filePath: string): string {
 
 // Generate sitemap.xml + robots.txt at build time from markdown content.
 function sitemapPlugin(): Plugin {
-  let outDir = "dist";
   return {
     name: "lumi-sitemap",
     apply: "build",
-    configResolved(cfg) {
-      outDir = cfg.build.outDir;
-    },
     closeBundle() {
       try {
         const files = walkMd("content");
@@ -86,49 +74,6 @@ function sitemapPlugin(): Plugin {
         // Don't fail the build on sitemap errors.
 
         console.warn("[lumi-sitemap] skipped:", e);
-      }
-    },
-  };
-}
-
-// REQUIRED build-time workaround (verified: removing it crashes `bun run build`
-// during the prerender step). Patches three TanStack Start / Nitro issues seen
-// with @tanstack/react-start ^1.167 + the bundled Nitro Cloudflare preset:
-// 1) the prerender/preview server looks for `dist/server/server.js`, but Nitro
-//    only outputs `index.mjs`, so we copy it across.
-// 2) Nitro's Cloudflare preset assigns `req.ip`, but srvx's NodeRequest exposes
-//    it as read-only — wrap in try/catch.
-// 3) the preset reads `env.ASSETS`, but the preview server passes no `env`.
-// Re-check on the next TanStack Start / Nitro upgrade; this can likely be dropped
-// once the preview server resolves the Nitro output entry by itself.
-function serverJsCompatPlugin(): Plugin {
-  return {
-    name: "lumi-server-js-compat",
-    apply: "build",
-    closeBundle() {
-      try {
-        const serverDir = join(process.cwd(), "dist", "server");
-        const indexPath = join(serverDir, "index.mjs");
-        const serverPath = join(serverDir, "server.js");
-        if (existsSync(indexPath)) {
-          let code = readFileSync(indexPath, "utf-8");
-          // Patch augmentReq so the preview server doesn't crash on read-only ip
-          code = code.replace(
-            'req.ip = cfReq.headers.get("cf-connecting-ip") || void 0;',
-            'try { req.ip = cfReq.headers.get("cf-connecting-ip") || void 0; } catch {}',
-          );
-          // Patch env.ASSETS access when env is undefined in preview
-          code = code.replace(
-            "if (env.ASSETS && isPublicAssetURL(url.pathname)) {",
-            "if (env?.ASSETS && isPublicAssetURL(url.pathname)) {",
-          );
-          writeFileSync(indexPath, code);
-          if (!existsSync(serverPath)) {
-            copyFileSync(indexPath, serverPath);
-          }
-        }
-      } catch {
-        // ignore
       }
     },
   };
@@ -187,6 +132,5 @@ export default defineConfig({
     }),
     viteReact(),
     sitemapPlugin(),
-    serverJsCompatPlugin(),
   ],
 });
