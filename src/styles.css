@@ -643,11 +643,6 @@ pre.with-line-numbers .code-line::before {
   line-height: 1;
 }
 
-.terminal-btn-close {
-  background: transparent;
-  color: #ffffff;
-}
-
 /* Brighten hljs tokens inside terminal blocks so they read on the dark bg
    regardless of theme. */
 .terminal-block .hljs {
@@ -722,11 +717,6 @@ pre.with-line-numbers .code-line::before {
   color: #ffffff;
   font-size: 0.7rem;
   line-height: 1;
-}
-
-.nano-btn-close {
-  background: transparent;
-  color: #ffffff;
 }
 
 /* hljs token colors tuned for the dark nano body */
