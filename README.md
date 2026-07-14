@@ -20,5 +20,32 @@ Every push a commit to your repository, the website is rebuilt and redeployed au
 
 The demo with examples of how to add content and new pages can be found in `content/index.md`
 
+## Getting template updates into your course
+
+The template keeps improving (styling fixes, new features). A repository made with **Use this template** does not share git history with this template, so there is no "Sync fork" button — instead you copy the template's internals over with the commands below. Your own work is left alone: everything in `content/`, your images in `public/assets/`, your `site.config.ts`, and your `README.md` are untouched.
+
+You need a local clone of **your** repository (`git clone <your-repo-url>`). Then, one time only, register the template as an extra remote:
+
+```bash
+git remote add template https://github.com/lumi-ai-factory/course-template.git
+```
+
+Whenever you want the latest template version (commit and push your own work first):
+
+```bash
+git fetch template
+git checkout template/main -- . ":(exclude)content" ":(exclude)site.config.ts" ":(exclude)README.md"
+git commit -m "Pull in template updates"
+git push
+```
+
+After the push, your site rebuilds and redeploys automatically as usual.
+
+Good to know:
+
+- Review what changed before committing with `git status`.
+- If you edited the template's internals yourself (anything under `src/`, the build config, the deploy workflow), those edits are overwritten by this — re-apply them afterwards.
+- If a template update adds new settings, compare your config with the template's: `git diff HEAD template/main -- site.config.ts`.
+
 [GitHub Pages]: https://docs.github.com/en/pages
 [use this template]: https://github.com/Arbruiser/LUMI_AIF_template/generate

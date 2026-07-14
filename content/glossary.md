@@ -17,19 +17,8 @@ a small pop-up on hover.
 > right after it, with no space: `Front Matter%`. Matching is
 > **case-insensitive** and plural forms work too (`Front Matters%`).
 
----
-
-## Home
-
 | Term | Definition |
 |:-----|:-----------|
 | **Markdown** | A lightweight plain-text formatting syntax used to write all the content in this template. |
 | **Callout** | A coloured box used to highlight a note, warning, info side-note, tip, or copyable command for your students. |
-
----
-
-## Chapter 1 — Getting Started with LUMI
-
-| Term | Definition |
-|:-----|:-----------|
 | **Front Matter** | The block of metadata at the very top of a page, between the `---` lines, that sets the page title and sidebar order. |
