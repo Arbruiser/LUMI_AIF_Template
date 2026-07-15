@@ -11,21 +11,11 @@ Every page here is written in Markdown% and starts with Front Matter%. Hover
 over those highlighted words to see their glossary definitions — defined once in
 `content/glossary.md`.
 
-You can even **add subchapters** by creating another `.md` file (e.g. `chapter1-1.md`) and using the `parent` field. Update this file's frontmatter to mark it as a parent:
+You can even **add subchapters** by creating another `.md` file and setting its `parent` field to the parent page's title. This template ships with one example — `content/chapter1-1.md` starts with:
 
 ```yaml
 ---
-title: "Chapter 1 — Getting Started with LUMI"
-nav_order: 2
-has_children: true
----
-```
-
-…and the new subchapter's frontmatter as:
-
-```yaml
----
-title: "Authentication & Environment"
+title: "Chapter 1.1 — Subchapter Example"
 parent: "Chapter 1 — Getting Started with LUMI"
 nav_order: 1
 ---

@@ -21,6 +21,8 @@ export interface PageFrontmatter {
   title: string;
   nav_order?: number;
   parent?: string;
+  /** Accepted for Just the Docs-style front matter, but not required — nesting
+   * is driven entirely by the children's `parent` fields. */
   has_children?: boolean;
   /** Optional meta description. When omitted, one is derived from the body. */
   description?: string;
