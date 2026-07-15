@@ -1,36 +1,31 @@
 ---
-title: "Chapter 1 — Getting Started with LUMI"
+title: "Chapter 1: Getting Started with LUMI"
 nav_order: 2
 ---
 
-# Chapter 1 — Getting Started with LUMI
+# Chapter 1: Getting Started with LUMI
 
 This is an example of an extra page. Use chapters like this to add structure and split your materials into modules instead of a single long page.
 
-Every page here is written in Markdown% and starts with Front Matter%. Hover
-over those highlighted words to see their glossary definitions — defined once in
-`content/glossary.md`.
+Every page here is written in Markdown% and starts with Front Matter%. Hover over those highlighted words to see their glossary definitions, defined once in `content/glossary.md`.
 
-You can even **add subchapters** by creating another `.md` file and setting its `parent` field to the parent page's title. This template ships with one example — `content/chapter1-1.md` starts with:
+You can even **add subchapters** by creating another `.md` file and setting its `parent` field to the parent page's title. This template ships with one example, `content/chapter1-1.md`, which starts with:
 
 ```yaml
 ---
-title: "Chapter 1.1 — Subchapter Example"
-parent: "Chapter 1 — Getting Started with LUMI"
+title: "Chapter 1.1: Subchapter Example"
+parent: "Chapter 1: Getting Started with LUMI"
 nav_order: 1
 ---
 ```
 
 > [!warning] Before you publish
-> Double-check `nav_order` across all pages so the sidebar reads
-> top-to-bottom in the order you teach. Mismatched ordering is the most
-> common authoring mistake.
+> Double-check `nav_order` across all pages so the sidebar reads top-to-bottom in the order you teach. 
 
 The `parent` value must match the parent page's `title` exactly.
 
 > [!warning]
-> Don't rename `index.md` — it's the home page of the site. All other pages can be named arbitrarily. 
-> All `.md` files in `content/` (except `index.md`) can be named anything you like. The URL is derived from the filename.
+> Don't rename `index.md`: it's the home page of the site. All other pages can be named arbitrarily. All `.md` files in `content/` (except `index.md`) can be named anything you like. The URL is derived from the filename.
 
 ## Quick quiz
 
@@ -43,7 +38,7 @@ Q: Which file is always the home page of the site?
 - [ ] home.md
 - [x] index.md
 - [ ] readme.md
-> index.md is special — every other page can be named freely.
+> index.md is special: every other page can be named freely.
 
 ---
 

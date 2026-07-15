@@ -9,7 +9,7 @@ export const Route = createFileRoute("/$")({
     const slug = ((params as { _splat?: string })._splat ?? "").replace(/\/+$/, "");
     const page = findPage(slug);
     const title = page?.frontmatter.title
-      ? `${page.frontmatter.title} — ${siteConfig.title}`
+      ? `${page.frontmatter.title} | ${siteConfig.title}`
       : siteConfig.title;
     if (!page) {
       return { meta: [{ title }, { property: "og:title", content: title }] };

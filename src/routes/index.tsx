@@ -8,7 +8,7 @@ export const Route = createFileRoute("/")({
   head: () => {
     const page = findPage("");
     const title = page?.frontmatter.title
-      ? `${page.frontmatter.title} — ${siteConfig.title}`
+      ? `${page.frontmatter.title} | ${siteConfig.title}`
       : siteConfig.title;
     const description = page
       ? getPageDescription(page) || siteConfig.description
