@@ -155,11 +155,6 @@ html {
   --inline-code-bg: oklch(0.945 0.008 240);
   --inline-code-fg: var(--lumi-blue);
 
-  /* Mermaid diagram surface — keep in sync with the `bg` value in
-     MermaidDiagram.tsx (mermaid paints edge-label rectangles in that colour,
-     and they must blend into this box). */
-  --mermaid-bg: #ffffff;
-
   --terminal-bg: #3d0a2c;                       /* classic Ubuntu aubergine */
   --terminal-chrome: oklch(0.32 0.012 280);     /* Ubuntu titlebar */
   --terminal-chrome-fg: oklch(0.96 0.005 280);
@@ -229,10 +224,6 @@ html {
   --code-border: oklch(1 0 0 / 10%);
   --inline-code-bg: oklch(0.28 0.018 250);
   --inline-code-fg: oklch(0.8 0.08 237);
-
-  /* = hex of the dark --card (oklch(0.22 0.012 250)); keep in sync with
-     MermaidDiagram.tsx */
-  --mermaid-bg: #161b20;
 
   --terminal-bg: #3d0a2c;
   --terminal-chrome: oklch(0.28 0.012 280);
@@ -757,20 +748,35 @@ pre.with-line-numbers .code-line::before {
 }
 
 /* ============= Mermaid diagrams ============= */
+/* Same surface and border tokens as regular code blocks, so all boxes on a
+   page share one colour. */
 .mermaid-block {
   display: flex;
   justify-content: center;
   margin: 1.25rem 0;
   padding: 1rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--code-border);
   border-radius: var(--radius-lg);
-  background: var(--mermaid-bg);
+  background: var(--code-bg);
   overflow-x: auto;
 }
 
 .mermaid-block svg {
   max-width: 100%;
   height: auto;
+}
+
+/* Mermaid inlines its own theme colour behind arrow labels; forcing it to
+   the box token here guarantees labels always blend into the box, whatever
+   hex mermaid was initialized with. */
+.mermaid-block .edgeLabel,
+.mermaid-block .edgeLabel p,
+.mermaid-block .labelBkg {
+  background-color: var(--code-bg) !important;
+}
+
+.mermaid-block rect.labelBkg {
+  fill: var(--code-bg) !important;
 }
 
 /* Pre-hydration fallback: the diagram source, dimmed, until mermaid loads. */
