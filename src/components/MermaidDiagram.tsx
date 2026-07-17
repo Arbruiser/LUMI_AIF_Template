@@ -37,9 +37,10 @@ function brandRamp(): string[] {
 
 function buildThemeVariables(mode: "light" | "dark"): Record<string, string> {
   const dark = mode === "dark";
-  // Page background equivalents, built from brand black (mixed further down
-  // toward pure black for the dark theme, matching --background).
-  const bg = dark ? mix(BLACK, "#000000", 0.8) : WHITE;
+  // Diagram surface colour. Must stay identical to --mermaid-bg in
+  // styles.css: mermaid paints rectangles in this colour behind edge labels,
+  // and they only disappear when they match the container box behind them.
+  const bg = dark ? mix(BLUE, BLACK, 0.12) : WHITE;
   const fg = dark ? WHITE : BLACK;
   const ramp = brandRamp();
 

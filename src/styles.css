@@ -155,6 +155,11 @@ html {
   --inline-code-bg: oklch(0.945 0.008 240);
   --inline-code-fg: var(--lumi-blue);
 
+  /* Mermaid diagram surface — keep in sync with the `bg` value in
+     MermaidDiagram.tsx (mermaid paints edge-label rectangles in that colour,
+     and they must blend into this box). */
+  --mermaid-bg: #ffffff;
+
   --terminal-bg: #3d0a2c;                       /* classic Ubuntu aubergine */
   --terminal-chrome: oklch(0.32 0.012 280);     /* Ubuntu titlebar */
   --terminal-chrome-fg: oklch(0.96 0.005 280);
@@ -224,6 +229,9 @@ html {
   --code-border: oklch(1 0 0 / 10%);
   --inline-code-bg: oklch(0.28 0.018 250);
   --inline-code-fg: oklch(0.8 0.08 237);
+
+  /* = 12% lumi-blue over lumi-black; keep in sync with MermaidDiagram.tsx */
+  --mermaid-bg: #24282d;
 
   --terminal-bg: #3d0a2c;
   --terminal-chrome: oklch(0.28 0.012 280);
@@ -755,7 +763,7 @@ pre.with-line-numbers .code-line::before {
   padding: 1rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: var(--color-card);
+  background: var(--mermaid-bg);
   overflow-x: auto;
 }
 
