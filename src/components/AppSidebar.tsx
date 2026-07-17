@@ -15,8 +15,10 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { PageLink } from "@/components/PageLink";
 import { buildNavTree, findPage, type NavNode } from "@/lib/content";
 
 const logoLight = `${import.meta.env.BASE_URL}assets/lumi-logo-light.svg`;
@@ -24,6 +26,15 @@ const logoDark = `${import.meta.env.BASE_URL}assets/lumi-logo-dark.svg`;
 
 function slugToHref(slug: string) {
   return slug === "" ? "/" : `/${slug}`;
+}
+
+/** On mobile the sidebar is a sheet overlay: close it after picking a page,
+ * otherwise it stays open and hides the page that was just navigated to. */
+function useCloseMobileNav() {
+  const { isMobile, setOpenMobile } = useSidebar();
+  return React.useCallback(() => {
+    if (isMobile) setOpenMobile(false);
+  }, [isMobile, setOpenMobile]);
 }
 
 export function AppSidebar() {
@@ -34,11 +45,12 @@ export function AppSidebar() {
     // against slug-derived hrefs like "/Chapter_2" keep matching.
     select: (s) => s.location.pathname.replace(/\/+$/, "") || "/",
   });
+  const closeMobileNav = useCloseMobileNav();
 
   return (
     <Sidebar>
       <SidebarHeader className="h-14 flex-row items-center border-b border-sidebar-border px-3 py-0">
-        <Link to="/" className="block w-full">
+        <Link to="/" className="block w-full" onClick={closeMobileNav}>
           <img src={logoLight} alt="LUMI AI Factory" className="w-full h-auto block dark:hidden" />
           <img src={logoDark} alt="LUMI AI Factory" className="w-full h-auto hidden dark:block" />
         </Link>
@@ -64,10 +76,10 @@ export function AppSidebar() {
                 isActive={pathname === "/glossary"}
                 className="text-sidebar-foreground/70 data-[active=true]:text-sidebar-foreground"
               >
-                <Link to="/glossary" draggable={false}>
+                <PageLink slug="glossary" draggable={false} onClick={closeMobileNav}>
                   <BookMarked className="h-3.5 w-3.5" />
                   <span>{glossary.frontmatter.title}</span>
-                </Link>
+                </PageLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -118,14 +130,15 @@ function NavItem({ node, pathname }: { node: NavNode; pathname: string }) {
   const active = pathname === href;
   const branchActive = isActiveTree(node, pathname);
   const [open, setOpen] = useBranchOpen(branchActive, pathname);
+  const closeMobileNav = useCloseMobileNav();
 
   if (node.children.length === 0) {
     return (
       <SidebarMenuItem>
         <SidebarMenuButton asChild isActive={active} className={wrapTitle}>
-          <Link to={href} draggable={false}>
+          <PageLink slug={node.page.slug} draggable={false} onClick={closeMobileNav}>
             <span className="whitespace-normal leading-snug">{node.page.frontmatter.title}</span>
-          </Link>
+          </PageLink>
         </SidebarMenuButton>
       </SidebarMenuItem>
     );
@@ -135,9 +148,9 @@ function NavItem({ node, pathname }: { node: NavNode; pathname: string }) {
     <Collapsible open={open} onOpenChange={setOpen}>
       <SidebarMenuItem>
         <SidebarMenuButton asChild isActive={active} className={`${wrapTitle} pr-8`}>
-          <Link to={href} draggable={false}>
+          <PageLink slug={node.page.slug} draggable={false} onClick={closeMobileNav}>
             <span className="whitespace-normal leading-snug">{node.page.frontmatter.title}</span>
-          </Link>
+          </PageLink>
         </SidebarMenuButton>
         <BranchToggle open={open} />
         <CollapsibleContent>
@@ -163,14 +176,15 @@ function NavSubItem({ node, pathname }: { node: NavNode; pathname: string }) {
   const active = pathname === href;
   const branchActive = isActiveTree(node, pathname);
   const [open, setOpen] = useBranchOpen(branchActive, pathname);
+  const closeMobileNav = useCloseMobileNav();
 
   if (node.children.length === 0) {
     return (
       <SidebarMenuSubItem>
         <SidebarMenuSubButton asChild isActive={active} className={wrapTitle}>
-          <Link to={href} draggable={false}>
+          <PageLink slug={node.page.slug} draggable={false} onClick={closeMobileNav}>
             <span className="whitespace-normal leading-snug">{node.page.frontmatter.title}</span>
-          </Link>
+          </PageLink>
         </SidebarMenuSubButton>
       </SidebarMenuSubItem>
     );
@@ -180,9 +194,9 @@ function NavSubItem({ node, pathname }: { node: NavNode; pathname: string }) {
     <Collapsible open={open} onOpenChange={setOpen}>
       <SidebarMenuSubItem className="relative">
         <SidebarMenuSubButton asChild isActive={active} className={`${wrapTitle} pr-8`}>
-          <Link to={href} draggable={false}>
+          <PageLink slug={node.page.slug} draggable={false} onClick={closeMobileNav}>
             <span className="whitespace-normal leading-snug">{node.page.frontmatter.title}</span>
-          </Link>
+          </PageLink>
         </SidebarMenuSubButton>
         <BranchToggle open={open} />
         <CollapsibleContent>

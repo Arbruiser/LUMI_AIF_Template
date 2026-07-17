@@ -1,7 +1,7 @@
-import { Link } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
 import { MarkdownRenderer } from "./MarkdownRenderer";
+import { PageLink } from "./PageLink";
 import { TableOfContents } from "./TableOfContents";
 import { extractToc } from "@/lib/toc";
 import { getBreadcrumbs, getPrevNext, type Page } from "@/lib/content";
@@ -10,28 +10,6 @@ import { siteConfig } from "../../site.config";
 
 interface Props {
   page: Page;
-}
-
-/** Type-safe link to a content page: "" is the home route, anything else goes
- *  through the catch-all splat route. Avoids casting dynamic slugs to `any`. */
-function PageLink({
-  slug,
-  className,
-  children,
-}: {
-  slug: string;
-  className?: string;
-  children: React.ReactNode;
-}) {
-  return slug === "" ? (
-    <Link to="/" className={className}>
-      {children}
-    </Link>
-  ) : (
-    <Link to="/$" params={{ _splat: slug }} className={className}>
-      {children}
-    </Link>
-  );
 }
 
 export function PageLayout({ page }: Props) {

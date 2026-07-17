@@ -119,7 +119,10 @@ export function getPageDescription(page: Page, maxLen = 155): string {
     .replace(/\*([^*]+)\*/g, "$1")
     .replace(/__([^_]+)__/g, "$1")
     .replace(/_([^_]+)_/g, "$1")
-    .replace(/%/g, "") // glossary markers
+    // Glossary markers: a "%" directly after a letter ends a `Term%` marker.
+    // Percentages ("40%") follow digits, so they survive. `\%` escapes to "%".
+    .replace(/(?<=\p{L})%/gu, "")
+    .replace(/\\%/g, "%")
     .replace(/\s+/g, " ")
     .trim();
 
