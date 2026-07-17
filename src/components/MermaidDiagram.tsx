@@ -40,7 +40,9 @@ function buildThemeVariables(mode: "light" | "dark"): Record<string, string> {
   // Diagram surface colour. Must stay identical to --mermaid-bg in
   // styles.css: mermaid paints rectangles in this colour behind edge labels,
   // and they only disappear when they match the container box behind them.
-  const bg = dark ? mix(BLUE, BLACK, 0.12) : WHITE;
+  // #161b20 is the hex equivalent of the dark --card token
+  // (oklch(0.22 0.012 250)), so the box matches the site's other cards.
+  const bg = dark ? "#161b20" : WHITE;
   const fg = dark ? WHITE : BLACK;
   const ramp = brandRamp();
 

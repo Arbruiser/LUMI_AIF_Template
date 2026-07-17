@@ -230,8 +230,9 @@ html {
   --inline-code-bg: oklch(0.28 0.018 250);
   --inline-code-fg: oklch(0.8 0.08 237);
 
-  /* = 12% lumi-blue over lumi-black; keep in sync with MermaidDiagram.tsx */
-  --mermaid-bg: #24282d;
+  /* = hex of the dark --card (oklch(0.22 0.012 250)); keep in sync with
+     MermaidDiagram.tsx */
+  --mermaid-bg: #161b20;
 
   --terminal-bg: #3d0a2c;
   --terminal-chrome: oklch(0.28 0.012 280);
