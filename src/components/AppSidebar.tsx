@@ -64,7 +64,7 @@ export function AppSidebar() {
                 isActive={pathname === "/glossary"}
                 className="text-sidebar-foreground/70 data-[active=true]:text-sidebar-foreground"
               >
-                <Link to="/glossary">
+                <Link to="/glossary" draggable={false}>
                   <BookMarked className="h-3.5 w-3.5" />
                   <span>{glossary.frontmatter.title}</span>
                 </Link>
@@ -123,7 +123,7 @@ function NavItem({ node, pathname }: { node: NavNode; pathname: string }) {
     return (
       <SidebarMenuItem>
         <SidebarMenuButton asChild isActive={active} className={wrapTitle}>
-          <Link to={href}>
+          <Link to={href} draggable={false}>
             <span className="whitespace-normal leading-snug">{node.page.frontmatter.title}</span>
           </Link>
         </SidebarMenuButton>
@@ -135,7 +135,7 @@ function NavItem({ node, pathname }: { node: NavNode; pathname: string }) {
     <Collapsible open={open} onOpenChange={setOpen}>
       <SidebarMenuItem>
         <SidebarMenuButton asChild isActive={active} className={`${wrapTitle} pr-8`}>
-          <Link to={href}>
+          <Link to={href} draggable={false}>
             <span className="whitespace-normal leading-snug">{node.page.frontmatter.title}</span>
           </Link>
         </SidebarMenuButton>
@@ -168,7 +168,7 @@ function NavSubItem({ node, pathname }: { node: NavNode; pathname: string }) {
     return (
       <SidebarMenuSubItem>
         <SidebarMenuSubButton asChild isActive={active} className={wrapTitle}>
-          <Link to={href}>
+          <Link to={href} draggable={false}>
             <span className="whitespace-normal leading-snug">{node.page.frontmatter.title}</span>
           </Link>
         </SidebarMenuSubButton>
@@ -180,7 +180,7 @@ function NavSubItem({ node, pathname }: { node: NavNode; pathname: string }) {
     <Collapsible open={open} onOpenChange={setOpen}>
       <SidebarMenuSubItem className="relative">
         <SidebarMenuSubButton asChild isActive={active} className={`${wrapTitle} pr-8`}>
-          <Link to={href}>
+          <Link to={href} draggable={false}>
             <span className="whitespace-normal leading-snug">{node.page.frontmatter.title}</span>
           </Link>
         </SidebarMenuSubButton>
