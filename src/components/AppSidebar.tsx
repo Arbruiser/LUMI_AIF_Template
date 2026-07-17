@@ -76,7 +76,12 @@ export function AppSidebar() {
                 isActive={pathname === "/glossary"}
                 className="text-sidebar-foreground/70 data-[active=true]:text-sidebar-foreground"
               >
-                <PageLink slug="glossary" draggable={false} onClick={closeMobileNav}>
+                <PageLink
+                  slug="glossary"
+                  draggable={false}
+                  onClick={closeMobileNav}
+                  aria-current={pathname === "/glossary" ? "page" : undefined}
+                >
                   <BookMarked className="h-3.5 w-3.5" />
                   <span>{glossary.frontmatter.title}</span>
                 </PageLink>
@@ -136,7 +141,12 @@ function NavItem({ node, pathname }: { node: NavNode; pathname: string }) {
     return (
       <SidebarMenuItem>
         <SidebarMenuButton asChild isActive={active} className={wrapTitle}>
-          <PageLink slug={node.page.slug} draggable={false} onClick={closeMobileNav}>
+          <PageLink
+            slug={node.page.slug}
+            draggable={false}
+            onClick={closeMobileNav}
+            aria-current={active ? "page" : undefined}
+          >
             <span className="whitespace-normal leading-snug">{node.page.frontmatter.title}</span>
           </PageLink>
         </SidebarMenuButton>
@@ -148,7 +158,12 @@ function NavItem({ node, pathname }: { node: NavNode; pathname: string }) {
     <Collapsible open={open} onOpenChange={setOpen}>
       <SidebarMenuItem>
         <SidebarMenuButton asChild isActive={active} className={`${wrapTitle} pr-8`}>
-          <PageLink slug={node.page.slug} draggable={false} onClick={closeMobileNav}>
+          <PageLink
+            slug={node.page.slug}
+            draggable={false}
+            onClick={closeMobileNav}
+            aria-current={active ? "page" : undefined}
+          >
             <span className="whitespace-normal leading-snug">{node.page.frontmatter.title}</span>
           </PageLink>
         </SidebarMenuButton>
@@ -182,7 +197,12 @@ function NavSubItem({ node, pathname }: { node: NavNode; pathname: string }) {
     return (
       <SidebarMenuSubItem>
         <SidebarMenuSubButton asChild isActive={active} className={wrapTitle}>
-          <PageLink slug={node.page.slug} draggable={false} onClick={closeMobileNav}>
+          <PageLink
+            slug={node.page.slug}
+            draggable={false}
+            onClick={closeMobileNav}
+            aria-current={active ? "page" : undefined}
+          >
             <span className="whitespace-normal leading-snug">{node.page.frontmatter.title}</span>
           </PageLink>
         </SidebarMenuSubButton>
@@ -194,7 +214,12 @@ function NavSubItem({ node, pathname }: { node: NavNode; pathname: string }) {
     <Collapsible open={open} onOpenChange={setOpen}>
       <SidebarMenuSubItem className="relative">
         <SidebarMenuSubButton asChild isActive={active} className={`${wrapTitle} pr-8`}>
-          <PageLink slug={node.page.slug} draggable={false} onClick={closeMobileNav}>
+          <PageLink
+            slug={node.page.slug}
+            draggable={false}
+            onClick={closeMobileNav}
+            aria-current={active ? "page" : undefined}
+          >
             <span className="whitespace-normal leading-snug">{node.page.frontmatter.title}</span>
           </PageLink>
         </SidebarMenuSubButton>

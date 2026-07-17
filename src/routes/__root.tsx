@@ -113,10 +113,23 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <SidebarProvider>
+          {/* First focusable element on the page: lets keyboard users jump
+              straight to the article instead of tabbing through the whole
+              sidebar. Invisible until it receives focus. */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground"
+          >
+            Skip to content
+          </a>
           <AppSidebar />
           <SidebarInset className="flex min-h-screen flex-col">
             <Header />
-            <main className="flex-1 px-4 py-8 sm:px-8 lg:px-12 xl:px-16">
+            <main
+              id="main-content"
+              tabIndex={-1}
+              className="flex-1 scroll-mt-14 px-4 py-8 outline-none sm:px-8 lg:px-12 xl:px-16"
+            >
               <div className="mx-auto w-full max-w-[1400px] 2xl:max-w-[1600px]">
                 <Outlet />
               </div>

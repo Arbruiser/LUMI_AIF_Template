@@ -10,7 +10,7 @@ export function PageLink({
   slug: string;
 } & Pick<
   React.ComponentPropsWithoutRef<"a">,
-  "className" | "children" | "onClick" | "draggable"
+  "className" | "children" | "onClick" | "draggable" | "aria-current"
 >) {
   return slug === "" ? (
     <Link to="/" {...anchorProps} />
