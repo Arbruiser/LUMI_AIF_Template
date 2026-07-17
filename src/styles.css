@@ -2,6 +2,13 @@
 @source "../src";
 @import "tw-animate-css";
 @import "katex/dist/katex.min.css";
+/* Self-hosted fonts (no request to Google, works offline). */
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
 /* Syntax highlighting palette is defined below using only LUMI brand colours
    (no github.css import — that theme ships greens, reds, and oranges that
    are not part of the LUMI AIF palette). */
