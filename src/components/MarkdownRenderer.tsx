@@ -18,6 +18,7 @@ import { Link } from "@tanstack/react-router";
 import { visit } from "unist-util-visit";
 import { Callout } from "./Callout";
 import { CodeBlock } from "./CodeBlock";
+import { MermaidDiagram } from "./MermaidDiagram";
 import { Quiz } from "./Quiz";
 import { parseQuiz } from "@/lib/quiz";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -360,6 +361,10 @@ export function MarkdownRenderer({ source, enableGlossary = true }: MarkdownRend
             if (/\blanguage-quiz\b/.test(childClassName)) {
               const quiz = parseQuiz(nodeToText(child.props.children));
               return <Quiz title={quiz.title} questions={quiz.questions} />;
+            }
+
+            if (/\blanguage-mermaid\b/.test(childClassName)) {
+              return <MermaidDiagram source={nodeToText(child.props.children).trim()} />;
             }
 
             const parsed = parseCodeMeta(dataMeta);

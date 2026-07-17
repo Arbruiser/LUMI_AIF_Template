@@ -190,6 +190,34 @@ $$
 \int_{-\infty}^{\infty} e^{-x^2}\, dx = \sqrt{\pi}
 $$
 
+## Diagrams
+
+Tag a code block with `mermaid` to render a [Mermaid](https://mermaid.js.org/) diagram in LUMI colours. Flowcharts, sequence diagrams, pie charts, Gantt charts, state diagrams and the other Mermaid diagram types all work, and the colours follow the light/dark theme automatically:
+
+````text
+```mermaid
+flowchart LR
+    A[Write submit.sh] --> B[sbatch submit.sh]
+    B --> C{In queue}
+    C -->|resources free| D[Job runs on GPU nodes]
+    C -->|busy| C
+    D --> E[Check output]
+```
+````
+
+And here is that example, live:
+
+```mermaid
+flowchart LR
+    A[Write submit.sh] --> B[sbatch submit.sh]
+    B --> C{In queue}
+    C -->|resources free| D[Job runs on GPU nodes]
+    C -->|busy| C
+    D --> E[Check output]
+```
+
+See the [Mermaid documentation](https://mermaid.js.org/intro/) for the syntax of every diagram type.
+
 ## Section links and table of contents
 
 Every heading on the page automatically gets a copy-link icon next to it on hover. Clicking it copies a deep link to that section to your clipboard. The table of contents on the right tracks your scroll position and updates the URL link live, so the link you share always points to whatever the reader is currently looking at.
