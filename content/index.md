@@ -155,6 +155,18 @@ Images are clickable and can be opened full-screen.
   <figcaption><em>Figure 1: LUMI data center visual from the LUMI brand guide.</em></figcaption>
 </figure>
 
+## Offering files for download
+
+To let readers download a file (a notebook, dataset, script, or archive), drop it in the same `public/assets/` folder and link to it with the `./assets/...` form, just like an image. Any target that is not an image or another page renders as a download button showing the file name and type:
+
+[Example notebook](./assets/hello-world.ipynb)
+
+Leave the link text empty to label the button with the file name itself:
+
+[](./assets/hello-world.ipynb)
+
+Either way, clicking saves the file under its original name.
+
 ## Embedding YouTube videos
 
 To add a video, simply copy the **Embed code** from YouTube (Share > Embed) and paste it into the `.md` file:
